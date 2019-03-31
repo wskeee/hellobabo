@@ -4,6 +4,7 @@ namespace common\models\goods;
 
 use common\models\api\ApiResponse;
 use common\models\Tags;
+use common\utils\MysqlUtil;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Exception;
@@ -22,6 +23,7 @@ use yii\helpers\ArrayHelper;
  */
 class GoodsTagRef extends ActiveRecord
 {
+
     /**
      * {@inheritdoc}
      */
@@ -54,7 +56,7 @@ class GoodsTagRef extends ActiveRecord
             'is_del' => Yii::t('app', '是否删除：0否 1是'),
         ];
     }
-    
+
     /**
      * 保存商品goods_id标签关联关系
      * @param int $goods_id
@@ -65,23 +67,28 @@ class GoodsTagRef extends ActiveRecord
     {
         try {
             // 如果标签为空则返回
-            if(empty($tags)) return;
+            if (empty($tags))
+                return;
 
+            //找出已经存在标签
+            $exitsTags = self::findAll(['goods_id' => $goods_id, 'is_del' => 0]);
             //删除已存在的标签
             self::updateAll(['is_del' => 1], ['goods_id' => $goods_id]);
             //准备数据
             $mediaTags = [];
             foreach ($tags as $tag) {
                 /* @var $tag Tags */
-                $mediaTags[] = [$goods_id, $tag->id];
+                $mediaTags[] = [$goods_id, $tag->id, 0];
             }
-            
+
             //保存关联
-            \Yii::$app->db->createCommand()->batchInsert(self::tableName(), ['goods_id', 'tag_id'], $mediaTags)->execute();
-            //累加引用次数
-            Tags::updateAllCounters(['ref_count' => 1], ['id' => ArrayHelper::getColumn($tags, 'id')]);
-        }catch (Exception $ex) {
+            MysqlUtil::batchInsertDuplicateUpdate(self::tableName(), ['goods_id', 'tag_id', 'is_del'], $mediaTags, ['is_del']);
+            //累加引用次数，找出新加标签，累加新标签
+            $newIds = array_diff(ArrayHelper::getColumn($tags, 'id'), ArrayHelper::getColumn($exitsTags, 'tag_id'));
+            Tags::updateAllCounters(['ref_count' => 1], ['id' => $newIds]);
+        } catch (Exception $ex) {
             throw new Exception($ex->getMessage());
         }
     }
+
 }

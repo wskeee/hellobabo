@@ -293,7 +293,10 @@ a.desc:after {
 *****************************************************/
 /** 排版 */
 
-
+/** 模态框  */
+.myModal .modal-body{
+    padding: 15px 30px;
+}
 
 /** 设置单行显示省略号 */
 .single-clamp {
@@ -377,6 +380,10 @@ a.desc:after {
 .wsk-table{
     /* table-layout: fixed;*/
 }
+.wsk-table > tbody {
+    font-size: 12px;
+}
+
 
 .wsk-table > thead > tr > th {
     background-color: #f2f2f2;

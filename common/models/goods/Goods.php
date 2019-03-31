@@ -2,6 +2,7 @@
 
 namespace common\models\goods;
 
+use common\models\AdminUser;
 use common\models\system\Issue;
 use common\utils\I18NUitl;
 use Yii;
@@ -36,6 +37,11 @@ use yii\db\ActiveRecord;
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
  *
+ * @property AdminUser $owner   作者
+ * @property AdminUser $creater   创建人
+ * @property AdminUser $updater   更新人
+ * @property GoodsCategory $goodsCategory   分类
+ * @property GoodsModel $goodsModel         模型
  * @property GoodsFavorites $id0
  * @property GoodsRecord $id1
  * @property GoodsAction[] $goodsActions
@@ -47,14 +53,28 @@ use yii\db\ActiveRecord;
  */
 class Goods extends ActiveRecord
 {
+    /* 未发布 */
+    const STATUS_UNPUBLISHED = 1;
+    /* 已发布 */
+    const STATUS_PUBLISHED = 2;
+    /* 已下架 */
+    const STATUS_SOLD_OUT = 3;
+
+    /* 状态 */
+
+    public static $statusKeyMap = [
+        self::STATUS_UNPUBLISHED => '未发布',
+        self::STATUS_PUBLISHED => '已发布',
+        self::STATUS_SOLD_OUT => '已下架',
+    ];
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return '{{%goods}}';
     }
-    
+
     public function behaviors() {
         return [
             TimestampBehavior::class
@@ -64,25 +84,39 @@ class Goods extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['category_id','owner_id','goods_name'], 'required'],
+            [['category_id', 'owner_id', 'goods_name'], 'required'],
             [['category_id', 'model_id', 'owner_id', 'status', 'store_count', 'comment_count', 'click_count', 'share_count', 'like_count', 'sale_count', 'init_required', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['goods_cost', 'goods_price'], 'number'],
             [['goods_sn'], 'string', 'max' => 20],
             [['goods_name'], 'string', 'max' => 100],
             [['goods_des', 'cover_url', 'video_url', 'tags'], 'string', 'max' => 255],
-            [['id'], 'exist', 'skipOnError' => true, 'targetClass' => GoodsFavorites::className(), 'targetAttribute' => ['id' => 'goods_id']],
-            [['id'], 'exist', 'skipOnError' => true, 'targetClass' => GoodsRecord::className(), 'targetAttribute' => ['id' => 'id']],
+            [['tags'], 'tagVerify',],
         ];
+    }
+
+    /**
+     * 标签验证
+     * @param type $attribute
+     * @return boolean
+     */
+    public function tagVerify($attribute) {
+        $tags = $this->tags;
+        if (is_string($tags) && !empty($tags)) {
+            //把全角",""、"替换为半角","
+            $tags = str_replace(['，', '、'], ',', $tags);
+            $this->tags = $tags;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => Yii::t('app', 'ID'),
             'category_id' => Yii::t('app', 'Category'),
@@ -98,11 +132,11 @@ class Goods extends ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'tags' => Yii::t('app', 'Tag'),
             'store_count' => I18NUitl::t('app', '{Store}{Count}'),
-            'comment_count' => Yii::t('app', '{Comment}{Count}'),
-            'click_count' => Yii::t('app', '{Click}{Count}'),
-            'share_count' => Yii::t('app', '{Share}{Count}'),
-            'like_count' => Yii::t('app', '{Like}{Count}'),
-            'sale_count' => Yii::t('app', '{Sale}{Count}'),
+            'comment_count' => I18NUitl::t('app', '{Comment}{Count}'),
+            'click_count' => I18NUitl::t('app', '{Click}{Count}'),
+            'share_count' => I18NUitl::t('app', '{Share}{Count}'),
+            'like_count' => I18NUitl::t('app', '{Like}{Count}'),
+            'sale_count' => I18NUitl::t('app', '{Sale}{Count}'),
             'init_required' => Yii::t('app', 'Init Required'),
             'created_by' => Yii::t('app', 'Created By'),
             'updated_by' => Yii::t('app', 'Updated By'),
@@ -114,48 +148,76 @@ class Goods extends ActiveRecord
     /**
      * @return ActiveQuery
      */
-    public function getGoodsActions()
-    {
+    public function getGoodsCategory() {
+        return $this->hasOne(GoodsCategory::className(), ['id' => 'category_id']);
+    }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getGoodsModel() {
+        return $this->hasOne(GoodsModel::className(), ['id' => 'model_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getGoodsActions() {
         return $this->hasMany(GoodsAction::className(), ['goods_id' => 'id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getGoodsApproves()
-    {
+    public function getGoodsApproves() {
         return $this->hasMany(GoodsApprove::className(), ['goods_id' => 'id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getGoodsAttValueRefs()
-    {
+    public function getGoodsAttValueRefs() {
         return $this->hasMany(GoodsAttValueRef::className(), ['goods_id' => 'id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getGoodsDetails()
-    {
-        return $this->hasMany(GoodsDetail::className(), ['goods_id' => 'id']);
+    public function getGoodsDetails() {
+        return $this->hasOne(GoodsDetail::className(), ['goods_id' => 'id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getGoodsTagRefs()
-    {
+    public function getGoodsTagRefs() {
         return $this->hasMany(GoodsTagRef::className(), ['goods_id' => 'id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getIssues()
-    {
+    public function getIssues() {
         return $this->hasMany(Issue::className(), ['goods_id' => 'id']);
     }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getOwner() {
+        return $this->hasOne(AdminUser::className(), ['id' => 'owner_id']);
+    }
+    /**
+     * @return ActiveQuery
+     */
+    public function getCreater() {
+        return $this->hasOne(AdminUser::className(), ['id' => 'created_by']);
+    }
+    /**
+     * @return ActiveQuery
+     */
+    public function getUpdater() {
+        return $this->hasOne(AdminUser::className(), ['id' => 'updated_by']);
+    }
+
 }

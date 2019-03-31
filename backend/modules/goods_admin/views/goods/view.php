@@ -1,58 +1,104 @@
 <?php
 
+use backend\modules\goods_admin\assets\GoodsModuleAsset;
+use common\models\goods\Goods;
+use common\modules\rbac\components\ResourceHelper;
+use common\utils\I18NUitl;
 use yii\helpers\Html;
+use yii\web\View;
+use yii\web\YiiAsset;
 use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\goods\Goods */
+/* @var $this View */
+/* @var $model Goods */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Goods'), 'url' => ['index']];
+$this->title = $model->goods_name;
+$this->params['breadcrumbs'][] = ['label' => I18NUitl::t('app', '{Goods}{List}'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+YiiAsset::register($this);
+GoodsModuleAsset::register($this);
 ?>
 <div class="goods-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
+        <?= ResourceHelper::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= ResourceHelper::a(I18NUitl::t('app', '{Material}{Admin}'), ['/goods_admin/material/index', 'goods_id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= ResourceHelper::a(I18NUitl::t('app', '{Scene}{Admin}'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= ResourceHelper::a(I18NUitl::t('app', '{Attribute}{Spec}'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'category_id',
-            'model_id',
-            'owner_id',
-            'goods_sn',
-            'goods_name',
-            'goods_cost',
-            'goods_price',
-            'goods_des',
-            'cover_url:url',
-            'video_url:url',
-            'status',
-            'tags',
-            'store_count',
-            'comment_count',
-            'click_count',
-            'share_count',
-            'like_count',
-            'sale_count',
-            'created_by',
-            'updated_by',
-            'created_at',
-            'updated_at',
-        ],
-    ]) ?>
-
+    <div class="wsk-panel">
+        <div class="title">基本信息</div>
+        <div class="body">
+            <div style="width:48%;display: inline-block;float: left;">
+                <?=
+                DetailView::widget([
+                    'model' => $model,
+                    'attributes' => [
+                        'goods_sn',
+                        //key:format:label
+                        "goodsCategory.name:text:{$model->getAttributeLabel('category_id')}",
+                        "goodsModel.name:text:{$model->getAttributeLabel('model_id')}",
+                        "owner.nickname:text:{$model->getAttributeLabel('owner_id')}",
+                        'goods_name',
+                        'goods_cost',
+                        'goods_price',
+                        'goods_des',
+                        'tags',
+                        //封面
+                        [
+                            'attribute' => 'cover_url',
+                            'format' => 'raw',
+                            'value' => function($model) {
+                                return Html::img($model->cover_url, ['style' => 'width:96px']);
+                            }
+                        ],
+                        //视频
+                        [
+                            'attribute' => 'video_url',
+                            'format' => 'raw',
+                            'value' => function($model) {
+                                return Html::tag('video', '', ['style' => 'width:250px', 'src' => $model->video_url, 'controls' => 'controls']);
+                            }
+                        ],
+                    ],
+                ])
+                ?>
+            </div>
+            <div style="width:48%;display: inline-block;float: left;">
+                <?=
+                DetailView::widget([
+                    'model' => $model,
+                    'attributes' => [
+                        //状态
+                        [
+                            'attribute' => 'status',
+                            'value' => function($model) {
+                                return Goods::$statusKeyMap[$model->status];
+                            }
+                        ],
+                        'store_count',
+                        'comment_count',
+                        'click_count',
+                        'share_count',
+                        'like_count',
+                        'sale_count',
+                        "creater.nickname:text:{$model->getAttributeLabel('created_by')}",
+                        "updater.nickname:text:{$model->getAttributeLabel('updated_by')}",
+                        'created_at:datetime',
+                        'updated_at:datetime',
+                    ],
+                ])
+                ?>
+            </div>
+        </div>
+    </div>
+    <div class="wsk-panel">
+        <div class="title">商品详情</div>
+        <div class="body">
+            <div class="goods-content-box">
+                <div class="rich-content"><?= $model->goodsDetails->content ?></div>
+            </div>
+        </div>
+    </div>
 </div>

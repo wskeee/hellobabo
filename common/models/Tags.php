@@ -7,7 +7,6 @@ use yii\db\ActiveRecord;
 use yii\db\Exception;
 use yii\helpers\ArrayHelper;
 
-
 /**
  * This is the model class for table "{{%tags}}".
  *
@@ -19,6 +18,7 @@ use yii\helpers\ArrayHelper;
  */
 class Tags extends ActiveRecord
 {
+
     /**
      * {@inheritdoc}
      */
@@ -61,41 +61,41 @@ class Tags extends ActiveRecord
     public static function saveTags($tags)
     {
         try {
-            if(is_string($tags) && !empty($tags)){
+            if (is_string($tags) && !empty($tags)) {
                 //把全角",""、"替换为半角","
-                $tags = str_replace(['，','、'], ',', $tags);
+                $tags = str_replace(['，', '、'], ',', $tags);
                 $tags = explode(',', $tags);
-            }else{
+            } else {
                 return;
             }
             //处理空值、重复值、清除左右空格
-            $tags = array_unique(array_filter($tags));    
-            foreach ($tags as &$tag){
+            $tags = array_unique(array_filter($tags));
+            foreach ($tags as &$tag) {
                 $tag = trim($tag);
             }
             unset($tag);
-            
+
             //查找已经存在的
             $result = self::find()->where(['name' => $tags])->asArray()->all();
             $result = ArrayHelper::map($result, 'name', 'id');
 
             //准备数据
             $rows = [];
-            foreach($tags as $tag){
+            foreach ($tags as $tag) {
                 //过滤已经存在的标签
-                if(!isset($result[$tag])){
+                if (!isset($result[$tag])) {
                     $rows[] = [$tag];
                 }
             }
-            
+
             //批量插入数据
             Yii::$app->db->createCommand()->batchInsert(self::tableName(), ['name'], $rows)->execute();
-            
+
             //返回所有标签
             return self::find()->where(['name' => $tags])->all();
-            
         } catch (Exception $exc) {
             throw new Exception($ex->getMessage());
         }
     }
+
 }

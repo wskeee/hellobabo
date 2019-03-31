@@ -72,7 +72,7 @@ use common\widgets\Menu;
                         'icon' => 'bars',
                         'url' => '#',
                         'items' => [
-                            ['label' => '上传商品', 'icon' => 'circle-o', 'url' => ['/goods_admin/goods/create']],
+                            ['label' => '添加商品', 'icon' => 'circle-o', 'url' => ['/goods_admin/goods/create']],
                             ['label' => '商品列表', 'icon' => 'circle-o', 'url' => ['/goods_admin/goods/index']],
                             ['label' => '商品审核', 'icon' => 'circle-o', 'url' => ['/goods_admin/approve/index']],
                             ['label' => '回收站', 'icon' => 'circle-o', 'url' => ['/goods_admin/recycle/index']],

@@ -1,5 +1,7 @@
 <?php
 
+use common\models\AdminUser;
+use common\models\goods\Goods;
 use common\models\goods\GoodsCategory;
 use common\models\goods\searchs\GoodsSearch;
 use common\utils\I18NUitl;
@@ -31,11 +33,13 @@ $dep_template = "<div class=\"col-lg-12 col-md-12 clean-padding\">{input}</div>"
     ?>
 
     <!-- 商品编号 -->
-    <?= $form->field($model, 'goods_sn')->textInput([
-        'maxlength' => true, 
+    <?=
+    $form->field($model, 'goods_sn')->textInput([
+        'maxlength' => true,
         'placeholder' => I18NUitl::t('app', '{Please}{Input}{Goods}{SN}'),
         'onchange' => 'submitForm()',
-        ]) ?>
+    ])
+    ?>
 
     <!-- 类目 -->
     <?=
@@ -56,7 +60,7 @@ $dep_template = "<div class=\"col-lg-12 col-md-12 clean-padding\">{input}</div>"
             <div class="dep-dropdown">
                 <?=
                 $form->field($model, 'owner_id', ['template' => $dep_template,])->widget(Select2::class, [
-                    'data' => GoodsCategory::getCategory(),
+                    'data' => AdminUser::getUserByType(AdminUser::TYPE_OWNER),
                     'options' => ['placeholder' => Yii::t('app', 'Owner')],
                     'pluginOptions' => ['allowClear' => true],
                     'pluginEvents' => ['change' => 'function(){ submitForm()}']
@@ -66,7 +70,7 @@ $dep_template = "<div class=\"col-lg-12 col-md-12 clean-padding\">{input}</div>"
             <div class="dep-dropdown">
                 <?=
                 $form->field($model, 'created_by', ['template' => $dep_template,])->widget(Select2::class, [
-                    'data' => GoodsCategory::getCategory(),
+                    'data' => AdminUser::getUserByType(AdminUser::TYPE_GENERAL),
                     'options' => ['placeholder' => Yii::t('app', 'Created By')],
                     'pluginOptions' => ['allowClear' => true],
                     'pluginEvents' => ['change' => 'function(){ submitForm()}']
@@ -76,7 +80,7 @@ $dep_template = "<div class=\"col-lg-12 col-md-12 clean-padding\">{input}</div>"
             <div class="dep-dropdown">
                 <?=
                 $form->field($model, 'status', ['template' => $dep_template,])->widget(Select2::class, [
-                    'data' => GoodsCategory::getCategory(),
+                    'data' => Goods::$statusKeyMap,
                     'options' => ['placeholder' => Yii::t('app', 'Status')],
                     'pluginOptions' => ['allowClear' => true],
                     'pluginEvents' => ['change' => 'function(){ submitForm()}']
@@ -87,11 +91,13 @@ $dep_template = "<div class=\"col-lg-12 col-md-12 clean-padding\">{input}</div>"
     </div>
 
     <!-- 关键字 -->
-    <?= $form->field($model, 'keyword')->textInput([
-        'maxlength' => true, 
+    <?=
+    $form->field($model, 'keyword')->textInput([
+        'maxlength' => true,
         'placeholder' => I18NUitl::t('app', '{Please}{Input}{Goods}{Name}{Or}{Tag}'),
         'onchange' => 'submitForm()',
-        ]) ?>
+    ])
+    ?>
 
     <?php //$form->field($model, 'id') ?>
 
@@ -135,16 +141,16 @@ $dep_template = "<div class=\"col-lg-12 col-md-12 clean-padding\">{input}</div>"
 
     <?php // echo $form->field($model, 'created_at') ?>
 
-    <?php // echo $form->field($model, 'updated_at')  ?>
+<?php // echo $form->field($model, 'updated_at')   ?>
 
 <?php ActiveForm::end(); ?>
 
 </div>
 <script type="text/javascript">
-    
+
     // 提交表单    
-    function submitForm (){
+    function submitForm() {
         $('#goods-search-form').submit();
-    }   
-    
+    }
+
 </script>

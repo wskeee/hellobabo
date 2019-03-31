@@ -1,8 +1,8 @@
 <?php
-
 namespace common\utils;
 
 use Yii;
+use yii\helpers\StringHelper;
 
 /**
  * mysql 工具类
@@ -72,6 +72,24 @@ class MysqlUtil {
         
         return $sql;
         
+    }
+    
+    /**
+     * 创建批量插入(数据重复时更新指定字段)
+     * @param string $table             表名     eg: %_t 
+     * @param array $insertColumns      插入字段 eg:[id,name,nickname]
+     * @param array $rows               插入数据 eg;[[1,2,3],[1,2,3]]
+     * @param array $updateColumns      更新字段 eg:[name,nickname]
+     * 
+     * eg: 
+        INSERT INTO table (id, col1, col2)
+            VALUES (1, 1, 1), (2, 2, 2), (3, 3, 3), (4, 4, 4)
+        ON DUPLICATE KEY UPDATE
+            col1 = VALUES(col1),
+            col2 = VALUES(col2);
+     */
+    public static function batchInsertDuplicateUpdate($table, $insertColumns, $rows, $updateColumns){
+        Yii::$app->db->createCommand(self::createBatchInsertDuplicateUpdateSQL($table, $insertColumns, $rows, $updateColumns))->execute();
     }
 
 }

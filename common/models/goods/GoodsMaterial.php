@@ -2,7 +2,11 @@
 
 namespace common\models\goods;
 
+use common\models\goods\Goods;
+use common\utils\I18NUitl;
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%goods_material}}".
@@ -15,9 +19,35 @@ use Yii;
  * @property int $is_required 是否必选 0否 1是
  * @property int $is_del 是否删除
  * @property string $des 备注
+ * 
+ * @property Goods $goods 商品
  */
-class GoodsMaterial extends \yii\db\ActiveRecord
+class GoodsMaterial extends ActiveRecord
 {
+
+    /** 单选-输入类型 */
+    const SINGLE_SELECT_INPUT_TYPE = 1;
+
+    /** 多选-输入类型 */
+    const MULTPLE_SELECT_INPUT_TYPE = 2;
+
+    /** 单行-输入类型 */
+    const SINGLE_LINE_INPUT_TYPE = 3;
+
+    /** 多行-输入类型 */
+    const MULTPLE_LINE_INPUT_TYPE = 4;
+
+    /**
+     * 输入类型
+     * @var array 
+     */
+    public static $inputTypeMap = [
+        self::SINGLE_SELECT_INPUT_TYPE => '单选',
+        self::MULTPLE_SELECT_INPUT_TYPE => '多选',
+        self::SINGLE_LINE_INPUT_TYPE => '单行输入',
+        self::MULTPLE_LINE_INPUT_TYPE => '多行输入'
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -45,13 +75,23 @@ class GoodsMaterial extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'goods_id' => Yii::t('app', '所属商品，关联goods表id字段'),
-            'name' => Yii::t('app', '素材名'),
-            'input_type' => Yii::t('app', '输入方式 1单选 2多选 3单行输入 4多行输入'),
-            'sort_order' => Yii::t('app', '排序'),
-            'is_required' => Yii::t('app', '是否必选 0否 1是'),
-            'is_del' => Yii::t('app', '是否删除'),
-            'des' => Yii::t('app', '备注'),
+            'goods_id' => Yii::t('app', 'Goods'),
+            'name' => Yii::t('app', 'Name'),
+            'input_type' => I18NUitl::t('app', '{Input}{Type}'),
+            'sort_order' => Yii::t('app', 'Sort Order'),
+            'is_required' => Yii::t('app', 'Is Required'),
+            'is_del' => Yii::t('app', 'Is Del'),
+            'des' => Yii::t('app', 'Des'),
         ];
     }
+
+    /**
+     * 
+     * @return ActiveQuery
+     */
+    public function getGoods()
+    {
+        return $this->hasOne(Goods::class, ['goods_id' => 'id']);
+    }
+
 }

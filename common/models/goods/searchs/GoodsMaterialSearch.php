@@ -2,29 +2,23 @@
 
 namespace common\models\goods\searchs;
 
-use common\models\goods\Goods;
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use common\models\goods\GoodsMaterial;
 
 /**
- * GoodsSearch represents the model behind the search form of `common\models\goods\Goods`.
+ * GoodsMaterialSearch represents the model behind the search form of `common\models\goods\GoodsMaterial`.
  */
-class GoodsSearch extends Goods
+class GoodsMaterialSearch extends GoodsMaterial
 {
-    /* 关键字搜索 */
-    public $keyword = '';
-    
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id', 'category_id', 'model_id', 'owner_id', 'status', 'store_count', 'comment_count', 'click_count', 'share_count', 'like_count', 'sale_count', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['goods_sn', 'goods_name', 'goods_des', 'cover_url', 'video_url', 'tags'], 'safe'],
-            [['goods_cost', 'goods_price'], 'number'],
-            [['keyword'], 'string'],
+            [['id', 'goods_id', 'input_type', 'sort_order', 'is_required', 'is_del'], 'integer'],
+            [['name', 'des'], 'safe'],
         ];
     }
 
@@ -46,7 +40,7 @@ class GoodsSearch extends Goods
      */
     public function search($params)
     {
-        $query = Goods::find();
+        $query = GoodsMaterial::find();
 
         // add conditions that should always apply here
 
@@ -65,19 +59,16 @@ class GoodsSearch extends Goods
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'goods_sn' => $this->goods_sn,
-            'category_id' => $this->category_id,
-            'owner_id' => $this->owner_id,
-            'status' => $this->status,
-            'created_by' => $this->created_by,
+            'goods_id' => $this->goods_id,
+            'input_type' => $this->input_type,
+            'sort_order' => $this->sort_order,
+            'is_required' => $this->is_required,
+            'is_del' => $this->is_del,
         ]);
 
-        $query->andFilterWhere(['or',['like', 'tags', $this->keyword],['like', 'goods_name', $this->keyword]]);
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'des', $this->des]);
 
         return $dataProvider;
-    }
-    
-    public function attributeLabels() {
-        return parent::attributeLabels() + ['keyword' => Yii::t('app', 'Keyword')];
     }
 }

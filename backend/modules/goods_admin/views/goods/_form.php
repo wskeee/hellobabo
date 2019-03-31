@@ -51,12 +51,12 @@ use yii\widgets\ActiveForm;
             <?= $model->getAttributeLabel('video_url') ?>
         </label>
         <div class="col-sm-2">
-            <?= VideoPicker::widget(['model' => $model,'attribute' => 'video_url',])?>
+            <?= VideoPicker::widget(['model' => $model, 'attribute' => 'video_url',]) ?>
         </div>
     </div>
-    
+
     <!-- 设置商品是否需要初始 -->
-    <?= $form->field($model, 'init_required')->checkbox(['title' => '开启后在上传相片前需要初始绘本','style' => 'margin: 13px 0;'], false) ?>
+    <?= $form->field($model, 'init_required')->checkbox(['title' => '开启后在上传相片前需要初始绘本', 'style' => 'margin: 13px 0;'], false) ?>
 
     <!-- 作者 -->
     <?=
@@ -71,9 +71,9 @@ use yii\widgets\ActiveForm;
 
     <!-- 商品描述 -->
     <?= $form->field($model, 'goods_des')->textarea(['maxlength' => true, 'placeholder' => '简单描述商品']) ?>
-    
+
     <!-- 商品详情 -->
-    <?= $form->field(new GoodsDetail(), 'content')->widget(UEDitor::class) ?>
+    <?= $form->field($model->isNewRecord ? new GoodsDetail() : $model->goodsDetails, 'content')->widget(UEDitor::class) ?>
 
     <div class="form-group">
         <label class="col-sm-1 control-label form-label"></label>

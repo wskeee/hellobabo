@@ -3,6 +3,9 @@
 namespace common\models\goods;
 
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
+use yii\helpers\Html;
 
 /**
  * This is the model class for table "{{%goods_detail}}".
@@ -13,8 +16,9 @@ use Yii;
  *
  * @property Goods $goods
  */
-class GoodsDetail extends \yii\db\ActiveRecord
+class GoodsDetail extends ActiveRecord
 {
+
     /**
      * {@inheritdoc}
      */
@@ -48,11 +52,29 @@ class GoodsDetail extends \yii\db\ActiveRecord
         ];
     }
 
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+        //保存前转码
+        $this->content = Html::encode($this->content);
+        return true;
+    }
+
+    public function afterFind()
+    {
+        //拿到数据前解码
+        $this->content = Html::decode($this->content);
+        parent::afterFind();
+    }
+
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getGoods()
     {
         return $this->hasOne(Goods::className(), ['id' => 'goods_id']);
     }
+
 }
