@@ -3,6 +3,8 @@
 namespace common\models\goods;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\redis\ActiveQuery;
 
 /**
  * This is the model class for table "{{%goods_scene}}".
@@ -20,9 +22,13 @@ use Yii;
  * @property int $is_selected 默认选中 0否 1是
  * @property int $is_del 是否删除
  * @property string $des 备注
+ * 
+ * @property Goods goods 商品
+ * @property SceneGroup group 分组
  */
-class GoodsScene extends \yii\db\ActiveRecord
+class GoodsScene extends ActiveRecord
 {
+
     /**
      * {@inheritdoc}
      */
@@ -37,6 +43,7 @@ class GoodsScene extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['goods_id', 'group_id', 'name'], 'required'],
             [['goods_id', 'group_id', 'sort_order', 'immutable', 'is_required', 'is_selected', 'is_del'], 'integer'],
             [['name'], 'string', 'max' => 20],
             [['effect_url', 'demo_url', 'source_url', 'des'], 'string', 'max' => 255],
@@ -50,18 +57,37 @@ class GoodsScene extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'goods_id' => Yii::t('app', '所属商品，关联goods表id字段'),
-            'group_id' => Yii::t('app', '分组id,关联scene_group,id'),
-            'name' => Yii::t('app', '场景名'),
-            'effect_url' => Yii::t('app', '效果图路径'),
-            'demo_url' => Yii::t('app', '参考路径'),
-            'source_url' => Yii::t('app', '源图路径'),
-            'sort_order' => Yii::t('app', '排序'),
-            'immutable' => Yii::t('app', '不可改变 0否 1是'),
-            'is_required' => Yii::t('app', '是否必选 0否 1是'),
-            'is_selected' => Yii::t('app', '默认选中 0否 1是'),
-            'is_del' => Yii::t('app', '是否删除'),
-            'des' => Yii::t('app', '备注'),
+            'goods_id' => Yii::t('app', 'Goods'),
+            'group_id' => Yii::t('app', 'Group'),
+            'name' => Yii::t('app', 'Name'),
+            'effect_url' => Yii::t('app', 'Effect Url'),
+            'demo_url' => Yii::t('app', 'Demo Url'),
+            'source_url' => Yii::t('app', 'Source Url'),
+            'sort_order' => Yii::t('app', 'Sort Order'),
+            'immutable' => Yii::t('app', 'Immutable'),
+            'is_required' => Yii::t('app', 'Required Img'),
+            'is_selected' => Yii::t('app', 'Is Selected'),
+            'is_del' => Yii::t('app', 'Is Del'),
+            'des' => Yii::t('app', 'Des'),
         ];
     }
+
+    /**
+     * 
+     * @return ActiveQuery
+     */
+    public function getGoods()
+    {
+        return $this->hasOne(Goods::class, ['id' => 'goods_id']);
+    }
+
+    /**
+     * 
+     * @return ActiveQuery
+     */
+    public function getGroup()
+    {
+        return $this->hasOne(SceneGroup::class, ['id' => 'group_id']);
+    }
+
 }

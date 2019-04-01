@@ -15,7 +15,7 @@ use yii\web\View;
 /* @var $dataProvider ActiveDataProvider */
 /* @var $goodsModel Goods */
 
-$this->title = I18NUitl::t('app', '{Goods}{Material}{List}');
+$this->title = I18NUitl::t('app', '{Material}{List}');
 $this->params['breadcrumbs'][] = ['label' => $goodsModel->goods_name, 'url' => ['/goods_admin/goods/view', 'id' => $goodsModel->id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -73,7 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 return Html::a(Yii::t('yii', 'Update'), ['/goods_admin/material/update', 'id' => $model->id], ['class' => 'btn btn-default']);
                             },
                             'view' => function($url, $model) {
-                                return Html::a(I18NUitl::t('app', '{Config}{Value}'), ['/goods_admin/material/view', 'id' => $model->id], ['class' => 'btn btn-primary']);
+                                return Html::a(I18NUitl::t('app', '{Config}{Value}'), ['/goods_admin/material-value/index', 'material_id' => $model->id], ['class' => 'btn btn-primary']);
                             },
                             'delete' => function ($url, $model) {
                                 return Html::a(Yii::t('yii', 'Delete'), ['/goods_admin/material/delete', 'id' => $model->id], ['class' => 'btn btn-danger',
@@ -93,6 +93,4 @@ $this->params['breadcrumbs'][] = $this->title;
             ?>
         </div>
     </div>
-
-
 </div>

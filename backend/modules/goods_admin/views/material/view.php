@@ -1,43 +1,43 @@
 <?php
 
+use common\models\goods\GoodsMaterial;
+use common\utils\I18NUitl;
 use yii\helpers\Html;
+use yii\web\View;
+use yii\web\YiiAsset;
 use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\goods\GoodsMaterial */
+/* @var $this View */
+/* @var $model GoodsMaterial */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Goods Materials'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->goods->goods_name, 'url' => ['/goods_admin/goods/view', 'id' => $model->goods_id]];
+$this->params['breadcrumbs'][] = ['label' => I18NUitl::t('app', '{Material}{List}'), 'url' => ['index' , 'goods_id' => $model->goods_id]];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+YiiAsset::register($this);
 ?>
 <div class="goods-material-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <!--属性值-->
+    <div class="wsk-panel pull-left">
 
-    <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+        <div class="title">
+            <div class="pull-left">
+                <?= I18NUitl::t('app', '{Attribute}{Value}') ?>
+            </div>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'goods_id',
-            'name',
-            'input_type',
-            'sort_order',
-            'is_required',
-            'is_del',
-            'des',
-        ],
-    ]) ?>
+            <div class="btngroup pull-right">
+                <span class="loading" style="display: none;"></span>
+                <?= Html::a(Yii::t('app', 'Add'), ['material-value/create', 'attribute_id' => $model->id], ['id' => 'btn-addValue', 'class' => 'btn btn-primary btn-flat']);?>
+            </div>
+        </div>
+
+        <?=
+        $this->render('/material-value/index', [
+            'dataProvider' => $dataProvider,
+        ])
+        ?>
+
+    </div>    
 
 </div>

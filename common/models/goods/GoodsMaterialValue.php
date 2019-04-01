@@ -3,6 +3,7 @@
 namespace common\models\goods;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%goods_material_value}}".
@@ -14,9 +15,12 @@ use Yii;
  * @property string $source_url 源图地址
  * @property int $is_selected 是否选择 0否 1是
  * @property int $is_del 是否已删除 1是 0否
+ * @property int $sort_order 排序
+ * @property string $des 备注
  */
-class GoodsMaterialValue extends \yii\db\ActiveRecord
+class GoodsMaterialValue extends ActiveRecord
 {
+
     /**
      * {@inheritdoc}
      */
@@ -32,9 +36,9 @@ class GoodsMaterialValue extends \yii\db\ActiveRecord
     {
         return [
             [['material_id'], 'required'],
-            [['material_id', 'is_selected', 'is_del'], 'integer'],
+            [['material_id', 'is_selected', 'is_del', 'sort_order'], 'integer'],
             [['name'], 'string', 'max' => 20],
-            [['effect_url', 'source_url'], 'string', 'max' => 255],
+            [['effect_url', 'source_url', 'des'], 'string', 'max' => 255],
         ];
     }
 
@@ -45,12 +49,15 @@ class GoodsMaterialValue extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'material_id' => Yii::t('app', '属性id 关联goods_material表id字段'),
-            'name' => Yii::t('app', '名称'),
-            'effect_url' => Yii::t('app', '\'\''),
-            'source_url' => Yii::t('app', '源图地址'),
-            'is_selected' => Yii::t('app', '是否选择 0否 1是'),
-            'is_del' => Yii::t('app', '是否已删除 1是 0否'),
+            'material_id' => Yii::t('app', 'Material'),
+            'name' => Yii::t('app', 'Name'),
+            'effect_url' => Yii::t('app', 'Effect Url'),
+            'source_url' => Yii::t('app', 'Source Url'),
+            'is_selected' => Yii::t('app', 'Is Selected'),
+            'is_del' => Yii::t('app', 'Is Del'),
+            'sort_order' => Yii::t('app', 'Sort Order'),
+            'des' => Yii::t('app', 'Des'),
         ];
     }
+
 }

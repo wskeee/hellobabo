@@ -23,16 +23,17 @@ GoodsModuleAsset::register($this);
     <p>
         <?= ResourceHelper::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= ResourceHelper::a(I18NUitl::t('app', '{Material}{Admin}'), ['/goods_admin/material/index', 'goods_id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= ResourceHelper::a(I18NUitl::t('app', '{Scene}{Admin}'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= ResourceHelper::a(I18NUitl::t('app', '{Scene}{Admin}'), ['/goods_admin/scene/index', 'goods_id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= ResourceHelper::a(I18NUitl::t('app', '{Attribute}{Spec}'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 
     <div class="wsk-panel">
         <div class="title">基本信息</div>
         <div class="body">
-            <div style="width:48%;display: inline-block;float: left;">
+            <div style="width:50%;display: inline-block;float: left;">
                 <?=
                 DetailView::widget([
+                    'options' => ['class' => 'table table-striped table-bordered wsk-table-detail'],
                     'model' => $model,
                     'attributes' => [
                         'goods_sn',
@@ -65,9 +66,10 @@ GoodsModuleAsset::register($this);
                 ])
                 ?>
             </div>
-            <div style="width:48%;display: inline-block;float: left;">
+            <div style="width:50%;display: inline-block;float: right;">
                 <?=
                 DetailView::widget([
+                    'options' => ['class' => 'table table-striped table-bordered wsk-table-detail'],
                     'model' => $model,
                     'attributes' => [
                         //状态

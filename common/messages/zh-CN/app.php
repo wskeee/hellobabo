@@ -329,6 +329,13 @@ return [
     'Sale' => '销量',
     'Cost' => '成本',
     'Material' => '素材',
+    'Effect Url' => '效果图',
+    'Demo Url' => '参考图',
+    'Source Url' => '源图',
+    'Is Selected' => '是否选择',
+    'Required Img' => '必须上图',
+    'Up Img' => '上图',
+    'Immutable' => '不可改变',
     
     //后台-商品配置
     'Storage' => '存储',

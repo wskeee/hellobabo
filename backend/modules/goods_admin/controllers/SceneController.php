@@ -3,18 +3,17 @@
 namespace backend\modules\goods_admin\controllers;
 
 use common\models\goods\Goods;
-use common\models\goods\GoodsMaterial;
-use common\models\goods\GoodsMaterialValue;
-use common\models\goods\searchs\GoodsMaterialSearch;
+use common\models\goods\GoodsScene;
+use common\models\goods\searchs\GoodsSceneSearch;
 use common\widgets\grid\GridViewChangeSelfController;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 /**
- * MaterialController implements the CRUD actions for GoodsMaterial model.
+ * SceneController implements the CRUD actions for GoodsScene model.
  */
-class MaterialController extends GridViewChangeSelfController
+class SceneController extends GridViewChangeSelfController
 {
     /**
      * {@inheritdoc}
@@ -32,13 +31,13 @@ class MaterialController extends GridViewChangeSelfController
     }
 
     /**
-     * Lists all GoodsMaterial models.
+     * Lists all GoodsScene models.
      * @return mixed
      */
     public function actionIndex($goods_id)
     {
         $goodsModel = Goods::findOne(['id' => $goods_id]);
-        $searchModel = new GoodsMaterialSearch(['goods_id' => $goods_id]);
+        $searchModel = new GoodsSceneSearch(['goods_id' => $goods_id, 'is_del' => 0]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -49,8 +48,8 @@ class MaterialController extends GridViewChangeSelfController
     }
 
     /**
-     * Displays a single GoodsMaterial model.
-     * @param string $id
+     * Displays a single GoodsScene model.
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -62,14 +61,14 @@ class MaterialController extends GridViewChangeSelfController
     }
 
     /**
-     * Creates a new GoodsMaterial model.
+     * Creates a new GoodsScene model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate($goods_id)
     {
         $goodsModel = Goods::findOne(['id' => $goods_id]);
-        $model = new GoodsMaterial(['goods_id' => $goods_id]);
+        $model = new GoodsScene(['goods_id' => $goods_id]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', 'goods_id' => $goods_id]);
@@ -82,9 +81,9 @@ class MaterialController extends GridViewChangeSelfController
     }
 
     /**
-     * Updates an existing GoodsMaterial model.
+     * Updates an existing GoodsScene model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -102,29 +101,31 @@ class MaterialController extends GridViewChangeSelfController
     }
 
     /**
-     * Deletes an existing GoodsMaterial model.
+     * Deletes an existing GoodsScene model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->is_del = 1;
+        $model->save();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index' , 'goods_id' => $model->goods_id]);
     }
 
     /**
-     * Finds the GoodsMaterial model based on its primary key value.
+     * Finds the GoodsScene model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return GoodsMaterial the loaded model
+     * @param integer $id
+     * @return GoodsScene the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = GoodsMaterial::findOne($id)) !== null) {
+        if (($model = GoodsScene::findOne($id)) !== null) {
             return $model;
         }
 

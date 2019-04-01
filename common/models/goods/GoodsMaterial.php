@@ -91,7 +91,7 @@ class GoodsMaterial extends ActiveRecord
      */
     public function getGoods()
     {
-        return $this->hasOne(Goods::class, ['goods_id' => 'id']);
+        return $this->hasOne(Goods::class, ['id' => 'goods_id']);
     }
 
 }

@@ -2,19 +2,18 @@
 
 namespace backend\modules\goods_admin\controllers;
 
-use common\models\goods\Goods;
 use common\models\goods\GoodsMaterial;
 use common\models\goods\GoodsMaterialValue;
-use common\models\goods\searchs\GoodsMaterialSearch;
+use common\models\goods\searchs\GoodsMaterialValueSearch;
 use common\widgets\grid\GridViewChangeSelfController;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 /**
- * MaterialController implements the CRUD actions for GoodsMaterial model.
+ * MaterialValueController implements the CRUD actions for GoodsMaterialValue model.
  */
-class MaterialController extends GridViewChangeSelfController
+class MaterialValueController extends GridViewChangeSelfController
 {
     /**
      * {@inheritdoc}
@@ -32,25 +31,25 @@ class MaterialController extends GridViewChangeSelfController
     }
 
     /**
-     * Lists all GoodsMaterial models.
+     * Lists all GoodsMaterialValue models.
      * @return mixed
      */
-    public function actionIndex($goods_id)
+    public function actionIndex($material_id)
     {
-        $goodsModel = Goods::findOne(['id' => $goods_id]);
-        $searchModel = new GoodsMaterialSearch(['goods_id' => $goods_id]);
+        $materialModel = GoodsMaterial::findOne(['id' => $material_id]);
+        $searchModel = new GoodsMaterialValueSearch(['material_id' => $material_id , 'is_del' => 0]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'goodsModel' => $goodsModel,
+            'materialModel' => $materialModel,
         ]);
     }
 
     /**
-     * Displays a single GoodsMaterial model.
-     * @param string $id
+     * Displays a single GoodsMaterialValue model.
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -62,29 +61,27 @@ class MaterialController extends GridViewChangeSelfController
     }
 
     /**
-     * Creates a new GoodsMaterial model.
+     * Creates a new GoodsMaterialValue model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($goods_id)
+    public function actionCreate($material_id)
     {
-        $goodsModel = Goods::findOne(['id' => $goods_id]);
-        $model = new GoodsMaterial(['goods_id' => $goods_id]);
+        $model = new GoodsMaterialValue(['material_id' => $material_id]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index', 'goods_id' => $goods_id]);
+            return $this->redirect(['index', 'material_id' => $model->material_id]);
         }
 
-        return $this->render('create', [
+        return $this->renderAjax('create', [
             'model' => $model,
-            'goodsModel' => $goodsModel,
         ]);
     }
 
     /**
-     * Updates an existing GoodsMaterial model.
+     * Updates an existing GoodsMaterialValue model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -93,38 +90,40 @@ class MaterialController extends GridViewChangeSelfController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index', 'goods_id' => $model->goods_id]);
+            return $this->redirect(['index', 'material_id' => $model->material_id]);
         }
 
-        return $this->render('update', [
+        return $this->renderAjax('update', [
             'model' => $model,
         ]);
     }
 
     /**
-     * Deletes an existing GoodsMaterial model.
+     * Deletes an existing GoodsMaterialValue model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->is_del = 1;
+        $model->save();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index', 'material_id' => $model->material_id]);
     }
 
     /**
-     * Finds the GoodsMaterial model based on its primary key value.
+     * Finds the GoodsMaterialValue model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return GoodsMaterial the loaded model
+     * @param integer $id
+     * @return GoodsMaterialValue the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = GoodsMaterial::findOne($id)) !== null) {
+        if (($model = GoodsMaterialValue::findOne($id)) !== null) {
             return $model;
         }
 
