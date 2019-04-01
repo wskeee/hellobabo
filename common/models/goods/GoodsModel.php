@@ -15,7 +15,8 @@ use yii\helpers\ArrayHelper;
  * @property string $des 描述
  * @property integer $is_del 是否删除 0否1是
  *
- * @property GoodsAttribute[] $goodsAttributes
+ * @property GoodsAttribute[] $goodsAttributes      属性
+ * @property GoodsSpec[] $goodsSpecs                规格
  */
 class GoodsModel extends ActiveRecord {
 
@@ -53,6 +54,13 @@ class GoodsModel extends ActiveRecord {
     public function getGoodsAttributes() {
         return $this->hasMany(GoodsAttribute::className(), ['model_id' => 'id']);
     }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getGoodsSpecs() {
+        return $this->hasMany(GoodsSpec::className(), ['model_id' => 'id']);
+    }
 
     /**
      * 返回模型
@@ -63,8 +71,9 @@ class GoodsModel extends ActiveRecord {
     public static function getModels($condition = ['is_del' => 0], $key_to_value = true) {
         $query = self::find();
         $query->andFilterWhere($condition);
+        $models = $query->all();
 
-        return $key_to_value ? ArrayHelper::map($query->all(), 'id', 'name') : $categorys;
+        return $key_to_value ? ArrayHelper::map($models, 'id', 'name') : $models;
     }
 
 }
