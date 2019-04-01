@@ -40,6 +40,19 @@ class AttSpecController extends GridViewChangeSelfController
             'model' => $model,
         ]);
     }
+    
+    /**
+     * 更换 goods.model_id
+     * @param int $goods_id 商品ID
+     */
+    public function actionChangeModel($goods_id){
+        $model = $this->findModel($goods_id);
+        
+        $model->load(\Yii::$app->request->post());
+        $model->save();
+        
+        $this->redirect(['index','goods_id' => $goods_id]);
+    }
 
 
     /**

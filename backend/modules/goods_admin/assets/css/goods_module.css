@@ -27,5 +27,23 @@
 .goods-view .goods-content-box img{
     width: 100%;
 }
-
+/********************************************************
+ * 商品属性及规格
+*********************************************************/
+.goods-att-spec-index .goods-att-box{
+    padding: 20px 0;
+}
+.goods-att-spec-index .goods-att-box .att-item-box{
+    margin-bottom: 10px;
+}
+.goods-att-spec-index .goods-att-box .att-item-box .att-label{
+    width: 150px;
+    text-align: right;
+    line-height: 34px;
+}
+.goods-att-spec-index .goods-att-box .att-item-box .att-value-box{
+    display: inline-block;
+    width: 70%;
+    margin: 0 0 0 10px;
+}
 

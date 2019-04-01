@@ -27,26 +27,26 @@ use yii\db\ActiveRecord;
 class GoodsAttribute extends ActiveRecord
 {
     /** 单选-输入类型 */
-    const SINGLE_SELECT_INPUT_TYPE = 1;
+    const TYPE_SINGLE_SELECT = 1;
     
     /** 多选-输入类型 */
-    const MULTPLE_SELECT_INPUT_TYPE = 2;
+    const TYPE_MULTPLE_SELECT = 2;
     
     /** 单行-输入类型 */
-    const SINGLE_LINE_INPUT_TYPE = 3;
+    const TYPE_SINGLE_INPUT = 3;
     
     /** 多行-输入类型 */
-    const MULTPLE_LINE_INPUT_TYPE = 4;
+    const TYPE_MULTPLE_INPUT = 4;
     
     /**
      * 输入类型
      * @var array 
      */
     public static $inputTypeMap = [
-        self::SINGLE_SELECT_INPUT_TYPE => '单选框',
-        self::MULTPLE_SELECT_INPUT_TYPE => '多选框',
-        self::SINGLE_LINE_INPUT_TYPE => '单行输入',
-        self::MULTPLE_LINE_INPUT_TYPE => '多行输入'
+        self::TYPE_SINGLE_SELECT => '单选',
+        self::TYPE_MULTPLE_SELECT => '多选',
+        self::TYPE_SINGLE_INPUT => '单行输入',
+        self::TYPE_MULTPLE_INPUT => '多行输入'
     ];
     
     /**
