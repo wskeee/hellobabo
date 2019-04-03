@@ -2,7 +2,9 @@
 
 namespace backend\modules\goods_admin\controllers;
 
+use common\models\api\ApiResponse;
 use common\models\goods\Goods;
+use common\models\goods\GoodsSpecItem;
 use common\widgets\grid\GridViewChangeSelfController;
 use Yii;
 use yii\filters\VerbFilter;
@@ -13,6 +15,7 @@ use yii\web\NotFoundHttpException;
  */
 class AttSpecController extends GridViewChangeSelfController
 {
+
     /**
      * {@inheritdoc}
      */
@@ -35,25 +38,57 @@ class AttSpecController extends GridViewChangeSelfController
     public function actionIndex($goods_id)
     {
         $model = $this->findModel($goods_id);
-        
+
         return $this->render('index', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
-    
+
     /**
      * 更换 goods.model_id
      * @param int $goods_id 商品ID
      */
-    public function actionChangeModel($goods_id){
+    public function actionChangeModel($goods_id)
+    {
         $model = $this->findModel($goods_id);
-        
+
         $model->load(\Yii::$app->request->post());
         $model->save();
-        
-        $this->redirect(['index','goods_id' => $goods_id]);
+
+        $this->redirect(['index', 'goods_id' => $goods_id]);
     }
 
+    /**
+     * 添加规格项
+     * @param array $post [spec_id,goods_id,value]
+     */
+    public function actionAddSpecItem()
+    {
+        Yii::$app->response->format = 'json';
+        $post = Yii::$app->request->post();
+        $model = new GoodsSpecItem();
+        if ($model->load($post, 'SpecItem') && $model->save()) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_OK, null, $model->toArray());
+        }
+        return new ApiResponse(ApiResponse::CODE_COMMON_SAVE_DB_FAIL, null, $model->getErrorSummary(true));
+    }
+    
+    /**
+     * 删除规格项
+     * @param int $id
+     */
+    public function actionDelSpecItem($id){
+        Yii::$app->response->format = 'json';
+        $model = GoodsSpecItem::findOne(['id' => $id]);
+        if($model){
+            $model->is_del = 1;
+            $model->save();
+            return new ApiResponse(ApiResponse::CODE_COMMON_OK, null, $model->toArray());
+        }else{
+            return new ApiResponse(ApiResponse::CODE_COMMON_NOT_FOUND,null,null,['param' => Yii::t('app', 'Spec')]);
+        }
+        return new ApiResponse(ApiResponse::CODE_COMMON_UNKNOWN);
+    }
 
     /**
      * Finds the Goods model based on its primary key value.
@@ -70,4 +105,5 @@ class AttSpecController extends GridViewChangeSelfController
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
+
 }

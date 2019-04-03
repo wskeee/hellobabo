@@ -50,6 +50,7 @@ use yii\db\ActiveRecord;
  * @property GoodsDetail[] $goodsDetails
  * @property GoodsTagRef[] $goodsTagRefs
  * @property Issue[] $issues
+ * @property GoodsSpecItem[] $goodsSpecItems    所有商品规格
  */
 class Goods extends ActiveRecord
 {
@@ -218,6 +219,17 @@ class Goods extends ActiveRecord
      */
     public function getUpdater() {
         return $this->hasOne(AdminUser::className(), ['id' => 'updated_by']);
+    }
+    
+    /**
+     * @return ActiveQuery
+     */
+    public function getGoodsSpecItems($asArray = false) {
+        $query = $this->hasMany(GoodsSpecItem::className(), ['goods_id' => 'id'])->where(['is_del' => 0]);
+        if($asArray){
+            $query->asArray();
+        }
+        return $query;
     }
 
 }

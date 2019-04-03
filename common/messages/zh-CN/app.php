@@ -176,7 +176,7 @@ return [
     'Cover Img' => '封面图片',
     'Fullname' => '姓名',
     'Privilege' => '权限',
-    'Action' => '动作',
+    'Action' => '操作',
     'Reference' => '引用',
     'Frequency' => '次数',
     'Keyword' => '关键字',
@@ -336,6 +336,10 @@ return [
     'Required Img' => '必须上图',
     'Up Img' => '上图',
     'Immutable' => '不可改变',
+    'Item' => '项',
+    'Fill' => '填充',
+    'Price Placeholder' => '*价钱（元）',
+    'Store Placeholder' => '*数量（个）',
     
     //后台-商品配置
     'Storage' => '存储',
