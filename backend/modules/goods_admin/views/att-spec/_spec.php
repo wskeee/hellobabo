@@ -14,6 +14,8 @@ GrowlAsset::register($this);
 
 //加载 SpecItem DOM 模板
 $spec_item_dom = str_replace("\n", ' ', $this->render('____spec_item_dom'));
+//所有规格项
+$goodsSpecItems = $model->getGoodsSpecItems();
 ?>
 <div class="goods-spec-box">
     <!-- 规格 -->
@@ -97,6 +99,8 @@ $spec_item_dom = str_replace("\n", ' ', $this->render('____spec_item_dom'));
 <script>
     //规格项Dom
     var spec_item_dom = <?= json_encode($spec_item_dom) ?>;
+    var spec_items_map = <?= json_encode(ArrayHelper::index($goodsSpecItems, 'spec_id')) ?>;
+    console.log(<?= json_encode($goodsSpecItems) ?>);
     //已经存在的规格项
     var spec_items = [];
     //所有规格价格
@@ -112,7 +116,7 @@ $spec_item_dom = str_replace("\n", ' ', $this->render('____spec_item_dom'));
      * @returns {void}
      */
     function initSpec() {
-        var init_spec_items = <?= json_encode($model->getGoodsSpecItems(true)->all()) ?>;
+        var init_spec_items = <?= json_encode($goodsSpecItems) ?>;
         $.each(init_spec_items, function (index, item) {
             addSpecItem(item);
         });
@@ -201,7 +205,7 @@ $spec_item_dom = str_replace("\n", ' ', $this->render('____spec_item_dom'));
         var specItem = new SpecItemVO(item);
         spec_items.push(specItem);
         $(specItem).on('changed', function () {
-
+            reflashItemPrice();
         });
         //显示
         $specBox = $(".spec-box[data-id=" + item.spec_id + "]");
@@ -212,6 +216,7 @@ $spec_item_dom = str_replace("\n", ' ', $this->render('____spec_item_dom'));
         });
         $specItem.on('click', function () {
             $(this).toggleClass('selected');
+            specItem.setSelected($(this).hasClass('selected'));
         });
     }
 
@@ -237,20 +242,20 @@ $spec_item_dom = str_replace("\n", ' ', $this->render('____spec_item_dom'));
      * 刷新规格价格显示
      * @returns {void}
      */
-    reflashItemPrice();
+    //reflashItemPrice();
     function reflashItemPrice(){
         //规格数
-        var specs = <?= json_encode(ArrayHelper::map($model->goodsModel->goodsSpecs, 'id' , function(){
-            return false;
-        })) ?>;
-        var specItem;
-        for(var i=0.len=spec_items.length;i<len;i++){
-            specItem = spec_items[i];
-            if(specItem.selected && !specs[specItem.id]){
-                specs[specItem.id] = true;
+        var specs = <?= json_encode(ArrayHelper::getColumn($model->goodsModel->goodsSpecs, 'id')) ?>;
+        //必须所有规格都有值
+        for (var i = 0, len = specs.length; i < len; i++) {
+            if($('.spec-box[data-id='+specs[i]+'] .selected').length == 0){
+                return;
             }
         }
-        
+        //生成
+        for (var j = 0, len = specs.length; j < len; j++) {
+            
+        }
     }
 </script>
 

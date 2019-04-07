@@ -9,6 +9,7 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 
 /**
  * This is the model class for table "{{%goods}}".
@@ -50,11 +51,12 @@ use yii\db\ActiveRecord;
  * @property GoodsDetail[] $goodsDetails
  * @property GoodsTagRef[] $goodsTagRefs
  * @property Issue[] $issues
- * @property GoodsSpecItem[] $goodsSpecItems    所有商品规格
+ * @property Array[] $goodsSpecItems    所有商品规格
  */
 class Goods extends ActiveRecord
 {
     /* 未发布 */
+
     const STATUS_UNPUBLISHED = 1;
     /* 已发布 */
     const STATUS_PUBLISHED = 2;
@@ -72,11 +74,13 @@ class Goods extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public static function tableName() {
+    public static function tableName()
+    {
         return '{{%goods}}';
     }
 
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             TimestampBehavior::class
         ];
@@ -85,7 +89,8 @@ class Goods extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             [['category_id', 'owner_id', 'goods_name'], 'required'],
             [['category_id', 'model_id', 'owner_id', 'status', 'store_count', 'comment_count', 'click_count', 'share_count', 'like_count', 'sale_count', 'init_required', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
@@ -102,7 +107,8 @@ class Goods extends ActiveRecord
      * @param type $attribute
      * @return boolean
      */
-    public function tagVerify($attribute) {
+    public function tagVerify($attribute)
+    {
         $tags = $this->tags;
         if (is_string($tags) && !empty($tags)) {
             //把全角",""、"替换为半角","
@@ -117,7 +123,8 @@ class Goods extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels() {
+    public function attributeLabels()
+    {
         return [
             'id' => Yii::t('app', 'ID'),
             'category_id' => Yii::t('app', 'Category'),
@@ -145,91 +152,109 @@ class Goods extends ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
-    
+
     /**
      * @return ActiveQuery
      */
-    public function getGoodsCategory() {
+    public function getGoodsCategory()
+    {
         return $this->hasOne(GoodsCategory::className(), ['id' => 'category_id']);
     }
-    
+
     /**
      * @return ActiveQuery
      */
-    public function getGoodsModel() {
+    public function getGoodsModel()
+    {
         return $this->hasOne(GoodsModel::className(), ['id' => 'model_id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getGoodsActions() {
+    public function getGoodsActions()
+    {
         return $this->hasMany(GoodsAction::className(), ['goods_id' => 'id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getGoodsApproves() {
+    public function getGoodsApproves()
+    {
         return $this->hasMany(GoodsApprove::className(), ['goods_id' => 'id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getGoodsAttValueRefs() {
+    public function getGoodsAttValueRefs()
+    {
         return $this->hasMany(GoodsAttValueRef::className(), ['goods_id' => 'id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getGoodsDetails() {
+    public function getGoodsDetails()
+    {
         return $this->hasOne(GoodsDetail::className(), ['goods_id' => 'id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getGoodsTagRefs() {
+    public function getGoodsTagRefs()
+    {
         return $this->hasMany(GoodsTagRef::className(), ['goods_id' => 'id']);
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getIssues() {
+    public function getIssues()
+    {
         return $this->hasMany(Issue::className(), ['goods_id' => 'id']);
     }
-    
+
     /**
      * @return ActiveQuery
      */
-    public function getOwner() {
+    public function getOwner()
+    {
         return $this->hasOne(AdminUser::className(), ['id' => 'owner_id']);
     }
+
     /**
      * @return ActiveQuery
      */
-    public function getCreater() {
+    public function getCreater()
+    {
         return $this->hasOne(AdminUser::className(), ['id' => 'created_by']);
     }
+
     /**
      * @return ActiveQuery
      */
-    public function getUpdater() {
+    public function getUpdater()
+    {
         return $this->hasOne(AdminUser::className(), ['id' => 'updated_by']);
     }
-    
+
     /**
-     * @return ActiveQuery
+     * @return Array
      */
-    public function getGoodsSpecItems($asArray = false) {
-        $query = $this->hasMany(GoodsSpecItem::className(), ['goods_id' => 'id'])->where(['is_del' => 0]);
-        if($asArray){
-            $query->asArray();
-        }
-        return $query;
+    public function getGoodsSpecItems()
+    {
+        $query = (new Query())
+                ->from(['GoodsSpecItem' => GoodsSpecItem::tableName()])
+                ->leftJoin(['GoodsSpec' => GoodsSpec::tableName()], 'GoodsSpec.id = GoodsSpecItem.spec_id')
+                ->where([
+                    'GoodsSpecItem.goods_id' => $this->id,
+                    'GoodsSpec.model_id' => $this->model_id,
+                    'GoodsSpecItem.is_del' => 0,
+                    'GoodsSpec.is_del' => 0]);
+        return $query->all();
     }
 
 }

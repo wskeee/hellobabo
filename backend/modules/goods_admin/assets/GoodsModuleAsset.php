@@ -16,7 +16,6 @@ class GoodsModuleAsset extends AssetBundle
         'css/goods_module.css',
     ];
     public $js = [
-        'js/bootstrap-paginator.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
