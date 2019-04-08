@@ -85,3 +85,8 @@
 .goods-att-spec-index .goods-spec-box .spec-box .selected .close{
     color: #fff;
 }
+/**
+ * 价格
+ **/
+.goods-att-spec-index .goods-spec-box .spec-price-box table tbody{}
+.goods-att-spec-index .goods-spec-box .spec-price-box table tbody tr{}

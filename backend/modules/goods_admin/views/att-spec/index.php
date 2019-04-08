@@ -50,4 +50,12 @@ GoodsModuleAsset::register($this);
             <?= $this->render('_spec',['model' => $model]) ?>
         </div>
     </div>
+    
+    <a class="btn btn-success" onclick="saveF()"><?= Yii::t('app', 'Save') ?></a>
 </div>
+<script>
+    function saveF(){
+        //保存属性
+        saveAttribute();
+    }
+</script>

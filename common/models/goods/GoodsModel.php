@@ -52,14 +52,14 @@ class GoodsModel extends ActiveRecord {
      * @return ActiveQuery
      */
     public function getGoodsAttributes() {
-        return $this->hasMany(GoodsAttribute::className(), ['model_id' => 'id']);
+        return $this->hasMany(GoodsAttribute::className(), ['model_id' => 'id'])->where(['is_del' => 0]);
     }
     
     /**
      * @return ActiveQuery
      */
     public function getGoodsSpecs() {
-        return $this->hasMany(GoodsSpec::className(), ['model_id' => 'id']);
+        return $this->hasMany(GoodsSpec::className(), ['model_id' => 'id'])->where(['is_del' => 0]);
     }
 
     /**

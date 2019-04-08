@@ -190,7 +190,7 @@ class Goods extends ActiveRecord
      */
     public function getGoodsAttValueRefs()
     {
-        return $this->hasMany(GoodsAttValueRef::className(), ['goods_id' => 'id']);
+        return $this->hasMany(GoodsAttValueRef::className(), ['goods_id' => 'id'])->where(['is_del' => 0]);
     }
 
     /**
@@ -247,6 +247,12 @@ class Goods extends ActiveRecord
     public function getGoodsSpecItems()
     {
         $query = (new Query())
+                ->select([
+                    'GoodsSpec.id as spec_id', 
+                    'GoodsSpecItem.goods_id', 
+                    'GoodsSpecItem.id', 
+                    'GoodsSpecItem.value', 
+                    ])
                 ->from(['GoodsSpecItem' => GoodsSpecItem::tableName()])
                 ->leftJoin(['GoodsSpec' => GoodsSpec::tableName()], 'GoodsSpec.id = GoodsSpecItem.spec_id')
                 ->where([
@@ -254,6 +260,19 @@ class Goods extends ActiveRecord
                     'GoodsSpec.model_id' => $this->model_id,
                     'GoodsSpecItem.is_del' => 0,
                     'GoodsSpec.is_del' => 0]);
+        return $query->all();
+    }
+    
+    /**
+     * 获取商品价格项
+     * @return Array Description
+     */
+    public function getGoodsSpecPrices(){
+        $query = (new Query())
+                ->from(['GoodsSpecPrice' => GoodsSpecPrice::tableName()])
+                ->where([
+                    'GoodsSpecPrice.goods_id' => $this->id,
+                    'GoodsSpecPrice.is_del' => 0]);
         return $query->all();
     }
 

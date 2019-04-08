@@ -92,7 +92,7 @@ class GoodsAttribute extends ActiveRecord
      */
     public function getGoodsAttValueRefs()
     {
-        return $this->hasMany(GoodsAttValueRef::className(), ['attribute_id' => 'id']);
+        return $this->hasMany(GoodsAttValueRef::className(), ['attribute_id' => 'id'])->where(['is_del' => 0]);
     }
 
     /**
@@ -108,6 +108,6 @@ class GoodsAttribute extends ActiveRecord
      */
     public function getGoodsAttributeValues()
     {
-        return $this->hasMany(GoodsAttributeValue::className(), ['attribute_id' => 'id']);
+        return $this->hasMany(GoodsAttributeValue::className(), ['attribute_id' => 'id'])->where(['is_del' => 0]);
     }
 }
