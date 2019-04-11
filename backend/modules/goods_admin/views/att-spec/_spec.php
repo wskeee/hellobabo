@@ -2,6 +2,7 @@
 
 use common\models\goods\Goods;
 use common\utils\I18NUitl;
+use common\widgets\webuploader\WebUploaderAsset;
 use kartik\growl\GrowlAsset;
 use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
@@ -9,7 +10,8 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 GrowlAsset::register($this);
-
+//获取flash上传组件路径
+$sourcePath = $this->assetManager->getPublishedUrl(WebUploaderAsset::register($this)->sourcePath);
 /* @var $model Goods */
 
 //加载 SpecItem DOM 模板
@@ -126,6 +128,32 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
         var init_spec_items = <?= json_encode($goodsSpecItems) ?>;
         $.each(init_spec_items, function (index, item) {
             addSpecItem(item);
+        });
+    }
+
+    /**
+     * 保存规格价格
+     */
+    function saveSpec() {
+        var jons_specs = [];
+        for (var i in spec_item_prices) {
+            jons_specs.push(spec_item_prices[i]);
+        }
+        $.ajax({
+            type: "POST",
+            url: 'save-spec?goods_id=<?= $model->id ?>',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({specs: jons_specs}),
+            success: function (r, textStatus) {
+                if (r.code != '0') {
+                    $.notify({message: '保存规格失败！\n' + r.msg}, {type: 'danger'});
+                } else {
+                    $.notify({message: '保存规格成功！'}, {type: 'success'});
+                }
+            },
+            error: function (e) {
+                $.notify({message: '保存规格失败！'}, {type: 'danger'});
+            }
         });
     }
 </script>
@@ -248,14 +276,21 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
      * @returns {void}
      */
     function initSpecPrice() {
-        var initGoodsSpecPrices = <?= json_encode($initGoodsSpecPrices) ?>
+        var initGoodsSpecPrices = <?= json_encode($initGoodsSpecPrices) ?>;
         //找出已经选择的规格，先拿到所有spec_key（k_k_k）
-        var spec_key = <?= json_encode(array_filter(explode('_',implode('_', ArrayHelper::getColumn($initGoodsSpecPrices, 'spec_key'))))) ?>
+        var spec_keys = <?= json_encode(array_filter(explode('_', implode('_', ArrayHelper::getColumn($initGoodsSpecPrices, 'spec_key'))))) ?>;
+
         //填充数据
-        $.each(initGoodsSpecPrices,function(index,item){
-            var spvo = SpecItemSpriteVO.getInstance(item.goods_id,item.spec_key,item.spec_key_name);
+        $.each(initGoodsSpecPrices, function (index, item) {
+            var spvo = SpecItemSpriteVO.getInstance(item.goods_id, item.spec_key, item.spec_key_name);
             spvo.load(item);
         });
+        //设置规格选择
+        $.each(spec_keys, function (i, spec_id) {
+            $('.item-box[data-id=' + spec_id + ']').addClass('selected');
+            spec_items[spec_id].setSelected(true, false);
+        });
+        reflashItemPrice();
     }
     /**
      * 添加specItem 到map
@@ -299,11 +334,15 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
         spec_item_prices = [];
         $table = $('.spec-price-box .table');
         $tbody = $('.spec-price-box .table tbody');
+        //销毁所有图片上传器
+        destoryAllImgUploader();
+
         $tbody.empty();
         $.each(itemPrices, function (spec_key, spec_key_name) {
             spec_item_prices[spec_key] = SpecItemSpriteVO.getInstance(goods_id, spec_key, spec_key_name);
             //添加到表中显示
             $tbody.append(_createItemPriceTrDom(spec_item_prices[spec_key]));
+            createImgUploader(spec_key, spec_item_prices[spec_key]['spec_img_url']);
         });
         //合并相同列
         if (specs.length >= 2) {
@@ -329,6 +368,25 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
         });
         $(d_tr).prependTo($tr);
         return $tr;
+    }
+
+    /**
+     * input 数字值检验
+     * @returns {void}     
+     **/
+    function inputNumCheck($dom) {
+        $dom.val($dom.val().replace(/[^0-9-\.]+/, ''));
+    }
+
+    /**
+     * 价格项 input 发生改变
+     * @param {type} spec_key
+     * @param {type} attrName
+     * @param {type} $dom
+     * @returns {undefined}     */
+    function priceItemChanged(spec_key, attrName, $dom) {
+        var itemSpriteVO = spec_item_prices[spec_key];
+        itemSpriteVO[attrName] = $dom.val();
     }
     /**
      * 自动合并table行列
@@ -410,9 +468,11 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
         this.selected = false;
     }
 
-    SpecItemVO.prototype.setSelected = function (bo) {
+    SpecItemVO.prototype.setSelected = function (bo, fire) {
         this.selected = bo;
-        $(this).trigger('changed');
+        if (fire || fire == undefined) {
+            $(this).trigger('changed');
+        }
     }
 </script>
 
@@ -426,7 +486,7 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
         this.goods_id = goods_id;
         this.spec_key = spec_key;
         this.spec_key_name = spec_key_name;
-        this.goods_const = 0;
+        this.goods_cost = 0;
         this.goods_price = 0;
         this.spec_img_url = '';
         this.spec_des = '';
@@ -442,13 +502,97 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
         }
         return SpecItemSpriteVO.instances[spec_key];
     }
-    
-    SpecItemSpriteVO.prototype.load = function(data){
-        $.extend(this,data);
+
+    SpecItemSpriteVO.prototype.load = function (data) {
+        $.extend(this, data);
     }
 
     SpecItemSpriteVO.prototype.setSelected = function (bo) {
         this.selected = bo;
         $(this).trigger('changed');
     }
+</script>
+
+<script>
+    //图片上传器
+    var imgUploaders = {};
+    function createImgUploader(id, value) {
+        Wskeee.require(['euploader'], function (euploader) {
+            var config = {
+                name: 'spec-img-' + id,
+                //input value 默认使用的属性
+                targetAttribute: 'url',
+                //图片默认压缩
+                compress: false,
+                //组件绝对路径
+                sourcePath: '<?= $sourcePath ?>',
+                // 文件接收服务端。
+                server: '/webuploader/default/upload',
+                //检查文件是否存在
+                checkFile: '/webuploader/default/check-file',
+                //分片合并
+                mergeChunks: '/webuploader/default/merge-chunks',
+                // 选择文件的按钮。可选。
+                auto: true,
+                // 上传容器
+                container: '#spec-img-' + id,
+                //附加样式
+                rootAddedClass: 'mini',
+                //最大文件数
+                fileNumLimit: 1,
+                //同时上传多个文件数量
+                threads: 2,
+                //csrf
+                formData: {
+                    '<?= Yii::$app->request->csrfParam ?>': '<?= Yii::$app->request->csrfToken ?>'
+                },
+                accept: {
+                    title: 'Images',
+                    extensions: 'gif,jpg,jpeg,bmp,png',
+                    mimeTypes: 'image/*'
+                }
+            };
+
+            var uploader = new euploader.Uploader(config, euploader.TileView);
+            $(uploader).on('uploadComplete', function (evt, dbfile, file) {
+                spec_item_prices[id]['spec_img_url'] = dbfile.url;
+            });
+            if(value != ""){
+                uploader.addCompleteFiles([{
+                    'id': "file-picker-" + Math.round(Math.random() * 1000),
+                    'thumb_url': value,
+                    'url': value,
+                    'ext': 'jpg',
+                    'size': 0,
+                    'name': ''
+                }]);
+            }
+            imgUploaders[id] = uploader;
+        });
+    }
+
+    /**
+     * 销毁图片上传器
+     * @param {string} id 
+     * @returns {void}     
+     **/
+    function destoryImgUploader(id) {
+        var uploader = imgUploaders[id];
+        if (uploader) {
+            $(uploader).off();
+            uploader.destroy();
+            delete imgUploaders[id];
+        }
+    }
+
+    /**
+     * 销毁所有图片上传器
+     * @returns {void}     
+     **/
+    function destoryAllImgUploader() {
+        $.each(imgUploaders, function (i, uploader) {
+            destoryImgUploader(i);
+        });
+    }
+
 </script>

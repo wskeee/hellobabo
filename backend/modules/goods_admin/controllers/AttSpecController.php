@@ -4,7 +4,6 @@ namespace backend\modules\goods_admin\controllers;
 
 use common\models\api\ApiResponse;
 use common\models\goods\Goods;
-use common\models\goods\GoodsAttribute;
 use common\models\goods\GoodsAttValueRef;
 use common\models\goods\GoodsSpecItem;
 use common\models\goods\GoodsSpecPrice;
@@ -59,7 +58,8 @@ class AttSpecController extends GridViewChangeSelfController
 
         $model->load(\Yii::$app->request->post());
         $model->save();
-        GoodsSpecPrice::updateAll(['is_del' => 1],['goods_id' => $goods_id]);
+        GoodsAttValueRef::updateAll(['is_del' => 1], ['goods_id' => $goods_id]);
+        GoodsSpecPrice::updateAll(['is_del' => 1], ['goods_id' => $goods_id]);
 
         $this->redirect(['index', 'goods_id' => $goods_id]);
     }
@@ -78,47 +78,74 @@ class AttSpecController extends GridViewChangeSelfController
         }
         return new ApiResponse(ApiResponse::CODE_COMMON_SAVE_DB_FAIL, null, $model->getErrorSummary(true));
     }
-    
+
     /**
      * 删除规格项
      * @param int $id
      */
-    public function actionDelSpecItem($id){
+    public function actionDelSpecItem($id)
+    {
         Yii::$app->response->format = 'json';
         $model = GoodsSpecItem::findOne(['id' => $id]);
-        if($model){
+        if ($model) {
             $model->is_del = 1;
             $model->save();
             return new ApiResponse(ApiResponse::CODE_COMMON_OK, null, $model->toArray());
-        }else{
-            return new ApiResponse(ApiResponse::CODE_COMMON_NOT_FOUND,null,null,['param' => Yii::t('app', 'Spec')]);
+        } else {
+            return new ApiResponse(ApiResponse::CODE_COMMON_NOT_FOUND, null, null, ['param' => Yii::t('app', 'Spec')]);
         }
         return new ApiResponse(ApiResponse::CODE_COMMON_UNKNOWN);
     }
-    
+
     /**
      * 保存商品属性
      * @param int  $goods_id
      */
-    public function actionSaveAttribute($goods_id){
-        $attrs = \Yii::$app->request->post('attrs',[]);
-        $inputAttr = GoodsAttribute::findAll(['id' => array_keys($attrs),'input_type' => [GoodsAttribute::TYPE_SINGLE_INPUT,GoodsAttribute::TYPE_MULTPLE_INPUT]]);
-        $inputAttrIds = ArrayHelper::getColumn($inputAttr, 'id');
-        //删除已存在的属性
-        GoodsAttValueRef::updateAll(['is_del' => 1], ['goods_id' => $goods_id]);
-        foreach ($attrs as $attr_id => $values){
-            if(in_array($attr_id, $inputAttrIds)){
-                //输入类型
-            }else{
+    public function actionSaveAttribute($goods_id)
+    {
+        Yii::$app->response->format = 'json';
+        $attrs = \Yii::$app->request->post('attrs', []);
+        try {
+            //删除已存在的属性
+            GoodsAttValueRef::updateAll(['is_del' => 1], ['goods_id' => $goods_id]);
+            foreach ($attrs as $attr_id => $values) {
                 //准备数据
-                $goodsAttrs = [];
                 foreach ($values as $value) {
-                    $goodsAttrs[] = [$goods_id, $attr_id, $value , 0];
+                    $goodsAttrRefRows[] = [$goods_id, $attr_id, $value, 0];
                 }
-                //保存关联
-                MysqlUtil::batchInsertDuplicateUpdate(GoodsAttValueRef::tableName(), ['goods_id', 'attribute_id','attribute_value_id', 'is_del'], $goodsAttrs, ['is_del']);
             }
+            //更新选择类型引用数据
+            MysqlUtil::batchInsertDuplicateUpdate(GoodsAttValueRef::tableName(), ['goods_id', 'attribute_id', 'attribute_value_id', 'is_del'], $goodsAttrRefRows, ['is_del']);
+        } catch (\Exception $ex) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_SAVE_DB_FAIL, $ex->getMessage(), $ex);
         }
+        return new ApiResponse(ApiResponse::CODE_COMMON_OK);
+    }
+
+    /**
+     * 保存商品规格
+     * @param int  $goods_id
+     */
+    public function actionSaveSpec($goods_id)
+    {
+        Yii::$app->response->format = 'json';
+        Yii::info(Yii::$app->request->rawBody);
+        $post = json_decode(Yii::$app->request->rawBody,true);
+        $specs = ArrayHelper::getValue($post, 'specs' , []);
+        try {
+            GoodsSpecPrice::updateAll(['is_del' => 1], ['goods_id' => $goods_id]);
+            foreach ($specs as $spec) {
+                //准备数据
+                $rows[] = [$goods_id, $spec['goods_cost'], $spec['goods_price'], $spec['spec_key'], $spec['spec_key_name'], $spec['spec_img_url'], $spec['spec_des'], $spec['store_count'],0];
+            }
+            //更新选择类型引用数据
+            MysqlUtil::batchInsertDuplicateUpdate(GoodsSpecPrice::tableName(), 
+                    ['goods_id', 'goods_cost', 'goods_price', 'spec_key', 'spec_key_name', 'spec_img_url', 'spec_des', 'store_count','is_del'], $rows, 
+                    ['goods_cost', 'goods_price', 'spec_key_name', 'spec_img_url', 'spec_des', 'store_count','is_del']);
+        } catch (\Exception $ex) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_SAVE_DB_FAIL, $ex->getMessage(), $ex);
+        }
+        return new ApiResponse(ApiResponse::CODE_COMMON_OK,null,$post);
     }
 
     /**

@@ -8,6 +8,10 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $model Goods */
+$goodsRefs = ArrayHelper::index($model->goodsAttValueRefs, 'attribute_value_id', 'attribute_id');;
+foreach($goodsRefs as &$ref){
+    $ref = array_keys($ref);
+}
 ?>
 <div class="goods-att-box">
     <?php $form = ActiveForm::begin(['id' => 'goods-attr-form']);?>
@@ -19,19 +23,20 @@ use yii\widgets\ActiveForm;
                 <?php
                 $attName = "attrs[$att->id][]";
                 $attValues = ArrayHelper::map($att->goodsAttributeValues, 'id', 'value');
+                $attValue = isset($goodsRefs[$att->id]) ? $goodsRefs[$att->id] : null;
                 switch ($att->input_type) {
                     case GoodsAttribute::TYPE_SINGLE_SELECT:
                         echo Select2::widget([
                             'name' => $attName,
-                            'value' => '',
+                            'value' => $attValue,
                             'data' => $attValues,
                         ]);
                         break;
                     case GoodsAttribute::TYPE_MULTPLE_SELECT:
-                        echo Html::checkboxList($attName, null, $attValues);
+                        echo Html::checkboxList($attName, $attValue, $attValues);
                         break;
                     case GoodsAttribute::TYPE_SINGLE_INPUT:
-                        echo Html::textInput($attName, '11', ['maxlength' => $att->value_length, 'class' => 'form-control']);
+                        echo Html::textInput($attName, '', ['maxlength' => $att->value_length, 'class' => 'form-control']);
                         break;
                     case GoodsAttribute::TYPE_MULTPLE_INPUT:
                         echo Html::textarea($attName, '', ['maxlength' => $att->value_length, 'class' => 'form-control']);
@@ -47,10 +52,24 @@ use yii\widgets\ActiveForm;
 </div>
 <script>
     /**
-     * 获取属性formdata
-     * @returns {array}
+     * 保存属性
      */
     function saveAttribute() {
-        $.post('save-attribute?goods_id=<?= $model->id ?>',$('#goods-attr-form').serialize());
+        $.ajax({
+                type: "POST",
+                url: 'save-attribute?goods_id=<?= $model->id ?>',
+                data: $('#goods-attr-form').serialize(),
+                success: function (r, textStatus) {
+                    if (r.code != '0') {
+                        console.log(r);
+                        $.notify({message: '保存属性失败！\n' + r.msg}, {type: 'danger'});
+                    }else{
+                        $.notify({message: '保存属性成功！'}, {type: 'success'});
+                    }
+                },
+                error: function (e) {
+                    $.notify({message: '保存属性失败！'}, {type: 'danger'});
+                }
+            });
     }
 </script>

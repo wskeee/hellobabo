@@ -45,8 +45,8 @@ class GoodsAttribute extends ActiveRecord
     public static $inputTypeMap = [
         self::TYPE_SINGLE_SELECT => '单选',
         self::TYPE_MULTPLE_SELECT => '多选',
-        self::TYPE_SINGLE_INPUT => '单行输入',
-        self::TYPE_MULTPLE_INPUT => '多行输入'
+        //self::TYPE_SINGLE_INPUT => '单行输入',
+        //self::TYPE_MULTPLE_INPUT => '多行输入'
     ];
     
     /**
