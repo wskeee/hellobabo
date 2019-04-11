@@ -126,11 +126,11 @@ class Goods extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
+            'id' => I18NUitl::t('app', '{Goods}{SN}'),
             'category_id' => Yii::t('app', 'Category'),
             'model_id' => Yii::t('app', 'Model'),
             'owner_id' => Yii::t('app', 'Owner'),
-            'goods_sn' => I18NUitl::t('app', '{Goods}{SN}'),
+            //'goods_sn' => I18NUitl::t('app', '{Goods}{SN}'),
             'goods_name' => Yii::t('app', 'Name'),
             'goods_cost' => Yii::t('app', 'Cost'),
             'goods_price' => Yii::t('app', 'Price'),

@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\CheckboxColumn',],
             //商品编号
             [
-                'attribute' => 'goods_sn',
+                'attribute' => 'id',
                 'headerOptions' => ['style' => 'width:100px'],
             ],
             //封面

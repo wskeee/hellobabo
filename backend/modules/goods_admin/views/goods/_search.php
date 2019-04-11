@@ -34,7 +34,7 @@ $dep_template = "<div class=\"col-lg-12 col-md-12 clean-padding\">{input}</div>"
 
     <!-- 商品编号 -->
     <?=
-    $form->field($model, 'goods_sn')->textInput([
+    $form->field($model, 'id')->textInput([
         'maxlength' => true,
         'placeholder' => I18NUitl::t('app', '{Please}{Input}{Goods}{SN}'),
         'onchange' => 'submitForm()',

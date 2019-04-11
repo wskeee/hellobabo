@@ -36,7 +36,7 @@ GoodsModuleAsset::register($this);
                     'options' => ['class' => 'table table-striped table-bordered wsk-table-detail'],
                     'model' => $model,
                     'attributes' => [
-                        'goods_sn',
+                        'id',
                         //key:format:label
                         "goodsCategory.name:text:{$model->getAttributeLabel('category_id')}",
                         "goodsModel.name:text:{$model->getAttributeLabel('model_id')}",
