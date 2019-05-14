@@ -23,9 +23,9 @@ use yii\web\IdentityInterface;
  * @property bigint $max_store              最大存储空间（最小单位为B）
  * @property string $des                    简介
  * @property string $auth_key               认证
- * @property string $from 用户来源，默认本站，也会其它站点用户
- * @property string $money 当前金额
- * @property string $money_sign 金额校验
+ * @property string $from                   用户来源，默认本站，也会其它站点用户
+ * @property string $money                  当前金额
+ * @property string $money_sign             金额校验
  * @property string $access_token           访问令牌
  * @property string $access_token_expire_time           访问令牌到期时间
  * @property string $created_at             创建时间
