@@ -14,7 +14,7 @@ use yii\db\ActiveRecord;
  * @property string $province   省
  * @property string $city       市
  * @property string $district   区
- * @property string $twon       镇
+ * @property string $town       镇
  * @property string $address    详细地址
  * @property string $job_title  职称
  * @property int    $level      等级
@@ -63,7 +63,7 @@ class UserProfile extends ActiveRecord
     {
         return [
             [['user_id'], 'required'],
-            [['user_id', 'province', 'city', 'district', 'twon', 'level', 'is_certificate', 'created_at', 'updated_at'], 'integer'],
+            [['user_id', 'province', 'city', 'district', 'town', 'level', 'is_certificate', 'created_at', 'updated_at'], 'integer'],
             [['address', 'job_title', 'company', 'department', 'sign'], 'string', 'max' => 255],
         ];
     }
@@ -79,7 +79,7 @@ class UserProfile extends ActiveRecord
             'province' => Yii::t('app', 'Province'),
             'city' => Yii::t('app', 'City'),
             'district' => Yii::t('app', 'District'),
-            'twon' => Yii::t('app', 'Twon'),
+            'town' => Yii::t('app', 'Twon'),
             'address' => Yii::t('app', 'Address'),
             'job_title' => Yii::t('app', 'Job Title'),
             'level' => Yii::t('app', 'Level'),

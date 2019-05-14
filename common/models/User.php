@@ -23,7 +23,9 @@ use yii\web\IdentityInterface;
  * @property bigint $max_store              最大存储空间（最小单位为B）
  * @property string $des                    简介
  * @property string $auth_key               认证
- * @property int $is_official 是否为官网资源：0否 1是
+ * @property string $from 用户来源，默认本站，也会其它站点用户
+ * @property string $money 当前金额
+ * @property string $money_sign 金额校验
  * @property string $access_token           访问令牌
  * @property string $access_token_expire_time           访问令牌到期时间
  * @property string $created_at             创建时间
@@ -31,7 +33,6 @@ use yii\web\IdentityInterface;
  * @property string $password write-only password
  * 
  * @property Customer $customer             客户
- * @property UserProfile $profile           用户配置属性
  */
 class User extends BaseUser implements IdentityInterface {
 
@@ -74,8 +75,9 @@ class User extends BaseUser implements IdentityInterface {
             [['id', 'username'], 'unique'],
             [['password_hash'], 'string', 'min' => 6, 'max' => 64],
             [['created_at', 'updated_at', 'sex',], 'integer'],
+            [['money'], 'number'],
             [['des'], 'string'],
-            [['auth_key'], 'string', 'max' => 32],
+            [['auth_key','money_sign'], 'string', 'max' => 32],
             [['username', 'nickname'], 'string', 'max' => 50],
             [['phone'], 'string', 'min' => 11, 'max' => 50],
             [['password_reset_token', 'email', 'avatar'], 'string', 'max' => 255],
@@ -105,10 +107,34 @@ class User extends BaseUser implements IdentityInterface {
     }
     
     /**
-     * 获取用户配置
+     * 余额校检
+     */
+    public function moneyVerification()
+    {
+        if ($this->money == 0 && $this->money_sign == '') {
+            return true;
+        }
+        $money = floatval($this->money);
+        return $this->money_sign == md5("wskeee{$this->id}{$money}wskeee");
+    }
+
+    /**
+     * 创建余额验证
+     * @param int $id
+     * @param int $money
+     * @return string
+     */
+    public static function makeVerification($id, $money)
+    {
+        $money = floatval($money);
+        return md5("wskeee{$id}{$money}wskeee");
+    }
+
+    /**
      * @return ActiveQuery
      */
-    public function getProfile(){
-        return $this->hasOne(UserProfile::class, ['user_id' => 'id']);
+    public function getAuths()
+    {
+        return $this->hasOne(UserAuths::class, ['user_id' => 'id']);
     }
 }
