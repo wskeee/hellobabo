@@ -1,20 +1,15 @@
 <?php
 return [
-    /* 接口加密 aes128加密 */
-    'encryption' => [
-        'secret_key' => 'api.mediacloud',        //密码
-        'method' => 'aes-128-ecb',              //加密方法
-        'options' => OPENSSL_RAW_DATA,          //选项
+    /* 微信小程序配置 */
+    'wechatPaymentConfig' => [
+        'app_id' => 'wx69f4a713347ecd2e',
+        'mch_id'             => '1533811161',
+        'key'                => 'efdgeqpypclk509cyjfxbj9k15fge7pi',   // API 密钥
+
+        // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
+        'cert_path'          => '@apiend/web/cert/apiclient_cert.pem/',     // XXX: 绝对路径！！！！
+        'key_path'           => '@apiend/web/cert/apiclient_key.pem',       // XXX: 绝对路径！！！！
+        //'sandbox'            => true,
+        'notify_url'         => 'http://shareline.free.idcfengye.com/v1/wx-pay/pay-cb',     // 你也可以在下单时单独设置来想覆盖它
     ],
-    /* 素材配置 */
-    'media' => [
-        'use' => [
-            //外部访问素材地址路径 eg:url?sn=xxx
-            'link_url' => 'http://tt.mediacloud.studying8.com/media/use/link',
-            //外部访问临时素材地址路径 eg:url?sn=xxx
-            'temp_link_url' => 'http://tt.mediacloud.studying8.com/media/use/temp-link',
-            //外部下载临时素材地址路径 eg:url?sn=xxx
-            'temp_download_url' => 'http://tt.mediacloud.studying8.com/media/use/temp-download',
-        ]
-    ]
 ];

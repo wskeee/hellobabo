@@ -9,13 +9,18 @@ use yii\filters\auth\QueryParamAuth;
  *
  * @author Administrator
  */
-class QueryParamHeaderAuth extends QueryParamAuth {
+class QueryParamHeaderAuth extends QueryParamAuth
+{
+
+    public $tokenParam = 'token';
 
     /**
      * {@inheritdoc}
      */
-    public function authenticate($user, $request, $response) {
+    public function authenticate($user, $request, $response)
+    {
         $accessToken = $request->getHeaders()->get($this->tokenParam);
+
         if (is_string($accessToken)) {
             $identity = $user->loginByAccessToken($accessToken, get_class($this));
             if ($identity !== null) {
