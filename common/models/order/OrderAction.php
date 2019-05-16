@@ -3,6 +3,8 @@
 namespace common\models\order;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\db\Exception;
 
 /**
  * This is the model class for table "{{%order_action}}".
@@ -15,7 +17,7 @@ use Yii;
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
  */
-class OrderAction extends \yii\db\ActiveRecord
+class OrderAction extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -52,5 +54,35 @@ class OrderAction extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+    
+    /**
+     * 保存日志
+     * @param array $ids     设备ID
+     * @param string $title     标题
+     * @param string $content   内容
+     */
+    public static function saveLog($ids, $title, $content)
+    {
+        if(count($ids) == 0){
+            return 0;
+        }
+        try{
+            $created_by = \Yii::$app->user->id;
+        } catch (Exception $ex) {
+            $created_by = 0;
+        }
+        
+        $time = time();
+        foreach ($ids as $id) {
+            $rows [] = [
+                $id,
+                $title,
+                $content,
+                $created_by,
+                $time, $time
+            ];
+        }
+        return \Yii::$app->db->createCommand()->batchInsert(self::tableName(), ['order_id', 'title', 'content', 'created_by', 'created_at', 'updated_at'], $rows)->execute();
     }
 }

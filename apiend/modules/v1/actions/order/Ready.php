@@ -9,11 +9,10 @@ use common\models\platform\Pricing;
 use Yii;
 
 /**
- * 下单准备
- * 返回当前设备是否在运行中
- * 返回当前设备的套餐
+ * 上图准备
+ * 返回已完成的图片
  */
-class Ready extends BaseAction {
+class UploadImageReady extends BaseAction {
 
     public function run() {
         if (!$this->verify()) {
