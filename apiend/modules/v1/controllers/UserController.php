@@ -3,8 +3,13 @@
 namespace apiend\modules\v1\controllers;
 
 use apiend\controllers\ApiController;
+use apiend\modules\v1\actions\user\AddAddress;
 use apiend\modules\v1\actions\user\BindInfo;
+use apiend\modules\v1\actions\user\DelAddress;
+use apiend\modules\v1\actions\user\GetAddressList;
 use apiend\modules\v1\actions\user\GetInfo;
+use apiend\modules\v1\actions\user\SetDefaultAddress;
+use apiend\modules\v1\actions\user\UpdateAddress;
 
 /**
  * 登录认证
@@ -23,6 +28,11 @@ class UserController extends ApiController
         $behaviors['verbs']['actions'] = [
             'get-info' => ['get'],
             'bind-info' => ['post'],
+            'get-address-list' => ['get'],
+            'add-address' => ['post'],
+            'del-address' => ['post'],
+            'update-address' => ['post'],
+            'set-default-address' => ['post'],
         ];
         return $behaviors;
     }
@@ -35,6 +45,11 @@ class UserController extends ApiController
         return [
             'get-info' => ['class' => GetInfo::class],
             'bind-info' => ['class' => BindInfo::class],
+            'get-address-list' => ['class' => GetAddressList::class],
+            'add-address' => ['class' => AddAddress::class],
+            'del-address' => ['class' => DelAddress::class],
+            'update-address' => ['class' => UpdateAddress::class],
+            'set-default-address' => ['class' => SetDefaultAddress::class],
         ];
     }
 

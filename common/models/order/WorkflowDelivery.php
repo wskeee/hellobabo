@@ -18,6 +18,7 @@ use Yii;
  * @property int $province 省ID，关联region,id
  * @property int $city 市ID，关联region,id
  * @property int $district 区ID，关联region,id
+ * @property int $town 镇ID，关联region,id
  * @property string $address 详细地址
  * @property string $shipping_code 物流code，关联shipping,code
  * @property string $shipping_name 物流名称
@@ -25,7 +26,7 @@ use Yii;
  * @property string $invoice_no 物流单号
  * @property string $note ''
  * @property int $send_type 发货方式 0自填快递 1无需物流
- * @property int $created_by 创建人ID，关联admin_user,id
+ * @property int $worker_id 发货人ID，关联admin_user,id
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
  */
@@ -45,8 +46,7 @@ class WorkflowDelivery extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'user_id', 'created_by', 'created_at'], 'required'],
-            [['id', 'order_id', 'user_id', 'country', 'province', 'city', 'district', 'send_type', 'created_by', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'order_id', 'user_id', 'country', 'province', 'city', 'district', 'town', 'send_type', 'worker_id', 'created_at', 'updated_at'], 'integer'],
             [['shipping_price'], 'number'],
             [['note'], 'string'],
             [['order_sn', 'phone'], 'string', 'max' => 20],
@@ -75,6 +75,7 @@ class WorkflowDelivery extends \yii\db\ActiveRecord
             'province' => Yii::t('app', 'Province'),
             'city' => Yii::t('app', 'City'),
             'district' => Yii::t('app', 'District'),
+            'town' => Yii::t('app', 'Town'),
             'address' => Yii::t('app', 'Address'),
             'shipping_code' => Yii::t('app', 'Shipping Code'),
             'shipping_name' => Yii::t('app', 'Shipping Name'),
@@ -82,7 +83,7 @@ class WorkflowDelivery extends \yii\db\ActiveRecord
             'invoice_no' => Yii::t('app', 'Invoice No'),
             'note' => Yii::t('app', 'Note'),
             'send_type' => Yii::t('app', 'Send Type'),
-            'created_by' => Yii::t('app', 'Created By'),
+            'worker_id' => Yii::t('app', 'Worker'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];

@@ -340,6 +340,7 @@ return [
     'Fill' => '填充',
     'Price Placeholder' => '*价钱（元）',
     'Store Placeholder' => '*数量（个）',
+    'Consignee' => '收货人',
     
     //后台-商品配置
     'Storage' => '存储',

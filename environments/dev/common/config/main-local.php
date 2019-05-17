@@ -19,7 +19,6 @@ return [
             'hostname' => '172.16.163.111',
             'port' => 6379,
             'database' => 7, //'unixSocket' => '/var/run/redis/redis.sock',			
-            'password' => 'eecn.cn',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',

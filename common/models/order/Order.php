@@ -2,7 +2,9 @@
 
 namespace common\models\order;
 
+use common\components\redis\RedisService;
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%order}}".
@@ -30,13 +32,21 @@ use Yii;
  * @property int $shipping_at 发货时间
  * @property int $confirm_at 确认时间
  * @property string $consignee 收货人
+ * @property string $zipcode 邮编
+ * @property string $phone 联系手机
+ * @property int $country 国ID
+ * @property int $province 省ID，关联region,id
+ * @property int $city 市ID，关联region,id
+ * @property int $district 区ID，关联region,id
+ * @property int $town 镇ID，关联region,id
+ * @property string $address 详细地址
  * @property int $is_recommend 是否为别人推荐而生成的订单 0否 1是
  * @property int $recommend_by 推荐人ID,关联user,id
  * @property int $created_by 创建人id（购买人ID），关联user表id字段
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
  */
-class Order extends \yii\db\ActiveRecord
+class Order extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -54,6 +64,9 @@ class Order extends \yii\db\ActiveRecord
         return [
             [['order_sn', 'goods_id'], 'required'],
             [['goods_id', 'goods_num', 'spec_id', 'order_status', 'work_status', 'play_at', 'init_at', 'upload_finish_at', 'design_at', 'print_at', 'shipping_at', 'confirm_at', 'is_recommend', 'recommend_by', 'created_by', 'created_at', 'updated_at'], 'integer'],
+            [['country', 'province', 'city', 'district', 'town',], 'integer'],
+            [['zipcode'], 'string', 'max' => 6],
+            [['address'], 'string', 'max' => 255],
             [['goods_price', 'order_amount'], 'number'],
             [['order_sn', 'play_code'], 'string', 'max' => 20],
             [['goods_name', 'spec_key', 'spec_key_name'], 'string', 'max' => 100],
@@ -92,11 +105,42 @@ class Order extends \yii\db\ActiveRecord
             'shipping_at' => Yii::t('app', 'Shipping At'),
             'confirm_at' => Yii::t('app', 'Confirm At'),
             'consignee' => Yii::t('app', 'Consignee'),
+            'zipcode' => Yii::t('app', 'Zipcode'),
+            'phone' => Yii::t('app', 'Phone'),
+            'country' => Yii::t('app', 'Country'),
+            'province' => Yii::t('app', 'Province'),
+            'city' => Yii::t('app', 'City'),
+            'district' => Yii::t('app', 'District'),
+            'town' => Yii::t('app', 'Town'),
+            'address' => Yii::t('app', 'Address'),
             'is_recommend' => Yii::t('app', 'Is Recommend'),
             'recommend_by' => Yii::t('app', 'Recommend By'),
             'created_by' => Yii::t('app', 'Created By'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+    
+    /**
+     * 随便生成一个 SN码
+     * @return string
+     */
+    public static function getRandomSN() {
+        //201904251229250000125
+        list($msec, $sec) = explode(' ', microtime());
+        $msectime = (float) sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
+        $key_sn = date('Ymd') . substr($msectime, -6);
+        $key = "Order:RandomSN:$key_sn";
+        $num = 1;
+        $r = RedisService::getRedis();
+        //一秒内包括 99999 个自增ID
+        if ($r->exists($key)) {
+            $num = $r->incr($key);
+        } else {
+            //不存先创建一个，并设置1分钟过期
+            $r->setex($key, 60, 1);
+        }
+        $orderSn = $key_sn . sprintf('%04d', $num) . sprintf('%02d', rand(0, 99));
+        return $orderSn;
     }
 }

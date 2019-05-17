@@ -35,7 +35,9 @@ class RedisService
      */
     public static function getRandomSN($codes = null, $start_year = 2019) {
         $yCode = $codes ? $codes : array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L','M','N');
-        $key_sn = $yCode[intval(date('Y')) - $start_year] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5);
+        //codes 为[] 时不添加前缀
+        $key_sn = (count($yCode) ==0 ? "" : $yCode[intval(date('Y')) - $start_year]);
+        $key_sn = $key_sn.strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5);
         $key = "RandomSN:$key_sn";
         $num = 1;
         $r = self::getRedis();

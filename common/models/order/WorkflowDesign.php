@@ -14,7 +14,7 @@ use Yii;
  * @property int $status 状态 0未完成，1已完成
  * @property int $start_at 开始时间
  * @property int $end_at 结束时间
- * @property int $created_by 操作人id,关联admin_user表id字段
+ * @property int $worker_id 设计人ID，关联admin_user,id
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
  */
@@ -35,7 +35,7 @@ class WorkflowDesign extends \yii\db\ActiveRecord
     {
         return [
             [['order_id'], 'required'],
-            [['order_id', 'order_goods_id', 'status', 'start_at', 'end_at', 'created_by', 'created_at', 'updated_at'], 'integer'],
+            [['order_id', 'order_goods_id', 'status', 'start_at', 'end_at', 'worker_id', 'created_at', 'updated_at'], 'integer'],
             [['order_sn'], 'string', 'max' => 20],
         ];
     }
@@ -53,7 +53,7 @@ class WorkflowDesign extends \yii\db\ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'start_at' => Yii::t('app', 'Start At'),
             'end_at' => Yii::t('app', 'End At'),
-            'created_by' => Yii::t('app', 'Created By'),
+            'worker_id' => Yii::t('app', 'Worker'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
