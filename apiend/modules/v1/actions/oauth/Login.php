@@ -15,10 +15,6 @@ class Login extends BaseAction
 
     public function run()
     {
-        $user = User::findOne(['id' => 1]);
-        $user->generateAccessToken();
-        return new Response(Response::CODE_COMMON_OK,null,$user->toArray());
-        
         if (!$this->verify()) {
             return $this->verifyError;
         }

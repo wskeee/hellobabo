@@ -31,9 +31,11 @@ class BindInfo extends BaseAction
         $user->avatar = $decryptedData['avatarUrl'];
         $user->sex = $decryptedData['gender'];
         
-        $user->save();
-        
-        return new Response(Response::CODE_COMMON_OK, null, $decryptedData);
+        if($user->save()){
+            return new Response(Response::CODE_COMMON_OK, null, $decryptedData);
+        }else{
+            return new Response(Response::CODE_COMMON_SAVE_DB_FAIL,null,$user->getErrorSummary(true));
+        }
     }
 
 }

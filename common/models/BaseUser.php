@@ -25,6 +25,8 @@ class BaseUser extends ActiveRecord implements IdentityInterface{
     const SCENARIO_CREATE = 'create';
     /** 更新场景 */
     const SCENARIO_UPDATE = 'update';
+    /** 第三方登录 */
+    const SCENARIO_OAUTH = 'oauth';
     
     /** 性别 保密 */
     const SEX_SECRECY = 0;

@@ -1,0 +1,96 @@
+[2019-05-20 21:35:40] NULL.INFO: >>>>>>>>
+GET /sns/jscode2session?access_token=21__e_GUPcZnHX7VzuTbnhuXyd-9_PTLBKM4ZeCk0B6BjG-i0FAbzSl7gY5_JfpmfL8jzc1uqq1FSRRMH5riawmgPfxit63OSWHL5LY1nUXK81VJU0sLjQS_PxkgQGM1slW5sGzx6JYUoQ4luYVGRIiADAZKB&appid=wx69f4a713347ecd2e&secret=55ac60d686d8f67fae0149a2032e86db&js_code=023g4Rj52WnK7P0T9wk52NdEj52g4Rj0&grant_type=authorization_code HTTP/1.1
+Host: api.weixin.qq.com
+User-Agent: GuzzleHttp/6.3.3 curl/7.61.1 PHP/7.2.14
+
+
+<<<<<<<<
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain
+Date: Mon, 20 May 2019 13:35:38 GMT
+Content-Length: 78
+
+{"errcode":40029,"errmsg":"invalid code, hints: [ req_id: rkJcB5yFe-mjmqAA ]"}
+--------
+NULL  
+[2019-05-20 21:36:39] NULL.INFO: >>>>>>>>
+GET /sns/jscode2session?access_token=21__e_GUPcZnHX7VzuTbnhuXyd-9_PTLBKM4ZeCk0B6BjG-i0FAbzSl7gY5_JfpmfL8jzc1uqq1FSRRMH5riawmgPfxit63OSWHL5LY1nUXK81VJU0sLjQS_PxkgQGM1slW5sGzx6JYUoQ4luYVGRIiADAZKB&appid=wx69f4a713347ecd2e&secret=55ac60d686d8f67fae0149a2032e86db&js_code=023u6X5F19l7170BNs5F1oFc6F1u6X5y&grant_type=authorization_code HTTP/1.1
+Host: api.weixin.qq.com
+User-Agent: GuzzleHttp/6.3.3 curl/7.61.1 PHP/7.2.14
+
+
+<<<<<<<<
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain
+Date: Mon, 20 May 2019 13:36:37 GMT
+Content-Length: 79
+
+{"errcode":40029,"errmsg":"invalid code, hints: [ req_id: RkJcMRLnRa-xVrc7a ]"}
+--------
+NULL  
+[2019-05-20 21:38:00] NULL.INFO: >>>>>>>>
+GET /sns/jscode2session?access_token=21__e_GUPcZnHX7VzuTbnhuXyd-9_PTLBKM4ZeCk0B6BjG-i0FAbzSl7gY5_JfpmfL8jzc1uqq1FSRRMH5riawmgPfxit63OSWHL5LY1nUXK81VJU0sLjQS_PxkgQGM1slW5sGzx6JYUoQ4luYVGRIiADAZKB&appid=wx69f4a713347ecd2e&secret=55ac60d686d8f67fae0149a2032e86db&js_code=0333PNJ52xB2YQ0PIUJ52GWVJ523PNJ5&grant_type=authorization_code HTTP/1.1
+Host: api.weixin.qq.com
+User-Agent: GuzzleHttp/6.3.3 curl/7.61.1 PHP/7.2.14
+
+
+<<<<<<<<
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain
+Date: Mon, 20 May 2019 13:37:58 GMT
+Content-Length: 82
+
+{"session_key":"ANh+NfHm6L5t6HX+BofmtA==","openid":"oA0pO5fjpEO5pHCED6JNQS0NLNW0"}
+--------
+NULL  
+[2019-05-20 21:38:17] NULL.INFO: >>>>>>>>
+GET /sns/jscode2session?access_token=21__e_GUPcZnHX7VzuTbnhuXyd-9_PTLBKM4ZeCk0B6BjG-i0FAbzSl7gY5_JfpmfL8jzc1uqq1FSRRMH5riawmgPfxit63OSWHL5LY1nUXK81VJU0sLjQS_PxkgQGM1slW5sGzx6JYUoQ4luYVGRIiADAZKB&appid=wx69f4a713347ecd2e&secret=55ac60d686d8f67fae0149a2032e86db&js_code=0235abYN1I5wX81I9nXN1X0WXN15abYa&grant_type=authorization_code HTTP/1.1
+Host: api.weixin.qq.com
+User-Agent: GuzzleHttp/6.3.3 curl/7.61.1 PHP/7.2.14
+
+
+<<<<<<<<
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain
+Date: Mon, 20 May 2019 13:38:15 GMT
+Content-Length: 82
+
+{"session_key":"ANh+NfHm6L5t6HX+BofmtA==","openid":"oA0pO5fjpEO5pHCED6JNQS0NLNW0"}
+--------
+NULL  
+[2019-05-20 21:40:41] NULL.INFO: >>>>>>>>
+GET /sns/jscode2session?access_token=21__e_GUPcZnHX7VzuTbnhuXyd-9_PTLBKM4ZeCk0B6BjG-i0FAbzSl7gY5_JfpmfL8jzc1uqq1FSRRMH5riawmgPfxit63OSWHL5LY1nUXK81VJU0sLjQS_PxkgQGM1slW5sGzx6JYUoQ4luYVGRIiADAZKB&appid=wx69f4a713347ecd2e&secret=55ac60d686d8f67fae0149a2032e86db&js_code=033lPNY62A02dS0EZ3Z62DmNY62lPNYh&grant_type=authorization_code HTTP/1.1
+Host: api.weixin.qq.com
+User-Agent: GuzzleHttp/6.3.3 curl/7.61.1 PHP/7.2.14
+
+
+<<<<<<<<
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain
+Date: Mon, 20 May 2019 13:40:39 GMT
+Content-Length: 82
+
+{"session_key":"ZsktbFuERxJuGqviW0EUBw==","openid":"oA0pO5fjpEO5pHCED6JNQS0NLNW0"}
+--------
+NULL  
+[2019-05-20 23:15:37] NULL.INFO: >>>>>>>>
+GET /sns/jscode2session?access_token=21__e_GUPcZnHX7VzuTbnhuXyd-9_PTLBKM4ZeCk0B6BjG-i0FAbzSl7gY5_JfpmfL8jzc1uqq1FSRRMH5riawmgPfxit63OSWHL5LY1nUXK81VJU0sLjQS_PxkgQGM1slW5sGzx6JYUoQ4luYVGRIiADAZKB&appid=wx69f4a713347ecd2e&secret=55ac60d686d8f67fae0149a2032e86db&js_code=033P9p5t08XwTg1pz63t0BUn5t0P9p5R&grant_type=authorization_code HTTP/1.1
+Host: api.weixin.qq.com
+User-Agent: GuzzleHttp/6.3.3 curl/7.61.1 PHP/7.2.14
+
+
+<<<<<<<<
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain
+Date: Mon, 20 May 2019 15:15:36 GMT
+Content-Length: 84
+
+{"session_key":"KRLnQ7H506uj7e\/mifx\/QA==","openid":"oA0pO5fjpEO5pHCED6JNQS0NLNW0"}
+--------
+NULL  

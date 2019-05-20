@@ -264,7 +264,7 @@ return [
     'Range' => '范围',
     'Tag' => '标签',
     'Public' => '公用',
-    'Goods' => '商品',
+    'Goods' => '绘本',
     
     //后台-文件管理
     'File' => '文件',
@@ -361,7 +361,6 @@ return [
     'Groups' => '分组列表',
     
     //后台-运营管理
-    'Goods' => '商品',
     'Purchaser' => '购买人',
     'Payable' => '应付',
     'Confirm' => '确认',

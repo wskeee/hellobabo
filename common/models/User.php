@@ -53,6 +53,7 @@ class User extends BaseUser implements IdentityInterface {
             ['username', 'nickname', 'sex', 'email', 'password_hash', 'password2', 'phone', 'avatar', 'des'],
             self::SCENARIO_DEFAULT => 
             ['username', 'nickname', 'sex', 'email', 'password_hash', 'password2', 'phone', 'avatar', 'des'],
+            self::SCENARIO_OAUTH => ['username'],
         ];
     }
 
