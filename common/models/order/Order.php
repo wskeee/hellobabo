@@ -5,6 +5,7 @@ namespace common\models\order;
 use common\components\redis\RedisService;
 use Yii;
 use yii\db\ActiveRecord;
+use yii\db\Exception;
 
 /**
  * This is the model class for table "{{%order}}".
@@ -19,8 +20,8 @@ use yii\db\ActiveRecord;
  * @property string $spec_key 商品规格key
  * @property string $spec_key_name 规格对应的中文名字
  * @property string $order_amount 应付金额（商品总价-折扣）
- * @property int $order_status 状态 0待付款 5待准备 15待制作 20待发货 25待确认 30已取消 99已作废
- * @property int $work_status 制作状态：0未准备5待初始10待上图11待设计12设计中15待印刷16印刷中20已完成
+ * @property int $order_status 状态 0待付款 5待准备 15待制作 20待发货 25待确认 30已完成 35已取消 99已作废
+ * @property int $work_status 制作状态：0未准备 5待设计 6设计中 10待印刷 11印刷中 20已完成
  * @property string $user_note 用户留言
  * @property string $play_code 付款方式标识，如：alplay
  * @property string $play_sn 付款流水号
@@ -48,6 +49,52 @@ use yii\db\ActiveRecord;
  */
 class Order extends ActiveRecord
 {
+    /* 订单状态 */
+
+    const ORDER_STATUS_WAIT_PAY = 0;          //待付款
+    const ORDER_STATUS_PAY_FAIL = 1;          //支付失败
+    const ORDER_STATUS_WAIT_INIT = 5;         //待初始
+    const ORDER_STATUS_WAIT_UPLOAD_PIC = 10;  //待上图
+    const ORDER_STATUS_WAIT_MAKE = 15;        //待制作
+    const ORDER_STATUS_WAIT_DELIVER = 20;     //待发货
+    const ORDER_STATUS_WAIT_CONFIRM = 25;     //待确认
+    const ORDER_STATUS_CONFIRMED = 30;        //已确认,已完成
+    const ORDER_STATUS_CANCELED = 35;         //已取消
+    const ORDER_STATUS_INVALID = 99;          //已作废
+
+    /* 制作状态 */
+    CONST WORK_STATUS_UNREADY = 0;            //未准备 12设计中 15待印刷 16印刷中 20已完成
+    CONST WORK_STATUS_WAIT_DESIGN = 5;        //待设计
+    CONST WORK_STATUS_DESIGNING = 6;          //设计中
+    CONST WORK_STATUS_WAIT_PRINT = 10;        //待印刷
+    CONST WORK_STATUS_PRINTING = 11;          //印刷中
+    CONST WORK_STATUS_FINISH = 20;            //已完成
+
+    /* 订单状态名 */
+
+    public static $orderStatusNameMap = [
+        self::ORDER_STATUS_WAIT_PAY => '待付款',
+        self::ORDER_STATUS_PAY_FAIL => '支付失败',
+        self::ORDER_STATUS_WAIT_INIT => '待初始',
+        self::ORDER_STATUS_WAIT_UPLOAD_PIC => '待上图',
+        self::ORDER_STATUS_WAIT_MAKE => '待制作',
+        self::ORDER_STATUS_WAIT_DELIVER => '待发货',
+        self::ORDER_STATUS_WAIT_CONFIRM => '待确认',
+        self::ORDER_STATUS_CONFIRMED => '已确认',
+        self::ORDER_STATUS_CANCELED => '已取消',
+        self::ORDER_STATUS_INVALID => '已作废',
+    ];
+
+    /* 制作状态名 */
+    public static $workStatusNameMap = [
+        self::WORK_STATUS_UNREADY => '未准备',
+        self::WORK_STATUS_WAIT_DESIGN => '待设计',
+        self::WORK_STATUS_DESIGNING => '设计中',
+        self::WORK_STATUS_WAIT_PRINT => '待印刷',
+        self::WORK_STATUS_PRINTING => '印刷中',
+        self::WORK_STATUS_FINISH => '已完成',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -120,12 +167,13 @@ class Order extends ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
-    
+
     /**
      * 随便生成一个 SN码
      * @return string
      */
-    public static function getRandomSN() {
+    public static function getRandomSN()
+    {
         //201904251229250000125
         list($msec, $sec) = explode(' ', microtime());
         $msectime = (float) sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
@@ -143,4 +191,37 @@ class Order extends ActiveRecord
         $orderSn = $key_sn . sprintf('%04d', $num) . sprintf('%02d', rand(0, 99));
         return $orderSn;
     }
+
+    /**
+     * 支付
+     * @param array $message
+     */
+    public function pay($message)
+    {
+        $tran = Yii::$app->db->beginTransaction();
+        $order = this;
+        try {
+            // 用户是否支付成功
+            if ($message['result_code'] === 'SUCCESS') {
+                $order->pay_code = 'weixin';
+                $order->pay_sn = $message['transaction_id'];
+                $order->pay_at = time(); // 更新支付时间为当前时间
+                $order->order_status = Order::ORDER_STATUS_WAIT_INIT;
+
+                OrderAction::saveLog([$order->id], '支付成功', "支付方式：{$order->pay_code}");
+
+                // 用户支付失败
+            } elseif ($message['result_code'] === 'FAIL') {
+                $order->order_status = Order::ORDER_STATUS_PAY_FAIL;
+                OrderAction::saveLog([$order->id], '支付失败', "{$message['err_code']}\n{$message['err_code_des']}");
+            }
+            $order->save(); // 保存订单
+            $tran->commit();
+            return true; // 返回处理完成
+        } catch (Exception $ex) {
+            $tran->rollBack();
+            return false;
+        }
+    }
+
 }

@@ -9,13 +9,17 @@ use Yii;
  *
  * @property int $id
  * @property int $order_id 订单ID，关联Order,id
- * @property int $order_goods_id 订单商品id，关联order_goods表id字段
  * @property int $material_id 素材id，关联goods_material表id字段
- * @property int $material_value_id 素材值id，关联goods_material_value表id字段
+ * @property int $value_id 素材值id，关联goods_material_value表id字段
+ * @property int $value_name 素材值名称
+ * @property int $value_effect_url 素材值效果图路径
+ * @property int $value_source_url 素材值原图路径
+ * @property int $value_des 素材值描述
  * @property int $is_del 是否已删除 0否 1是
  */
 class OrderGoodsMaterial extends \yii\db\ActiveRecord
 {
+
     /**
      * {@inheritdoc}
      */
@@ -30,8 +34,10 @@ class OrderGoodsMaterial extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'order_goods_id', 'material_id', 'material_value_id', 'is_del'], 'integer'],
-            [['order_goods_id', 'material_id', 'material_value_id'], 'required'],
+            [['order_id', 'material_id', 'value_id', 'is_del'], 'integer'],
+            [['order_goods_id', 'material_id', 'value_id'], 'required'],
+            [['value_name',], 'string', 'max' => 20],
+            [['value_effect_url', 'value_source_url', 'value_des'], 'string', 'max' => 255],
         ];
     }
 
@@ -43,10 +49,14 @@ class OrderGoodsMaterial extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'order_id' => Yii::t('app', 'Order ID'),
-            'order_goods_id' => Yii::t('app', 'Order Goods ID'),
             'material_id' => Yii::t('app', 'Material ID'),
-            'material_value_id' => Yii::t('app', 'Material Value ID'),
+            'value_id' => Yii::t('app', 'Material Value ID'),
+            'value_name' => Yii::t('app', 'Material Value Name'),
+            'value_effect_url' => Yii::t('app', 'Material Value Effect'),
+            'value_source_url' => Yii::t('app', 'Material Value Source'),
+            'value_des' => Yii::t('app', 'Material Value Des'),
             'is_del' => Yii::t('app', 'Is Del'),
         ];
     }
+
 }

@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $order_id 订单ID，关联Order,id
- * @property int $order_goods_id 订单商品ID，关联order_goods表id字段
+ * @property int $scene_id 场景ID
  * @property string $name 场景名
  * @property string $effect_url 效果图路径
  * @property string $demo_url 参考路径
@@ -23,6 +23,7 @@ use Yii;
  */
 class OrderGoodsScene extends \yii\db\ActiveRecord
 {
+
     /**
      * {@inheritdoc}
      */
@@ -37,7 +38,7 @@ class OrderGoodsScene extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'order_goods_id', 'sort_order', 'is_required', 'is_del'], 'integer'],
+            [['order_id', 'scene_id', 'sort_order', 'is_required', 'is_del'], 'integer'],
             [['name'], 'string', 'max' => 20],
             [['effect_url', 'demo_url', 'source_url', 'user_img_url', 'finish_url', 'des'], 'string', 'max' => 255],
         ];
@@ -51,7 +52,7 @@ class OrderGoodsScene extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'order_id' => Yii::t('app', 'Order ID'),
-            'order_goods_id' => Yii::t('app', 'Order Goods ID'),
+            'scene_id' => Yii::t('app', 'Scene'),
             'name' => Yii::t('app', 'Name'),
             'effect_url' => Yii::t('app', 'Effect Url'),
             'demo_url' => Yii::t('app', 'Demo Url'),
@@ -64,4 +65,5 @@ class OrderGoodsScene extends \yii\db\ActiveRecord
             'des' => Yii::t('app', 'Des'),
         ];
     }
+
 }
