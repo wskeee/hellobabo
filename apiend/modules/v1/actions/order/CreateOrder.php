@@ -55,6 +55,7 @@ class CreateOrder extends BaseAction
             'is_recommend' => $recommend_by != null ? 1 : 0, //是否为推荐订单
             'recommend_by' => $recommend_by, //推挤人ID
             //收货地址
+            'address_id' => $address_id, //地址ID
             'user_note' => $user_note, //留言
             'consignee' => $address_id->consignee, //收货人
             'zipcode' => $address_id->zipcode,

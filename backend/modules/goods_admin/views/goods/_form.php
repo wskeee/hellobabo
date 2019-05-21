@@ -38,6 +38,9 @@ use yii\widgets\ActiveForm;
     ?>
     <!-- 商品名称 -->
     <?= $form->field($model, 'goods_name')->textInput(['maxlength' => true]) ?>
+    
+    <!-- 商品标题 -->
+    <?= $form->field($model, 'goods_title')->textInput(['maxlength' => true]) ?>
 
     <!-- 封面和视频 -->
     <div class="form-group">
@@ -73,7 +76,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'goods_des')->textarea(['maxlength' => true, 'placeholder' => '简单描述商品']) ?>
 
     <!-- 商品详情 -->
-    <?= $form->field($model->isNewRecord ? new GoodsDetail() : $model->goodsDetails, 'content')->widget(UEDitor::class) ?>
+    <?php $form->field($model->isNewRecord ? new GoodsDetail() : $model->goodsDetails, 'content')->widget(UEDitor::class) ?>
 
     <div class="form-group">
         <label class="col-sm-1 control-label form-label"></label>

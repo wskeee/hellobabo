@@ -32,6 +32,7 @@ use yii\db\Exception;
  * @property int $print_at 印刷时间
  * @property int $shipping_at 发货时间
  * @property int $confirm_at 确认时间
+ * @property int $address_id 地址ID
  * @property string $consignee 收货人
  * @property string $zipcode 邮编
  * @property string $phone 联系手机
@@ -109,17 +110,17 @@ class Order extends ActiveRecord
     public function rules()
     {
         return [
-            [['order_sn', 'goods_id'], 'required'],
-            [['goods_id', 'goods_num', 'spec_id', 'order_status', 'work_status', 'play_at', 'init_at', 'upload_finish_at', 'design_at', 'print_at', 'shipping_at', 'confirm_at', 'is_recommend', 'recommend_by', 'created_by', 'created_at', 'updated_at'], 'integer'],
-            [['country', 'province', 'city', 'district', 'town',], 'integer'],
-            [['zipcode'], 'string', 'max' => 6],
-            [['address'], 'string', 'max' => 255],
-            [['goods_price', 'order_amount'], 'number'],
-            [['order_sn', 'play_code'], 'string', 'max' => 20],
-            [['goods_name', 'spec_key', 'spec_key_name'], 'string', 'max' => 100],
-            [['user_note'], 'string', 'max' => 255],
-            [['play_sn'], 'string', 'max' => 50],
-            [['consignee'], 'string', 'max' => 64],
+                [['order_sn', 'goods_id'], 'required'],
+                [['goods_id', 'goods_num', 'spec_id', 'order_status', 'work_status', 'play_at', 'init_at', 'upload_finish_at', 'design_at', 'print_at', 'shipping_at', 'confirm_at', 'address_id', 'is_recommend', 'recommend_by', 'created_by', 'created_at', 'updated_at'], 'integer'],
+                [['country', 'province', 'city', 'district', 'town',], 'integer'],
+                [['zipcode'], 'string', 'max' => 6],
+                [['address'], 'string', 'max' => 255],
+                [['goods_price', 'order_amount'], 'number'],
+                [['order_sn', 'play_code'], 'string', 'max' => 20],
+                [['goods_name', 'spec_key', 'spec_key_name'], 'string', 'max' => 100],
+                [['user_note'], 'string', 'max' => 255],
+                [['play_sn'], 'string', 'max' => 50],
+                [['consignee'], 'string', 'max' => 64],
         ];
     }
 

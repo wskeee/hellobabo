@@ -36,10 +36,10 @@ class OrderController extends ApiController
     public function actions()
     {
         return [
-            'create-order' => ['class' => CreateOrder::class],
+            'create' => ['class' => CreateOrder::class],
             'get-list' => ['class' => GetOrderList::class],
-            'get-order-detail' => ['class' => GetOrderDetail::class],
-            'order-ready' => ['class' => OrderReady::class],
+            'get-detail' => ['class' => GetOrderDetail::class],
+            'ready' => ['class' => OrderReady::class],
         ];
     }
 

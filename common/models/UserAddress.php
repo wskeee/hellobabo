@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\system\Region;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -79,6 +80,20 @@ class UserAddress extends ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+    
+    /**
+     * 获取详细版本，包括省市区名称
+     */
+    public function getDetail(){
+        $address = $this->toArray();
+        //返回对应省市区名称
+        $regionNames = Region::getRegionList(['id' => [$address['province'], $address['city'], $address['district']]]);
+
+        $address['province_name'] = $regionNames[$address['province']];
+        $address['city_name'] = $regionNames[$address['city']];
+        $address['district_name'] = $regionNames[$address['district']];
+        return $address;
     }
 
 }
