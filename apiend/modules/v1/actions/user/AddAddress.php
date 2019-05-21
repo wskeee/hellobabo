@@ -16,9 +16,6 @@ class AddAddress extends BaseAction
 
     public function run()
     {
-        if (!$this->verify()) {
-            return $this->verifyError;
-        }
         $address = new UserAddress();
         $address->load($this->secretParams,"");
         if ($address->validate() && $address->save()) {

@@ -94,3 +94,67 @@ Content-Length: 84
 {"session_key":"KRLnQ7H506uj7e\/mifx\/QA==","openid":"oA0pO5fjpEO5pHCED6JNQS0NLNW0"}
 --------
 NULL  
+[2019-05-21 14:37:17] NULL.INFO: >>>>>>>>
+GET /sns/jscode2session?access_token=21_cbGnxbfmi-wORj9CGAvoiRY4LxHut3SqnAxObxLnJGJZ0tTjXfAlYptOuxlB9bDLHtrPAs-qkEwz1qN2OmIxLXj7Aibt19TZ2dK8NWsUtT0IADMTqKCxCBJHQst639OH_dMdt9lbphKf51TcQLTcAEABWE&appid=wx69f4a713347ecd2e&secret=55ac60d686d8f67fae0149a2032e86db&js_code=111&grant_type=authorization_code HTTP/1.1
+Host: api.weixin.qq.com
+User-Agent: GuzzleHttp/6.3.3 curl/7.61.1 PHP/7.2.14
+
+
+<<<<<<<<
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain
+Date: Tue, 21 May 2019 06:37:16 GMT
+Content-Length: 79
+
+{"errcode":40029,"errmsg":"invalid code, hints: [ req_id: sGkc7qaLRa-7Wt.QA ]"}
+--------
+NULL  
+[2019-05-21 14:39:17] NULL.INFO: >>>>>>>>
+GET /sns/jscode2session?access_token=21_cbGnxbfmi-wORj9CGAvoiRY4LxHut3SqnAxObxLnJGJZ0tTjXfAlYptOuxlB9bDLHtrPAs-qkEwz1qN2OmIxLXj7Aibt19TZ2dK8NWsUtT0IADMTqKCxCBJHQst639OH_dMdt9lbphKf51TcQLTcAEABWE&appid=wx69f4a713347ecd2e&secret=55ac60d686d8f67fae0149a2032e86db&js_code=111&grant_type=authorization_code HTTP/1.1
+Host: api.weixin.qq.com
+User-Agent: GuzzleHttp/6.3.3 curl/7.61.1 PHP/7.2.14
+
+
+<<<<<<<<
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain
+Date: Tue, 21 May 2019 06:39:15 GMT
+Content-Length: 76
+
+{"errcode":40029,"errmsg":"invalid code, hints: [ req_id: tGkcczXBe-Vhd6 ]"}
+--------
+NULL  
+[2019-05-21 14:41:25] NULL.INFO: >>>>>>>>
+GET /sns/jscode2session?access_token=21_cbGnxbfmi-wORj9CGAvoiRY4LxHut3SqnAxObxLnJGJZ0tTjXfAlYptOuxlB9bDLHtrPAs-qkEwz1qN2OmIxLXj7Aibt19TZ2dK8NWsUtT0IADMTqKCxCBJHQst639OH_dMdt9lbphKf51TcQLTcAEABWE&appid=wx69f4a713347ecd2e&secret=55ac60d686d8f67fae0149a2032e86db&js_code=111&grant_type=authorization_code HTTP/1.1
+Host: api.weixin.qq.com
+User-Agent: GuzzleHttp/6.3.3 curl/7.61.1 PHP/7.2.14
+
+
+<<<<<<<<
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain
+Date: Tue, 21 May 2019 06:41:23 GMT
+Content-Length: 78
+
+{"errcode":40029,"errmsg":"invalid code, hints: [ req_id: uGkcezXBe-3i.bSa ]"}
+--------
+NULL  
+[2019-05-21 14:46:12] NULL.INFO: >>>>>>>>
+GET /sns/jscode2session?access_token=21_cbGnxbfmi-wORj9CGAvoiRY4LxHut3SqnAxObxLnJGJZ0tTjXfAlYptOuxlB9bDLHtrPAs-qkEwz1qN2OmIxLXj7Aibt19TZ2dK8NWsUtT0IADMTqKCxCBJHQst639OH_dMdt9lbphKf51TcQLTcAEABWE&appid=wx69f4a713347ecd2e&secret=55ac60d686d8f67fae0149a2032e86db&js_code=111&grant_type=authorization_code HTTP/1.1
+Host: api.weixin.qq.com
+User-Agent: GuzzleHttp/6.3.3 curl/7.61.1 PHP/7.2.14
+
+
+<<<<<<<<
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain
+Date: Tue, 21 May 2019 06:46:11 GMT
+Content-Length: 78
+
+{"errcode":40029,"errmsg":"invalid code, hints: [ req_id: WGkcY24ce-VscVta ]"}
+--------
+NULL  

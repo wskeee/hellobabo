@@ -9,12 +9,11 @@ use common\models\system\Config;
 use common\models\User;
 use Yii;
 
-class Withdrawal extends BaseAction {
+class Withdrawal extends BaseAction
+{
 
-    public function run() {
-        if (!$this->verify()) {
-            return $this->verifyError;
-        }
+    public function run()
+    {
         /* @var $user User */
         $user = Yii::$app->user->identity;
         //对应商家
@@ -64,7 +63,7 @@ class Withdrawal extends BaseAction {
 
         if ($model->validate() && $model->save()) {
             return new Response(Response::CODE_COMMON_OK, null, $model);
-        }else{
+        } else {
             return new Response(Response::CODE_USER_MONEY_WITHDRAWAL_FAILED, null, $model->getErrorSummary(true));
         }
     }

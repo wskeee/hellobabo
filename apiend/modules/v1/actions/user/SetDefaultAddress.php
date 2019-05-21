@@ -14,15 +14,12 @@ use yii\db\Expression;
  */
 class SetDefaultAddress extends BaseAction
 {
+    /* 必须参数 */
+
+    protected $requiredParams = ['id'];
 
     public function run()
     {
-        if (!$this->verify()) {
-            return $this->verifyError;
-        }
-        if (count($notfounds = $this->checkRequiredParams($this->getSecretParams(), ['id'])) != 0) {
-            return new Response(Response::CODE_COMMON_MISS_PARAM, null, null, ['param' => implode(',', $notfounds)]);
-        }
         $id = $this->getSecretParam('id');
         UserAddress::updateAll(['is_default' => new Expression("IF(id=$id,1,0)")], ['user_id' => Yii::$app->user->id]);
         $list = UserAddress::find()->where([

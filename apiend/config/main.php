@@ -36,6 +36,7 @@ return [
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
+            'class' => 'apiend\components\ApiExceptionHandler',
         ],
         
         'urlManager' => [

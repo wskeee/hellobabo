@@ -19,25 +19,19 @@ use Yii;
  */
 class CreateOrder extends BaseAction
 {
+    /* 必须参数 */
+
+    protected $requiredParams = ['goods_id', 'gsp_id', 'address_id'];
 
     public function run()
     {
-        if (!$this->verify()) {
-            return $this->verifyError;
-        }
-
-        /* 检查必须参数 */
-        if ($notfounds = $this->checkRequiredParams($this->getSecretParams(), ['goods_id', 'gsp_id' ,'address_id'])) {
-            return new Response(Response::CODE_COMMON_MISS_PARAM, null, null, ['param' => implode(',', $notfounds)]);
-        }
-
         $user_id = Yii::$app->user->id;
-        $goods_num = $this->getSecretParam('goods_num', 1);//购买数量 
-        $user_note = $this->getSecretParam('user_note', '');//留言
-        $recommend_by = $this->getSecretParam('recommend_by', null);//推挤人ID
-        $goods = Goods::findOne(['id' => $this->getSecretParam('goods_id')]);//绘本商品
-        $spec_price = GoodsSpecPrice::findOne(['id' => $this->getSecretParam('gsp_id')]);//价格
-        $address_id = UserAddress::findOne(['id' => $this->getSecretParam('address_id')]);//地址
+        $goods_num = $this->getSecretParam('goods_num', 1); //购买数量 
+        $user_note = $this->getSecretParam('user_note', ''); //留言
+        $recommend_by = $this->getSecretParam('recommend_by', null); //推挤人ID
+        $goods = Goods::findOne(['id' => $this->getSecretParam('goods_id')]); //绘本商品
+        $spec_price = GoodsSpecPrice::findOne(['id' => $this->getSecretParam('gsp_id')]); //价格
+        $address_id = UserAddress::findOne(['id' => $this->getSecretParam('address_id')]); //地址
 
         /* 检查订单状态 */
         if (!$goods || $goods->status != Goods::STATUS_PUBLISHED) {
@@ -62,7 +56,7 @@ class CreateOrder extends BaseAction
             'recommend_by' => $recommend_by, //推挤人ID
             //收货地址
             'user_note' => $user_note, //留言
-            'consignee' => $address_id->consignee,//收货人
+            'consignee' => $address_id->consignee, //收货人
             'zipcode' => $address_id->zipcode,
             'phone' => $address_id->phone,
             'province' => $address_id->province,
@@ -70,7 +64,6 @@ class CreateOrder extends BaseAction
             'district' => $address_id->district,
             'town' => $address_id->town,
             'address' => $address_id->address,
-            
             'created_by' => $user_id,
         ]);
 

@@ -3,8 +3,11 @@
 namespace apiend\modules\v1\actions;
 
 use apiend\models\Response;
+use common\core\ApiException;
+use Exception;
 use Yii;
 use yii\base\Action;
+use function GuzzleHttp\json_decode;
 
 /**
  * Description of BaseAction
@@ -13,6 +16,12 @@ use yii\base\Action;
  */
 class BaseAction extends Action
 {
+
+    /**
+     * 设置接口检验必须的参数
+     * @var type 
+     */
+    protected $requiredParams = [];
 
     /**
      * 合并了 QueryParam 及 BodyParam 参数
@@ -43,24 +52,17 @@ class BaseAction extends Action
     protected function beforeRun()
     {
         $this->params = array_merge($this->getBodyParams(), $this->getQueryParams());
-       
+
         if ($raw = Yii::$app->request->getRawBody()) {
-            try{
+            try {
                 $this->params = array_merge($this->params, json_decode($raw, true));
-            } catch (\Exception $ex) {
+            } catch (Exception $ex) {
                 //
             }
         }
         $this->secretParams = $this->params;
-        /*
-          if ($secret = Yii::$app->request->getQueryParam('secret', null)) {
-          $this->secretParams = EncryptionService::decrypt($secret, true);
-          } else if ($secret = Yii::$app->request->getBodyParam('secret', null)) {
-          $this->secretParams = EncryptionService::decrypt($secret, true);
-          } */
 
-
-        return true;
+        return $this->verify();
     }
 
     /**
@@ -69,22 +71,19 @@ class BaseAction extends Action
      */
     protected function verify()
     {
-        $notfounds = $this->checkRequiredParams($this->getSecretParams(), ['appkey', 'sign', 'timestamp']);
+        $notfounds = $this->checkRequiredParams($this->getSecretParams(), array_merge(['appkey', 'sign', 'timestamp'], $this->requiredParams));
         if (count($notfounds) > 0) {
-            $this->verifyError = new Response(Response::CODE_COMMON_MISS_PARAM, null, null, ['param' => implode(',', $notfounds)]);
-            return false;
+            throw new ApiException(new Response(Response::CODE_COMMON_MISS_PARAM, null, null, ['param' => implode(',', $notfounds)]));
         }
 
         //检查时效
         $timestamp = $this->getParam("timestamp");
         if (time() * 1000 - $timestamp > 60 * 1000) {
-            $this->verifyError = new Response(Response::CODE_COMMON_TIMEOUT, null, ["server_time" => time() * 1000]);
-            return false;
+            throw new ApiException(new Response(Response::CODE_COMMON_TIMEOUT, null, ["server_time" => time() * 1000]));
         }
 
         if (!$this->verifySign($this->getParam('appkey'), $timestamp, $this->getParam('sign'))) {
-            $this->verifyError = new Response(Response::CODE_COMMON_VERIFY_SIGN_FAIL);
-            return false;
+            throw new ApiException(new Response(Response::CODE_COMMON_VERIFY_SIGN_FAIL));
         }
 
         return true;

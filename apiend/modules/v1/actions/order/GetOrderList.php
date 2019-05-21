@@ -9,12 +9,11 @@ use common\models\platform\Order;
 use Yii;
 use yii\db\Query;
 
-class GetOrderList extends BaseAction {
+class GetOrderList extends BaseAction
+{
 
-    public function run() {
-        if (!$this->verify()) {
-            return $this->verifyError;
-        }
+    public function run()
+    {
 
         $order_status = $this->getSecretParam('order_status', null);
         $orders = (new Query())

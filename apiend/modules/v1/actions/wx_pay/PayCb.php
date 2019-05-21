@@ -3,9 +3,7 @@
 namespace apiend\modules\v1\actions\wx_pay;
 
 use common\models\order\Order;
-use common\models\order\OrderAction;
 use EasyWeChat\Payment\Application;
-use Exception;
 use Yii;
 use yii\base\Action;
 

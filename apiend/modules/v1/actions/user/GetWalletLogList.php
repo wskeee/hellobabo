@@ -10,12 +10,11 @@ use Yii;
 /**
  * 获取订单列表
  */
-class GetWalletLogList extends BaseAction {
+class GetWalletLogList extends BaseAction
+{
 
-    public function run() {
-        if (!$this->verify()) {
-            return $this->verifyError;
-        }
+    public function run()
+    {
 
         //ID
         $user_id = Yii::$app->user->id;

@@ -12,9 +12,7 @@ use apiend\modules\v1\actions\BaseAction;
 class AffirmOrder extends BaseAction {
 
     public function run() {
-        if (!$this->verify()) {
-            return $this->verifyError;
-        }
+        
     }
 
 }

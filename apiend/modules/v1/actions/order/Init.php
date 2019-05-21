@@ -4,22 +4,31 @@ namespace apiend\modules\v1\actions\order;
 
 use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
+use common\models\order\Order;
 
 /**
- * 初始绘本
- * 提交已选择的素材和场景
+ * 设置绘本已初始
+ * 已完成素材和场景的选择
  */
-class Init extends BaseAction {
+class Init extends BaseAction
+{
+    /* 必须参数 */
 
-    public function run() {
-        if (!$this->verify()) {
-            return $this->verifyError;
+    protected $requiredParams = ['order_id'];
+
+    public function run()
+    {
+        $order_id = $this->getSecretParam('order_id');
+
+        $order = Order::findOne(['id' => $order_id]);
+        $order->order_status = Order::ORDER_STATUS_WAIT_UPLOAD_PIC; //设置为待上图状态
+        $order->init_at = time();   //记录初始时间
+
+        if ($order->save()) {
+            return new Response(Response::CODE_COMMON_OK);
+        } else {
+            return new Response(Response::CODE_COMMON_SAVE_DB_FAIL, null, $order->getErrorSummary(true));
         }
-        
-        
-        return new Response(Response::CODE_COMMON_OK, null, [
-            
-        ]);
     }
 
 }

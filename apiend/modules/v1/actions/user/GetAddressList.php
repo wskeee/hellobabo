@@ -18,9 +18,6 @@ class GetAddressList extends BaseAction
 
     public function run()
     {
-        if (!$this->verify()) {
-            return $this->verifyError;
-        }
         /* @var $user User */
         $user = Yii::$app->user->identity;
         $list = UserAddress::find()

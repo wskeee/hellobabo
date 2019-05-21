@@ -9,16 +9,13 @@ use apiend\modules\v1\actions\BaseAction;
  * 初始绘本准备
  * 返回绘本素材和场景
  */
-class InitReady extends BaseAction {
+class InitReady extends BaseAction
+{
 
-    public function run() {
-        if (!$this->verify()) {
-            return $this->verifyError;
-        }
-        
-        
+    public function run()
+    {
+
         return new Response(Response::CODE_COMMON_OK, null, [
-            
         ]);
     }
 

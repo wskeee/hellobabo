@@ -9,12 +9,11 @@ use common\models\system\Config;
 use common\models\User;
 use Yii;
 
-class WithdrawalReady extends BaseAction {
+class WithdrawalReady extends BaseAction
+{
 
-    public function run() {
-        if (!$this->verify()) {
-            return $this->verifyError;
-        }
+    public function run()
+    {
         /* @var $user User */
         $user = Yii::$app->user->identity;
         //对应商家
@@ -32,13 +31,13 @@ class WithdrawalReady extends BaseAction {
         //查出当前已经申请的金额
         $hasDones = Withdrawals::find()
                 ->select(['ifnull(sum(amount),0) as amount'])
-               ->where([
+                ->where([
                     'user_id' => $user->id,
                     'status' => [Withdrawals::STATUS_APPLYING, Withdrawals::STATUS_CHECK_SUCCESS, Withdrawals::STATUS_PAY_SUCCESS]]
                 )
                 ->andWhere(['between', 'created_at', strtotime('today'), strtotime('today +1 day')])
                 ->column();
-        
+
         return new Response(Response::CODE_COMMON_OK, null, [
             'has_apply_money' => $hasDones[0], //今天已经申请的金额
             'newest_money' => $user->money, //当前余额
