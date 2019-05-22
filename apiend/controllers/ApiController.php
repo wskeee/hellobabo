@@ -4,6 +4,7 @@
 namespace apiend\controllers;
 
 use apiend\components\auth\QueryParamHeaderAuth;
+use common\core\ApiException;
 use Yii;
 use yii\base\Controller;
 use yii\base\ErrorException;
@@ -126,7 +127,7 @@ class ApiController extends Controller {
      */
     protected function convertExceptionToArray($exception)
     {
-        if($exception instanceof \common\core\ApiException){
+        if($exception instanceof ApiException){
             return $exception->data;
         }
         
