@@ -3,9 +3,7 @@
     <td>
         <textarea name="spec_des" 
                   class="form-control" 
-                  onchange="priceItemChanged(\'{%spec_key%}\',\'spec_des\',$(this));" >
-            {%spec_des%}
-        </textarea>
+                  onchange="priceItemChanged(\'{%spec_key%}\',\'spec_des\',$(this));" >{%spec_des%}</textarea>
     </td>
     <td>
         <input name="goods_price" 

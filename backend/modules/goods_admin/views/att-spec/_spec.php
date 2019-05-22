@@ -323,14 +323,47 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
     }
 
     /**
+     * 获取item对应名称
+     * @param {array} item_ids
+     * @returns {array}
+     */
+    function getItemName(item_ids) {
+        var names = [];
+        for (var i = 0, len = item_ids.length; i < len; i++) {
+            names.push(spec_items[item_ids[i]]['value']);
+        }
+        return names;
+    }
+
+    /**
      * 生成价格数据
      * @returns {void}
      */
     function createItemPrices() {
-        var itemPrices = null;
+        //规格价格项{id_id_id:value_value_value}
+        var itemPrices = {};
+        //id数组，[[1,2,3,4],[,2,3,4],[]...]
+        //先拿到id数组，再作数组笛卡尔积运算
+        var item_ids = [];
         $.each(spec_items_map, function (key, items) {
-            itemPrices = _createItemPrice(itemPrices, items);
+            var t_ids = [];
+            $.each(items, function (index, item) {
+                t_ids.push(item.id);
+            });
+            item_ids.push(t_ids);
         });
+        //笛卡尔积运算
+        var result = combineDika(item_ids);
+        $.each(result, function (key, items) {
+            //所有id升序排序
+            items = items.sort(function (a, b) {
+                return a - b
+            });
+            //合并id与值
+            itemPrices[items.join('_')] = getItemName(items).join('_');
+        });
+        console.log(itemPrices);
+        //生成表格
         spec_item_prices = [];
         $table = $('.spec-price-box .table');
         $tbody = $('.spec-price-box .table tbody');
@@ -362,9 +395,17 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
         var d_tr = '';
         var spec_keys = itemPrice.spec_key.split('_');
         var spec_key_names = itemPrice.spec_key_name.split('_');
-        //添加动态列
+        var spec_name_map = {};
+        //计算出 spec 对应 spec_item.name 
         $.each(spec_key_names, function (index, item) {
-            d_tr += '<td>' + item + '</td>';
+            var spec_item = spec_items[spec_keys[index]];
+            //记录 spec_id = spec_name
+            spec_name_map[spec_item['spec_id']] = spec_key_names[index];
+        });
+        
+        //添加动态列
+        $.each(specs, function (index, spec_id) {
+            d_tr += '<td>' + spec_name_map[spec_id] + '</td>';
         });
         $(d_tr).prependTo($tr);
         return $tr;
@@ -412,35 +453,51 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
         }
     }
 
+    /**
+     * 所有数组的笛卡尔积
+     * 
+     * @param unknown_type $data
+     */
+    function combineDika(args)
+    {
+        var cnt = args.length;
+        var result = [];
+        for (var i in args[0]) {
+            //已选择才会加入计算
+            if(spec_items[args[0][i]].selected){
+                result.push([args[0][i]]);
+            }
+        }
+        for (var i = 1; i < cnt; i++) {
+            result = combineArray(result, args[i]);
+        }
+        return result;
+    }
 
     /**
-     * 生成价格，只生成已选择规格项
-     * @param {Object} prices SpectItemPrice
-     * @param {Array} items SpecItem
-     * @returns {Object} SpectItemPrice
+     * 两个数组的笛卡尔积
+     * 
+     * @param array arr1
+     * @param array arr2
      */
-    function _createItemPrice(prices, items) {
-        if (!prices) {
-            //第一次
-            prices = {};
-            $.each(items, function (index, item) {
-                if (spec_items[item.id].selected) {
-                    prices[item.id] = item.value;
+    function combineArray(arr1, arr2)
+    {
+        var result = [];
+        for (var i = 0, len = arr1.length; i < len; i++) {
+            var arr1_i = arr1[i].concat();
+            for (var j = 0, jlen = arr2.length; j < jlen; j++) {
+                //已选择才会加入计算
+                if (spec_items[arr2[j]].selected) {
+                    var temp = arr1_i.concat();
+                    temp.push(arr2[j]);
+                    result.push(temp);
                 }
-            });
-        } else {
-            $.each(prices, function (key, value) {
-                $.each(items, function (index, item) {
-                    if (spec_items[item.id].selected) {
-                        prices[key + "_" + item.id] = value + "_" + item.value;
-                        delete prices[key];
-                    }
-                });
-            });
+            }
         }
 
-        return prices;
+        return result;
     }
+
     /**
      * 刷新规格价格显示
      * @returns {void}
@@ -557,15 +614,15 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
             $(uploader).on('uploadComplete', function (evt, dbfile, file) {
                 spec_item_prices[id]['spec_img_url'] = dbfile.url;
             });
-            if(value != ""){
+            if (value != "") {
                 uploader.addCompleteFiles([{
-                    'id': "file-picker-" + Math.round(Math.random() * 1000),
-                    'thumb_url': value,
-                    'url': value,
-                    'ext': 'jpg',
-                    'size': 0,
-                    'name': ''
-                }]);
+                        'id': "file-picker-" + Math.round(Math.random() * 1000),
+                        'thumb_url': value,
+                        'url': value,
+                        'ext': 'jpg',
+                        'size': 0,
+                        'name': ''
+                    }]);
             }
             imgUploaders[id] = uploader;
         });
