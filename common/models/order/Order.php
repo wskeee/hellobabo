@@ -217,12 +217,33 @@ class Order extends ActiveRecord
                 OrderAction::saveLog([$order->id], '支付失败', "{$message['err_code']}\n{$message['err_code_des']}");
             }
             $order->save(); // 保存订单
+            OrderAction::saveLog($order->id, '付款成功', '');
             $tran->commit();
             return true; // 返回处理完成
         } catch (Exception $ex) {
             $tran->rollBack();
             return false;
         }
+    }
+    
+    /**
+     * 检查是否已经支付
+     * @return boolean 
+     */
+    public function getIsPlyed(){
+        if(!$this->getIsValid()){
+            //订单无效
+            return false;
+        }else{
+            return $this->order_status != self::ORDER_STATUS_WAIT_PAY && $this->order_status != self::ORDER_STATUS_PAY_FAIL;
+        }
+    }
+    /**
+     * 检查订单是否有效
+     * @return boolean 
+     */
+    public function getIsValid(){
+        return $this->order_status != self::ORDER_STATUS_CANCELED && $this->order_status != self::ORDER_STATUS_INVALID;
     }
 
 }

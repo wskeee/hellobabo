@@ -43,13 +43,13 @@ class SaveGoodsScene extends BaseAction
                 $scenes_post_sort[$scene->id],
                 $scene->is_required,
                 $scene->des,
-                1,
+                0,
             ];
         }
         $tran = Yii::$app->db->beginTransaction();
         try {
             //先把原先已经选择的记录清除
-            OrderGoodsScene::updateAll(['is_del' => 0], ['order_id' => $order_id]);
+            OrderGoodsScene::updateAll(['is_del' => 1], ['order_id' => $order_id]);
             //重新插入新记录
             MysqlUtil::batchInsertDuplicateUpdate(OrderGoodsScene::tableName(), [
                         'order_id', 'scene_id', 'name', 'effect_url', 'demo_url', 'source_url', 'sort_order', 'is_required', 'des', 'is_del'], $rows, ['sort_order', 'is_del'])

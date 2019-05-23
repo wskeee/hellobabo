@@ -38,6 +38,7 @@ class OrderReady extends BaseAction
         $gsps_spec_key_store = ArrayHelper::map($gsps, 'spec_key', 'store_count');
         $spec_store = [];
         foreach ($gsps_spec_key_store as $spec_key => $store_count) {
+            //每个规格项中每个规格库存
             $spec_ids = explode('_', $spec_key);
             foreach ($spec_ids as $spec_id) {
                 $spec_item = &$spec_items[$spec_id];

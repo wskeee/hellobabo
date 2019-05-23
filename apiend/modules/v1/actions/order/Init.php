@@ -25,6 +25,7 @@ class Init extends BaseAction
         $order->init_at = time();   //记录初始时间
 
         if ($order->save()) {
+            OrderAction::saveLog($order->id, '初始绘本', '用户初始化绘本');
             return new Response(Response::CODE_COMMON_OK);
         } else {
             return new Response(Response::CODE_COMMON_SAVE_DB_FAIL, null, $order->getErrorSummary(true));

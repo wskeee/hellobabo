@@ -9,7 +9,7 @@ use apiend\modules\v1\actions\BaseAction;
  *
  * @author Administrator
  */
-class AffirmOrder extends BaseAction {
+class ConfirmOrder extends BaseAction {
 
     public function run() {
         

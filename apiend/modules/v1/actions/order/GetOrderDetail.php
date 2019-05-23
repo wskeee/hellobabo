@@ -11,18 +11,19 @@ class GetOrderDetail extends BaseAction
 {
     /* 必须参数 */
 
-    protected $requiredParams = ['order_sn'];
-    
+    protected $requiredParams = ['order_id'];
+
     public function run()
     {
-        $order_sn = $this->getSecretParam('order_sn', null);
+        $order_id = $this->getSecretParam('order_id', null);
 
-        $order = Order::findOne(['order_sn' => $order_sn, 'created_by' => Yii::$app->user->id]);
-        
-        if($order){
+        $order = Order::findOne(['order_id' => $order_id, 'created_by' => Yii::$app->user->id]);
+
+        if ($order) {
             return new Response(Response::CODE_COMMON_OK, null, $order);
-        }else{
-            return new Response(Response::CODE_COMMON_NOT_FOUND,null,null,['param' => \Yii::t('app', 'Order')]);
+        } else {
+            return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => \Yii::t('app', 'Order')]);
         }
     }
+
 }

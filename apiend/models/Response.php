@@ -55,6 +55,10 @@ class Response extends ApiResponse{
     const CODE_ORDER_STORE_COUNT_OUT = '10300';
     /* 下单失败 */
     const CODE_ORDER_CREATE_FAILED = '10301';
+    /** 重复支付  */
+    const CODE_ORDER_PAY_REPEATED = '10302';
+    /* 订单取消失败 */
+    const CODE_ORDER_CANCEL_FAILED = '10303';
     //--------------------------------------------------------------------------------------------------------------
     //
     // 对应描述
@@ -82,6 +86,8 @@ class Response extends ApiResponse{
             /* ORDER */
             self::CODE_ORDER_STORE_COUNT_OUT => '商品已售罄！',
             self::CODE_ORDER_CREATE_FAILED => '下单失败！',
+            self::CODE_ORDER_PAY_REPEATED => '重复支付！',
+            self::CODE_ORDER_CANCEL_FAILED => '订单取消失败！',
         ];
     }
 }

@@ -4,6 +4,10 @@ namespace apiend\modules\v1\actions\order;
 
 use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
+use common\models\order\Order;
+use common\models\order\OrderGoodsScene;
+use common\models\User;
+use Yii;
 
 /**
  * 初始绘本准备
@@ -14,8 +18,20 @@ class InitReady extends BaseAction
 
     public function run()
     {
+        $order_id = $this->getSecretParam('order_id');
+
+        /* @var $user User */
+        $user = Yii::$app->user->identity;
+        $order = Order::findOne(['id' => $order_id]);
+        if (!$order) {
+            return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => Yii::t('app', 'Order')]);
+        }
+        $scenes = OrderGoodsScene::find()->where(['order_id' => $order_id, 'is_del' => 0])->all();
 
         return new Response(Response::CODE_COMMON_OK, null, [
+            'order_status' => $order->order_status,
+            'order_status_text' => Order::$orderStatusNameMap[$order->order_status],
+            'scenes' => $scenes,
         ]);
     }
 

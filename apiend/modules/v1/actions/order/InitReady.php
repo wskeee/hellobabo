@@ -19,7 +19,7 @@ class InitReady extends BaseAction
 {
 /* 必须参数 */
 
-    protected $requiredParams = ['order_sn'];
+    protected $requiredParams = ['order_id'];
     
     public function run()
     {
@@ -27,9 +27,9 @@ class InitReady extends BaseAction
         $user = Yii::$app->user->identity;
         
         //订单
-        $order = Order::findOne(['order_sn' => $this->getSecretParam('order_sn'), 'created_by' => $user->id]);
+        $order = Order::findOne(['order_id' => $this->getSecretParam('order_id'), 'created_by' => $user->id]);
         //所有绘本素材
-        $goodsMaterials = GoodsMaterial::find()->where(['goods_id' => $order->goods_id, 'is_del'])->all();
+        $goodsMaterials = GoodsMaterial::find()->where(['goods_id' => $order->goods_id, 'is_del' => 0])->all();
         //已经选择的素材
         $orderGoodsMaterials = OrderGoodsMaterial::find()->where(['order_id' => $order->id, 'is_del' => 0])->all();
         //已经选择的场景

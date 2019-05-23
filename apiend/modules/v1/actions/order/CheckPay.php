@@ -18,14 +18,14 @@ class CheckPay extends BaseAction
 {
     /* 必须参数 */
 
-    protected $requiredParams = ['order_sn'];
+    protected $requiredParams = ['order_id'];
 
     public function run()
     {
         /* @var $user User */
         $user = Yii::$app->user->identity;
 
-        $order = Order::findOne(['order_sn' => $this->getSecretParam('order_sn'), 'created_by' => $user->id]);
+        $order = Order::findOne(['order_id' => $this->getSecretParam('order_id'), 'created_by' => $user->id]);
 
         if ($order) {
             if ($order->order_status == Order::ORDER_STATUS_WAIT_PAY) {
