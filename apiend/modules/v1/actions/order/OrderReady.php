@@ -60,7 +60,7 @@ class OrderReady extends BaseAction
         return new Response(Response::CODE_COMMON_OK, null, [
             'goods' => $goods,
             'specs' => $specs, //规格
-            'gsps' => ArrayHelper::index($gsps, 'id'), //规格价格
+            'gsps' => ArrayHelper::index($gsps, 'spec_key'), //规格价格
             'gsp_key' => $gsp_key, //默认规格
             'address' => $address->getDetail(),
         ]);
