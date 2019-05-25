@@ -105,6 +105,11 @@ class BaseAction extends Action
         }
         sort($secret_arr);
         $secret_sort_str = implode("", $secret_arr);
+        if(YII_DEBUG){
+            Yii::debug($this->secretParams);
+            Yii::debug($secret_arr);
+            Yii::debug(strtoupper(md5("wskeee{$secret_sort_str}wskeee")));
+        }
         return strtoupper(md5("wskeee{$secret_sort_str}wskeee")) == $sign;
     }
 

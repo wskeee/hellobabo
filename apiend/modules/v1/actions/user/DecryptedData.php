@@ -3,7 +3,7 @@
 namespace apiend\modules\v1\actions\user;
 
 use apiend\models\Response;
-use apiend_sj\modules\v1\actions\BaseAction;
+use apiend\modules\v1\actions\BaseAction;
 use common\models\User;
 use Yii;
 

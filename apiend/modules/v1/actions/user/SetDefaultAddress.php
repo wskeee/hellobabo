@@ -22,12 +22,8 @@ class SetDefaultAddress extends BaseAction
     {
         $id = $this->getSecretParam('id');
         UserAddress::updateAll(['is_default' => new Expression("IF(id=$id,1,0)")], ['user_id' => Yii::$app->user->id]);
-        $list = UserAddress::find()->where([
-                    'user_id' => Yii::$app->user->id,
-                    'is_del' => 0,
-                ])->all();
 
-        return new Response(Response::CODE_COMMON_OK, null, $list);
+        return new Response(Response::CODE_COMMON_OK);
     }
 
 }

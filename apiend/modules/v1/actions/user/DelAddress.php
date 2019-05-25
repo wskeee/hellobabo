@@ -15,11 +15,11 @@ class DelAddress extends BaseAction
 {
     /* 必须参数 */
 
-    protected $requiredParams = ['id'];
+    protected $requiredParams = ['address_id'];
 
     public function run()
     {
-        $address = UserAddress::findOne(['id' => $this->getSecretParam('id')]);
+        $address = UserAddress::findOne(['id' => $this->getSecretParam('address_id')]);
         if ($address == null || $address->is_del == 1) {
             return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => Yii::t('app', 'Address')]);
         }
