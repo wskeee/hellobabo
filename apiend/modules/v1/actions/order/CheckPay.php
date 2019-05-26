@@ -25,7 +25,7 @@ class CheckPay extends BaseAction
         /* @var $user User */
         $user = Yii::$app->user->identity;
 
-        $order = Order::findOne(['order_id' => $this->getSecretParam('order_id'), 'created_by' => $user->id]);
+        $order = Order::findOne(['id' => $this->getSecretParam('order_id'), 'created_by' => $user->id]);
 
         if ($order) {
             if ($order->order_status == Order::ORDER_STATUS_WAIT_PAY) {

@@ -23,9 +23,9 @@ use yii\db\Exception;
  * @property int $order_status 状态 0待付款 5待准备 15待制作 20待发货 25待确认 30已完成 35已取消 99已作废
  * @property int $work_status 制作状态：0未准备 5待设计 6设计中 10待印刷 11印刷中 20已完成
  * @property string $user_note 用户留言
- * @property string $play_code 付款方式标识，如：alplay
- * @property string $play_sn 付款流水号
- * @property int $play_at 付款时间
+ * @property string $pay_code 付款方式标识，如：alpay
+ * @property string $pay_sn 付款流水号
+ * @property int $pay_at 付款时间
  * @property int $init_at 初始时间
  * @property int $upload_finish_at 上图时间
  * @property int $design_at 设计时间
@@ -111,15 +111,15 @@ class Order extends ActiveRecord
     {
         return [
                 [['order_sn', 'goods_id'], 'required'],
-                [['goods_id', 'goods_num', 'spec_id', 'order_status', 'work_status', 'play_at', 'init_at', 'upload_finish_at', 'design_at', 'print_at', 'shipping_at', 'confirm_at', 'address_id', 'is_recommend', 'recommend_by', 'created_by', 'created_at', 'updated_at'], 'integer'],
+                [['goods_id', 'goods_num', 'spec_id', 'order_status', 'work_status', 'pay_at', 'init_at', 'upload_finish_at', 'design_at', 'print_at', 'shipping_at', 'confirm_at', 'address_id', 'is_recommend', 'recommend_by', 'created_by', 'created_at', 'updated_at'], 'integer'],
                 [['country', 'province', 'city', 'district', 'town',], 'integer'],
                 [['zipcode'], 'string', 'max' => 6],
                 [['address'], 'string', 'max' => 255],
                 [['goods_price', 'order_amount'], 'number'],
-                [['order_sn', 'play_code'], 'string', 'max' => 20],
+                [['order_sn', 'pay_code'], 'string', 'max' => 20],
                 [['goods_name', 'spec_key', 'spec_key_name'], 'string', 'max' => 100],
                 [['user_note'], 'string', 'max' => 255],
-                [['play_sn'], 'string', 'max' => 50],
+                [['pay_sn'], 'string', 'max' => 50],
                 [['consignee'], 'string', 'max' => 64],
         ];
     }
@@ -143,9 +143,9 @@ class Order extends ActiveRecord
             'order_status' => Yii::t('app', 'Order Status'),
             'work_status' => Yii::t('app', 'Work Status'),
             'user_note' => Yii::t('app', 'User Note'),
-            'play_code' => Yii::t('app', 'Play Code'),
-            'play_sn' => Yii::t('app', 'Play Sn'),
-            'play_at' => Yii::t('app', 'Play At'),
+            'pay_code' => Yii::t('app', 'Pay Code'),
+            'pay_sn' => Yii::t('app', 'Pay Sn'),
+            'pay_at' => Yii::t('app', 'Pay At'),
             'init_at' => Yii::t('app', 'Init At'),
             'upload_finish_at' => Yii::t('app', 'Upload Finish At'),
             'design_at' => Yii::t('app', 'Design At'),
@@ -200,7 +200,7 @@ class Order extends ActiveRecord
     public function pay($message)
     {
         $tran = Yii::$app->db->beginTransaction();
-        $order = this;
+        $order = $this;
         try {
             // 用户是否支付成功
             if ($message['result_code'] === 'SUCCESS') {
@@ -217,7 +217,7 @@ class Order extends ActiveRecord
                 OrderAction::saveLog([$order->id], '支付失败', "{$message['err_code']}\n{$message['err_code_des']}");
             }
             $order->save(); // 保存订单
-            OrderAction::saveLog($order->id, '付款成功', '');
+            OrderAction::saveLog([$order->id], '付款成功', '');
             $tran->commit();
             return true; // 返回处理完成
         } catch (Exception $ex) {
