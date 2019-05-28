@@ -27,7 +27,7 @@ class InitReady extends BaseAction
         $user = Yii::$app->user->identity;
         
         //订单
-        $order = Order::findOne(['order_id' => $this->getSecretParam('order_id'), 'created_by' => $user->id]);
+        $order = Order::findOne(['id' => $this->getSecretParam('order_id'), 'created_by' => $user->id]);
         //所有绘本素材
         $goodsMaterials = GoodsMaterial::find()->where(['goods_id' => $order->goods_id, 'is_del' => 0])->all();
         //已经选择的素材

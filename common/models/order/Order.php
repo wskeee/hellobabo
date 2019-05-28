@@ -68,12 +68,12 @@ class Order extends ActiveRecord
     const ORDER_STATUS_INVALID = 99;          //已作废
 
     /* 制作状态 */
-    CONST WORK_STATUS_UNREADY = 0;            //未准备 12设计中 15待印刷 16印刷中 20已完成
-    CONST WORK_STATUS_WAIT_DESIGN = 5;        //待设计
-    CONST WORK_STATUS_DESIGNING = 6;          //设计中
-    CONST WORK_STATUS_WAIT_PRINT = 10;        //待印刷
-    CONST WORK_STATUS_PRINTING = 11;          //印刷中
-    CONST WORK_STATUS_FINISH = 20;            //已完成
+    const WORK_STATUS_UNREADY = 0;            //未准备 12设计中 15待印刷 16印刷中 20已完成
+    const WORK_STATUS_WAIT_DESIGN = 5;        //待设计
+    const WORK_STATUS_DESIGNING = 6;          //设计中
+    const WORK_STATUS_WAIT_PRINT = 10;        //待印刷
+    const WORK_STATUS_PRINTING = 11;          //印刷中
+    const WORK_STATUS_FINISH = 20;            //已完成
 
     /* 订单状态名 */
 
