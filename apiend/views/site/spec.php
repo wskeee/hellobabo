@@ -1,4 +1,25 @@
-<?php ?>
+<?php
+$specs = [
+        ['id' => 1, 'name' => 'A', 'items' => [1, 2]],
+        ['id' => 2, 'name' => 'B', 'items' => [3, 6, 7]],
+        ['id' => 3, 'name' => 'C', 'items' => [4, 5]],
+];
+
+$gsps = [
+        ['spec_key' => '1_3_4', 'store_count' => 0],
+        ['spec_key' => '1_3_5', 'store_count' => 0],
+        ['spec_key' => '1_4_6', 'store_count' => 1],
+        ['spec_key' => '1_5_6', 'store_count' => 1],
+        ['spec_key' => '1_4_7', 'store_count' => 1],
+        ['spec_key' => '1_5_7', 'store_count' => 1],
+        ['spec_key' => '2_3_4', 'store_count' => 1],
+        ['spec_key' => '2_3_5', 'store_count' => 1],
+        ['spec_key' => '2_4_6', 'store_count' => 0],
+        ['spec_key' => '2_5_6', 'store_count' => 0],
+        ['spec_key' => '2_4_7', 'store_count' => 1],
+        ['spec_key' => '2_5_7', 'store_count' => 1],
+];
+?>
 <style>
     .item{
         display: inline-block;
@@ -21,7 +42,7 @@
     <div>
         <div><?= $spec['name'] ?></div>
         <div class="item-box">
-            <?php foreach ($spec['items'] as $name): ?>
+    <?php foreach ($spec['items'] as $name): ?>
                 <div class="item" data-level="<?= $index ?>" data-id="<?= $name ?>" onclick="onItemClick(<?= $index ?>,<?= $name ?>)"><?= $name ?></div>
             <?php endforeach; ?>
         </div>
@@ -79,7 +100,7 @@
             var ids = spec_key_arr.slice(0, index);
             var counts = getSpecItemChildCount(index == 0 ? null : ids.join("_"));
             var items = specs[index].items;
-            console.log(ids.join("_"),counts);
+            console.log(ids.join("_"), counts);
             $(items).each(function (i, id) {
                 spec_item_counts[id] = counts[id];
             });

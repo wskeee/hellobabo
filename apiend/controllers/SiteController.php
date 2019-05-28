@@ -61,85 +61,14 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex($target_id)
+    public function actionIndex()
     {
-
-        $specs = [
-            ['id' => 1, 'name' => 'A', 'items' => [1, 2]],
-            ['id' => 2, 'name' => 'B', 'items' => [3, 6, 7]],
-            ['id' => 3, 'name' => 'C', 'items' => [4, 5]],
-        ];
-
-        $gsps = [
-            ['spec_key' => '1_3_4', 'store_count' => 0],
-            ['spec_key' => '1_3_5', 'store_count' => 0],
-            ['spec_key' => '1_4_6', 'store_count' => 1],
-            ['spec_key' => '1_5_6', 'store_count' => 1],
-            ['spec_key' => '1_4_7', 'store_count' => 1],
-            ['spec_key' => '1_5_7', 'store_count' => 1],
-            ['spec_key' => '2_3_4', 'store_count' => 1],
-            ['spec_key' => '2_3_5', 'store_count' => 1],
-            ['spec_key' => '2_4_6', 'store_count' => 0],
-            ['spec_key' => '2_5_6', 'store_count' => 0],
-            ['spec_key' => '2_4_7', 'store_count' => 1],
-            ['spec_key' => '2_5_7', 'store_count' => 1],
-        ];
-
-        $gsps_map = ArrayHelper::map($gsps, 'spec_key', 'store_count');
-
-        $counts = $this->getCount($target_id, $gsps_map);
-
-
-        return $this->render('spec', [
-                    'specs' => $specs,
-                    'gsps' => $gsps
-        ]);
+        echo json_encode(\common\models\system\Region::getRegionByJson(3),JSON_UNESCAPED_UNICODE);
+        exit;
+        
+        return $this->render('spec');
     }
     
-    public function actionGetCount($target_id){
-        $specs = [
-            ['id' => 1, 'name' => 'A', 'items' => [1, 2]],
-            ['id' => 2, 'name' => 'B', 'items' => [3, 4, 5]],
-            ['id' => 3, 'name' => 'C', 'items' => [6, 7]],
-        ];
-
-        $gsps = [
-            ['spec_key' => '1_3_6', 'store_count' => 0],
-            ['spec_key' => '1_3_7', 'store_count' => 0],
-            ['spec_key' => '1_4_6', 'store_count' => 1],
-            ['spec_key' => '1_4_7', 'store_count' => 1],
-            ['spec_key' => '1_5_6', 'store_count' => 1],
-            ['spec_key' => '1_5_7', 'store_count' => 1],
-            ['spec_key' => '2_3_6', 'store_count' => 1],
-            ['spec_key' => '2_3_7', 'store_count' => 1],
-            ['spec_key' => '2_4_6', 'store_count' => 0],
-            ['spec_key' => '2_4_7', 'store_count' => 0],
-            ['spec_key' => '2_5_6', 'store_count' => 1],
-            ['spec_key' => '2_5_7', 'store_count' => 1],
-        ];
-
-        $gsps_map = ArrayHelper::map($gsps, 'spec_key', 'store_count');
-
-        return $this->getCount($target_id, $gsps_map);
-    }
-
-    private function getCount($spec_item_id, $gsps_map)
-    {
-        $spec_items = [];
-        foreach ($gsps_map as $key => $count) {
-            $spec_items_ids = explode('_', $key);
-            if (!isset($spec_item_id) || in_array($spec_item_id, $spec_items_ids)) {
-                foreach ($spec_items_ids as $id) {
-                    if (!isset($spec_items[$id])) {
-                        $spec_items[$id] = 0;
-                    }
-                    $spec_items[$id] += $count;
-                }
-            }
-        }
-        return $spec_items;
-    }
-
     /**
      * Login action.
      *

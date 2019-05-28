@@ -158,3 +158,51 @@ Content-Length: 78
 {"errcode":40029,"errmsg":"invalid code, hints: [ req_id: WGkcY24ce-VscVta ]"}
 --------
 NULL  
+[2019-05-24 23:12:54] NULL.INFO: >>>>>>>>
+GET /sns/jscode2session?access_token=21_QnKtQT6Xhq3ycbqJbneXHPDO3pkF4dz4GM_1JPYDWjgRnc998cbGA3as5W09wH9fjU4IA7AnrwJTby5F2xQjKsX2l3x42YPcCwwsYKzoHmHwcnWSSP2I8fvSWgNakphF4SMEvF3sJaTrRNUVHNGbAJASYR&appid=wx69f4a713347ecd2e&secret=55ac60d686d8f67fae0149a2032e86db&js_code=023J0pse2JeN7G03nrte2VIKse2J0psr&grant_type=authorization_code HTTP/1.1
+Host: api.weixin.qq.com
+User-Agent: GuzzleHttp/6.3.3 curl/7.61.1 PHP/7.2.14
+
+
+<<<<<<<<
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain
+Date: Fri, 24 May 2019 15:12:45 GMT
+Content-Length: 82
+
+{"session_key":"tBgNGZ5dv3FB8MfsR09Qvw==","openid":"oA0pO5fjpEO5pHCED6JNQS0NLNW0"}
+--------
+NULL  
+[2019-05-25 19:14:29] NULL.INFO: >>>>>>>>
+GET /sns/jscode2session?access_token=21_HtZCNMm2YF-78Y8mpJxu2N6UM9R2wDBRWGQ3dWC1obxHux2grXqEvNjbfJSNGxf2XqEmRcS_AT5qJhBYuLcoJaRyt2o8B_dFyw6h3bIiq-v0b5w7tXTYeL0Tyy5t4AKSbsoMWVj2pDjd5-MRCMMdAAAVFF&appid=wx69f4a713347ecd2e&secret=55ac60d686d8f67fae0149a2032e86db&js_code=023XasRq0YhJrn11nxQq0EvvRq0XasRe&grant_type=authorization_code HTTP/1.1
+Host: api.weixin.qq.com
+User-Agent: GuzzleHttp/6.3.3 curl/7.61.1 PHP/7.2.14
+
+
+<<<<<<<<
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain
+Date: Sat, 25 May 2019 11:14:19 GMT
+Content-Length: 82
+
+{"session_key":"NuVWR0jWFiqXHBr27nAUEQ==","openid":"oA0pO5fjpEO5pHCED6JNQS0NLNW0"}
+--------
+NULL  
+[2019-05-27 23:02:10] NULL.INFO: >>>>>>>>
+GET /sns/jscode2session?access_token=21_-kXswS2AhUzfIgSppWHi56Oe-SeEhw4PUO4bq0XuPiVvoD3y4M_DzUJ3OhtxSs15wn_g9E7g-4QQt7WiE61XZ-QZxi73T3BSEe6FVBQIvpQ8JMc8wN8vDe7x57y93MRMC65lPAWUmnz_oVLTEEAfAAARRN&appid=wx69f4a713347ecd2e&secret=55ac60d686d8f67fae0149a2032e86db&js_code=023Iws1M1eQkb61A6V0M1uvt1M1Iws1a&grant_type=authorization_code HTTP/1.1
+Host: api.weixin.qq.com
+User-Agent: GuzzleHttp/6.3.3 curl/7.61.1 PHP/7.2.14
+
+
+<<<<<<<<
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain
+Date: Mon, 27 May 2019 15:02:10 GMT
+Content-Length: 83
+
+{"session_key":"XaQ0Tkw4q\/rMhW35oWhCZg==","openid":"oA0pO5fjpEO5pHCED6JNQS0NLNW0"}
+--------
+NULL  
