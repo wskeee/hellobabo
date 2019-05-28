@@ -3,6 +3,8 @@
 namespace common\models\order;
 
 use common\components\redis\RedisService;
+use common\models\User;
+use common\utils\I18NUitl;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Exception;
@@ -47,6 +49,8 @@ use yii\db\Exception;
  * @property int $created_by 创建人id（购买人ID），关联user表id字段
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
+ * 
+ * @property User $creater 创建人
  */
 class Order extends ActiveRecord
 {
@@ -132,15 +136,15 @@ class Order extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'order_sn' => Yii::t('app', 'Order Sn'),
-            'goods_id' => Yii::t('app', 'Goods ID'),
-            'goods_name' => Yii::t('app', 'Goods Name'),
+            'goods_id' => Yii::t('app', 'Goods'),
+            'goods_name' => Yii::t('app', 'Goods'),
             'goods_price' => Yii::t('app', 'Goods Price'),
             'goods_num' => Yii::t('app', 'Goods Num'),
             'spec_id' => Yii::t('app', 'Spec ID'),
             'spec_key' => Yii::t('app', 'Spec Key'),
-            'spec_key_name' => Yii::t('app', 'Spec Key Name'),
-            'order_amount' => Yii::t('app', 'Order Amount'),
-            'order_status' => Yii::t('app', 'Order Status'),
+            'spec_key_name' => Yii::t('app', 'Spec'),
+            'order_amount' => I18NUitl::t('app', '{Order}{Amount}'),
+            'order_status' => I18NUitl::t('app', '{Order}{Status}'),
             'work_status' => Yii::t('app', 'Work Status'),
             'user_note' => Yii::t('app', 'User Note'),
             'play_code' => Yii::t('app', 'Play Code'),
@@ -244,6 +248,14 @@ class Order extends ActiveRecord
      */
     public function getIsValid(){
         return $this->order_status != self::ORDER_STATUS_CANCELED && $this->order_status != self::ORDER_STATUS_INVALID;
+    }
+    
+    /**
+     * 
+     * @return QueryRecord
+     */
+    public function getCreater(){
+        return $this->hasOne(User::class, ['id' => 'created_by']);
     }
 
 }

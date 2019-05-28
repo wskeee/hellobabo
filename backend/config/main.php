@@ -80,6 +80,10 @@ return [
         'goods_config' => [
             'class' => 'backend\modules\goods_config\Module',
         ],
+        //订单管理
+        'order_admin' => [
+            'class' => 'backend\modules\order_admin\Module',
+        ],
         //统计
 //        'statistics' => [
 //            'class' => 'backend\modules\statistics\Module',

@@ -374,6 +374,7 @@ return [
     'Goods Operate' => '商品运营',
     'Tegistration Time' => '注册时间',
     
+    
     //后台-定时任务
     'Crontab' => '定时任务',
     'Crontabs' => '日常任务',
@@ -483,6 +484,7 @@ return [
     //前台
     'Online' => '在线',
     'Order' => '订单',
+    'Orders' => '订单列表',
     'Order Sn' => '订单编号',
     'Goods Sn' => '商品编号',
     'Amount' => '金额',
