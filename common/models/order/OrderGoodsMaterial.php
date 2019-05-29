@@ -37,7 +37,7 @@ class OrderGoodsMaterial extends ActiveRecord
     {
         return [
             [['order_id', 'material_id', 'value_id', 'is_del'], 'integer'],
-            [['order_goods_id', 'material_id', 'value_id'], 'required'],
+            [['material_id', 'value_id'], 'required'],
             [['value_name',], 'string', 'max' => 20],
             [['value_effect_url', 'value_source_url', 'value_des'], 'string', 'max' => 255],
         ];

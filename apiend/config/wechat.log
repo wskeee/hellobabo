@@ -206,3 +206,19 @@ Content-Length: 83
 {"session_key":"XaQ0Tkw4q\/rMhW35oWhCZg==","openid":"oA0pO5fjpEO5pHCED6JNQS0NLNW0"}
 --------
 NULL  
+[2019-05-29 21:53:31] NULL.INFO: >>>>>>>>
+GET /sns/jscode2session?access_token=22_yBqlQH2Evz_dyt24EBaVIs3yXBZa4_voKkaNUieawqhE5bsBZR9sgdYr4WLr4NQ53I1luw7zYZSsbEfXM9cIErPnRZs9twgedl61nfIafz6m3xaKj_5bjFoBfF7utJLhDKQ_NtXt3OVAu0XyRCFeADAWHK&appid=wx69f4a713347ecd2e&secret=55ac60d686d8f67fae0149a2032e86db&js_code=023whJ9F0ZYWad2ZSi8F0fjy9F0whJ9b&grant_type=authorization_code HTTP/1.1
+Host: api.weixin.qq.com
+User-Agent: GuzzleHttp/6.3.3 curl/7.61.1 PHP/7.2.14
+
+
+<<<<<<<<
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Type: text/plain
+Date: Wed, 29 May 2019 13:53:29 GMT
+Content-Length: 83
+
+{"session_key":"KoKGwibejZGWbJP9wEvM\/A==","openid":"oA0pO5fjpEO5pHCED6JNQS0NLNW0"}
+--------
+NULL  

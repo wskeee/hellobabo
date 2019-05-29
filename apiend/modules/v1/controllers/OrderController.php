@@ -11,6 +11,7 @@ use apiend\modules\v1\actions\order\Init;
 use apiend\modules\v1\actions\order\InitReady;
 use apiend\modules\v1\actions\order\OrderReady;
 use apiend\modules\v1\actions\order\Pay;
+use apiend\modules\v1\actions\order\SaveGoodsMaterial;
 
 /**
  * 套餐
@@ -31,6 +32,7 @@ class OrderController extends ApiController
             'check-pay' => ['get'],
             'init-ready' => ['get'],
             'init' => ['post'],
+            'save-goods-material' => ['post'],
             'get-list' => ['get'],
             'get-order-detail' => ['get'],
             'ready' => ['get'],
@@ -49,6 +51,7 @@ class OrderController extends ApiController
             'check-pay' => ['class' => CheckPay::class],
             'init-ready' => ['class' => InitReady::class],
             'init' => ['class' => Init::class],
+            'save-goods-material' => ['class' => SaveGoodsMaterial::class],
             'get-list' => ['class' => GetOrderList::class],
             'get-detail' => ['class' => GetOrderDetail::class],
             'ready' => ['class' => OrderReady::class],

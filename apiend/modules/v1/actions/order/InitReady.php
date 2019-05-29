@@ -10,6 +10,7 @@ use common\models\order\OrderGoodsMaterial;
 use common\models\order\OrderGoodsScene;
 use common\models\User;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * 初始绘本准备
@@ -31,7 +32,7 @@ class InitReady extends BaseAction
         //所有绘本素材
         $goodsMaterials = GoodsMaterial::find()->where(['goods_id' => $order->goods_id, 'is_del' => 0])->all();
         //已经选择的素材
-        $orderGoodsMaterials = OrderGoodsMaterial::find()->where(['order_id' => $order->id, 'is_del' => 0])->all();
+        $orderGoodsMaterials = ArrayHelper::index(OrderGoodsMaterial::find()->where(['order_id' => $order->id, 'is_del' => 0])->all(), 'material_id');
         //已经选择的场景
         $orderGoodsScenes = OrderGoodsScene::find()->where(['order_id' => $order->id, 'is_del' => 0])->all();
 

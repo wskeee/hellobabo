@@ -11,7 +11,7 @@ use common\models\goods\GoodsMaterialValue;
  *
  * @author Administrator
  */
-class GetMaterialList extends BaseAction
+class GetMaterialValueList extends BaseAction
 {
     /* 必须参数 */
 

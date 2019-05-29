@@ -37,14 +37,19 @@ class SaveGoodsMaterial extends BaseAction
                 'value_des' => $m_value->des,
             ]);
         } else {
-            $model->is_del = 1;
+            if($model->is_del == 0){
+                //未发生改变
+                return new Response(Response::CODE_COMMON_OK, null, $model);
+            }else{
+                $model->is_del = 0;
+            }
         }
 
         //清除上次记录
         OrderGoodsMaterial::updateAll(['is_del' => 1], ['order_id' => $order_id, 'material_id' => $material_id]);
         //重新保存
         if ($model->validate() && $model->save()) {
-            return new Response(Response::CODE_COMMON_OK);
+            return new Response(Response::CODE_COMMON_OK, null, $model);
         } else {
             return new Response(Response::CODE_COMMON_SAVE_DB_FAIL, null, $model->getErrorSummary(true));
         }

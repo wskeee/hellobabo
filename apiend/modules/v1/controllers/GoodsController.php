@@ -5,7 +5,7 @@ namespace apiend\modules\v1\controllers;
 use apiend\controllers\ApiController;
 use apiend\modules\v1\actions\goods\GetGoodsDetail;
 use apiend\modules\v1\actions\goods\GetGoodsList;
-use apiend\modules\v1\actions\goods\GetMaterialList;
+use apiend\modules\v1\actions\goods\GetMaterialValueList;
 
 /**
  * 绘本
@@ -24,7 +24,7 @@ class GoodsController extends ApiController
         $behaviors['verbs']['actions'] = [
             'get-list' => ['get'],
             'get-detail' => ['get'],
-            'get-material-list' => ['get'],
+            'get-material-value-list' => ['get'],
         ];
         return $behaviors;
     }
@@ -37,7 +37,7 @@ class GoodsController extends ApiController
         return [
             'get-list' => ['class' => GetGoodsList::class],
             'get-detail' => ['class' => GetGoodsDetail::class],
-            'get-material-list' => ['class' => GetMaterialList::class],
+            'get-material-value-list' => ['class' => GetMaterialValueList::class],
         ];
     }
 
