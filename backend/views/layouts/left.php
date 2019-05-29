@@ -76,6 +76,7 @@ use common\widgets\Menu;
                             ['label' => '商品列表', 'icon' => 'circle-o', 'url' => ['/goods_admin/goods/index']],
                             ['label' => '商品审核', 'icon' => 'circle-o', 'url' => ['/goods_admin/approve/index']],
                             ['label' => '订单列表', 'icon' => 'circle-o', 'url' => ['/order_admin/default/index']],
+                            ['label' => '设计', 'icon' => 'circle-o', 'url' => ['/order_admin/design/index']],
                             ['label' => '回收站', 'icon' => 'circle-o', 'url' => ['/goods_admin/recycle/index']],
                         ],
                     ],

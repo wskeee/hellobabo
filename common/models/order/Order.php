@@ -51,6 +51,10 @@ use yii\db\Exception;
  * @property int $updated_at 更新时间
  * 
  * @property User $creater 创建人
+ * @property User $referrer 推荐人
+ * @property OrderGoodsMaterial[] $orderGoodsMaterials 订单素材
+ * @property OrderGoodsScene[] $orderGoodsScenes 订单场景
+ * @property OrderAction[] $actionLogs 订单场景
  */
 class Order extends ActiveRecord
 {
@@ -151,7 +155,7 @@ class Order extends ActiveRecord
             'pay_sn' => Yii::t('app', 'Pay Sn'),
             'pay_at' => Yii::t('app', 'Pay At'),
             'init_at' => Yii::t('app', 'Init At'),
-            'upload_finish_at' => Yii::t('app', 'Upload Finish At'),
+            'upload_finish_at' => Yii::t('app', 'Upload At'),
             'design_at' => Yii::t('app', 'Design At'),
             'print_at' => Yii::t('app', 'Print At'),
             'shipping_at' => Yii::t('app', 'Shipping At'),
@@ -256,6 +260,38 @@ class Order extends ActiveRecord
      */
     public function getCreater(){
         return $this->hasOne(User::class, ['id' => 'created_by']);
+    }
+    
+    /**
+     * 推荐人
+     * @return QueryRecord
+     */
+    public function getReferrer(){
+        return $this->hasOne(User::class, ['id' => 'recommend_by']);
+    }
+    
+    /**
+     * 订单素材
+     * @return QueryRecord
+     */
+    public function getOrderGoodsMaterials(){
+        return $this->hasMany(OrderGoodsMaterial::class, ['order_id' => 'id'])->where(['is_del' => 0]);
+    }
+    
+    /**
+     * 订单场景 
+     * @return QueryRecord
+     */
+    public function getOrderGoodsScenes(){
+        return $this->hasMany(OrderGoodsScene::class, ['order_id' => 'id'])->where(['is_del' => 0]);
+    }
+    
+    /**
+     * 制作日志
+     * @return QueryRecord
+     */
+    public function getActionLogs(){
+        return $this->hasMany(OrderAction::class, ['order_id' => 'id']);
     }
 
 }

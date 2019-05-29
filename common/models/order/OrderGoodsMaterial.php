@@ -2,7 +2,9 @@
 
 namespace common\models\order;
 
+use common\utils\I18NUitl;
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%order_goods_material}}".
@@ -17,7 +19,7 @@ use Yii;
  * @property int $value_des 素材值描述
  * @property int $is_del 是否已删除 0否 1是
  */
-class OrderGoodsMaterial extends \yii\db\ActiveRecord
+class OrderGoodsMaterial extends ActiveRecord
 {
 
     /**
@@ -51,10 +53,10 @@ class OrderGoodsMaterial extends \yii\db\ActiveRecord
             'order_id' => Yii::t('app', 'Order ID'),
             'material_id' => Yii::t('app', 'Material ID'),
             'value_id' => Yii::t('app', 'Material Value ID'),
-            'value_name' => Yii::t('app', 'Material Value Name'),
-            'value_effect_url' => Yii::t('app', 'Material Value Effect'),
-            'value_source_url' => Yii::t('app', 'Material Value Source'),
-            'value_des' => Yii::t('app', 'Material Value Des'),
+            'value_name' => I18NUitl::t('app', '{Material}{Name}'),
+            'value_effect_url' => Yii::t('app', 'Effect Url'),
+            'value_source_url' => Yii::t('app', 'Source Url'),
+            'value_des' => Yii::t('app', 'Des'),
             'is_del' => Yii::t('app', 'Is Del'),
         ];
     }

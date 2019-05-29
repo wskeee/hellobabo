@@ -2,7 +2,9 @@
 
 namespace common\models\order;
 
+use common\models\AdminUser;
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%workflow_design}}".
@@ -17,9 +19,26 @@ use Yii;
  * @property int $worker_id 设计人ID，关联admin_user,id
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
+ * 
+ * @property Order $order 订单
+ * @property AdminUser $worder 操作人
  */
-class WorkflowDesign extends \yii\db\ActiveRecord
+class WorkflowDesign extends ActiveRecord
 {
+    const STATUS_WAIT_START = 0;   //待开始
+    const STATUS_RUNGING = 1;       //未完成
+    const STATUS_ENDED = 2;         //已完成
+    
+    /**
+     * 状态名称
+     * @var type 
+     */
+    public static $statusNameMap = [
+        self::STATUS_WAIT_START => '待开始',
+        self::STATUS_RUNGING => '制作中',
+        self::STATUS_ENDED => '已完成',
+    ];
+    
     /**
      * {@inheritdoc}
      */
@@ -35,7 +54,7 @@ class WorkflowDesign extends \yii\db\ActiveRecord
     {
         return [
             [['order_id'], 'required'],
-            [['order_id', 'order_goods_id', 'status', 'start_at', 'end_at', 'worker_id', 'created_at', 'updated_at'], 'integer'],
+            [['order_id', 'status', 'start_at', 'end_at', 'worker_id', 'created_at', 'updated_at'], 'integer'],
             [['order_sn'], 'string', 'max' => 20],
         ];
     }
@@ -49,7 +68,6 @@ class WorkflowDesign extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'order_id' => Yii::t('app', 'Order ID'),
             'order_sn' => Yii::t('app', 'Order Sn'),
-            'order_goods_id' => Yii::t('app', 'Order Goods ID'),
             'status' => Yii::t('app', 'Status'),
             'start_at' => Yii::t('app', 'Start At'),
             'end_at' => Yii::t('app', 'End At'),
@@ -57,5 +75,21 @@ class WorkflowDesign extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+    
+    /**
+     * 操作人
+     * @return QueryRecord
+     */
+    public function getWorker(){
+        return $this->hasOne(AdminUser::class, ['id' => 'worker_id']);
+    }
+    
+    /**
+     * 订单
+     * @return QueryRecord
+     */
+    public function getOrder(){
+        return $this->hasOne(Order::class, ['id' => 'order_id']);
     }
 }

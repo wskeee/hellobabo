@@ -11,14 +11,16 @@ use common\models\order\Order;
  */
 class OrderSearch extends Order
 {
+    public $date_range;
+    
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id', 'goods_id', 'goods_num', 'spec_id', 'order_status', 'work_status', 'play_at', 'init_at', 'upload_finish_at', 'design_at', 'print_at', 'shipping_at', 'confirm_at', 'country', 'province', 'city', 'district', 'town', 'is_recommend', 'recommend_by', 'created_by', 'created_at', 'updated_at'], 'integer'],
-            [['order_sn', 'goods_name', 'spec_key', 'spec_key_name', 'user_note', 'play_code', 'play_sn', 'consignee', 'zipcode', 'phone', 'address'], 'safe'],
+            [['goods_id', 'spec_id', 'order_status', 'work_status', 'country', 'province', 'city', 'district', 'town', 'is_recommend', 'recommend_by', 'created_by',], 'integer'],
+            [['order_sn', 'goods_name', 'spec_key', 'spec_key_name', 'consignee',], 'safe'],
             [['goods_price', 'order_amount'], 'number'],
         ];
     }
@@ -56,24 +58,18 @@ class OrderSearch extends Order
             // $query->where('0=1');
             return $dataProvider;
         }
+        
+        if (!empty($this->date_range)) {
+            $timeRang = array_filter(explode(' - ', $this->date_range));
+            $query->andWhere(['between', 'created_at', $timeRang[0], $timeRang[1]]);
+        }
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
             'goods_id' => $this->goods_id,
-            'goods_price' => $this->goods_price,
-            'goods_num' => $this->goods_num,
             'spec_id' => $this->spec_id,
-            'order_amount' => $this->order_amount,
             'order_status' => $this->order_status,
             'work_status' => $this->work_status,
-            'play_at' => $this->play_at,
-            'init_at' => $this->init_at,
-            'upload_finish_at' => $this->upload_finish_at,
-            'design_at' => $this->design_at,
-            'print_at' => $this->print_at,
-            'shipping_at' => $this->shipping_at,
-            'confirm_at' => $this->confirm_at,
             'country' => $this->country,
             'province' => $this->province,
             'city' => $this->city,
@@ -82,21 +78,14 @@ class OrderSearch extends Order
             'is_recommend' => $this->is_recommend,
             'recommend_by' => $this->recommend_by,
             'created_by' => $this->created_by,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
         ]);
 
         $query->andFilterWhere(['like', 'order_sn', $this->order_sn])
             ->andFilterWhere(['like', 'goods_name', $this->goods_name])
-            ->andFilterWhere(['like', 'spec_key', $this->spec_key])
             ->andFilterWhere(['like', 'spec_key_name', $this->spec_key_name])
-            ->andFilterWhere(['like', 'user_note', $this->user_note])
-            ->andFilterWhere(['like', 'play_code', $this->play_code])
-            ->andFilterWhere(['like', 'play_sn', $this->play_sn])
+            ->andFilterWhere(['like', 'pay_sn', $this->pay_sn])
             ->andFilterWhere(['like', 'consignee', $this->consignee])
-            ->andFilterWhere(['like', 'zipcode', $this->zipcode])
-            ->andFilterWhere(['like', 'phone', $this->phone])
-            ->andFilterWhere(['like', 'address', $this->address]);
+            ->andFilterWhere(['like', 'phone', $this->phone]);
 
         return $dataProvider;
     }

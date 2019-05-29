@@ -1,7 +1,7 @@
 <?php
-
 namespace common\models\order;
 
+use common\models\AdminUser;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Exception;
@@ -16,6 +16,8 @@ use yii\db\Exception;
  * @property int $created_by 操作人id（0为用户操作）,关联admin_user表id字段
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
+ * 
+ * @property AdminUser $creater 创建人
  */
 class OrderAction extends ActiveRecord
 {
@@ -68,7 +70,7 @@ class OrderAction extends ActiveRecord
             return 0;
         }
         try{
-            $created_by = \Yii::$app->user->id;
+            $created_by = Yii::$app->user->id;
         } catch (Exception $ex) {
             $created_by = 0;
         }
@@ -83,6 +85,14 @@ class OrderAction extends ActiveRecord
                 $time, $time
             ];
         }
-        return \Yii::$app->db->createCommand()->batchInsert(self::tableName(), ['order_id', 'title', 'content', 'created_by', 'created_at', 'updated_at'], $rows)->execute();
+        return Yii::$app->db->createCommand()->batchInsert(self::tableName(), ['order_id', 'title', 'content', 'created_by', 'created_at', 'updated_at'], $rows)->execute();
+    }
+    
+    /**
+     * 操作人
+     * @return QueryRecord
+     */
+    public function getCreater(){
+        return $this->hasOne(AdminUser::class, ['id' => 'created_by']);
     }
 }
