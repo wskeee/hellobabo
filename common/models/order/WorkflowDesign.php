@@ -12,7 +12,6 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property int $order_id 订单id，关联order表id字段
  * @property string $order_sn 订单编号,关联order,sn
- * @property int $order_goods_id 订单商品ID,关联order_goods,id
  * @property int $status 状态 0未完成，1已完成
  * @property int $start_at 开始时间
  * @property int $end_at 结束时间
@@ -71,7 +70,7 @@ class WorkflowDesign extends ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'start_at' => Yii::t('app', 'Start At'),
             'end_at' => Yii::t('app', 'End At'),
-            'worker_id' => Yii::t('app', 'Worker'),
+            'worker_id' => Yii::t('app', 'Designer'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];

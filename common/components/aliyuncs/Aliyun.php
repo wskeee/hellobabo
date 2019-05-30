@@ -84,6 +84,17 @@ class Aliyun extends Component {
     public static function getOssHost(){
         return "http://" . \Yii::$app->params['aliyun']['oss']['host-output'];
     }
+    
+    /**
+     * 从地址分析拿 object key
+     * @param string $url
+     */
+    public static function getObjectKeyFormUrl($url){
+        if($url != ""){
+            return str_replace(self::getOssHost()."/", "", $url);
+        }
+        return $url;
+    }
 
 }
 

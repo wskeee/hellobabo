@@ -77,7 +77,7 @@
         if (showLoading) {
             BtnLoader.setLoading(_this, true);
         }
-        
+
         $.ajax({
             url: url,
             type: method == 'GET' ? 'GET' : 'POST',
@@ -119,7 +119,8 @@
      */
     $(win).on('load', function () {
         $('button[data-toggle=btnloader],a[data-toggle=btnloader]').on('click', function () {
-            var datas = BtnLoader.config['dataProvideFun']();
+            var dataProvideFun = $(this).attr('dataProvideFun');
+            var datas = dataProvideFun ? win[dataProvideFun]() : BtnLoader.config['dataProvideFun']();
             if (datas) {
                 //检查是否需要强提示
                 var confirm_str = $(this).attr('data-confirm');

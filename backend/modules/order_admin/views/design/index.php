@@ -1,12 +1,12 @@
 <?php
 
+use backend\modules\order_admin\assets\OrderModuleAsset;
 use common\models\order\searchs\WorkflowDesignSearch;
 use common\models\order\WorkflowDesign;
 use common\modules\rbac\components\ResourceHelper;
 use common\utils\I18NUitl;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
-use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
@@ -18,7 +18,11 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="workflow-design-index">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
+
+    <p class="btn-box">
+
+    </p>
 
     <?=
     GridView::widget([

@@ -22,9 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="order-index">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php  echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
+    <p class="btn-box">
         <?=
         ResourceHelper::a(Yii::t('app', 'Invalid'), ['invalid'], [
             'class' => 'btn btn-danger',

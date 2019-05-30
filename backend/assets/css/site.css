@@ -529,3 +529,17 @@ a.desc:after {
     width: 145px;
     margin-right: 5px;
 }
+/*******************************************************************************
+ *
+ * 搜索面板
+ *
+********************************************************************************/
+/* 其它选项 */
+.dep-dropdown-box{
+    float: left;
+}
+.dep-dropdown-box .dep-dropdown{
+    display: inline-block;
+    width: 125px;
+    margin-left: 5px;
+}

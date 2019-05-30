@@ -14,7 +14,7 @@ class WorkflowDesignSearch extends WorkflowDesign
 {
     public $order_sn; //订单sn
     public $consignee; //联系人
-    public $time; //时间段内任务 格式：2019-04-10 - 2019-04-15
+    public $date_range; //时间段内任务 格式：2019-04-10 - 2019-04-15
 
     /**
      * {@inheritdoc}
@@ -24,7 +24,7 @@ class WorkflowDesignSearch extends WorkflowDesign
     {
         return [
             [['status', 'worker_id',], 'integer'],
-            [['time',], 'string'],
+            [['date_range',], 'string'],
             [['order_sn', 'consignee'], 'safe'],
         ];
     }
@@ -54,7 +54,7 @@ class WorkflowDesignSearch extends WorkflowDesign
      */
     public function search($params)
     {
-        $query = WorkflowDesign::find();
+        $query = WorkflowDesign::find()->from(['Design' => WorkflowDesign::tableName()]);
 
         // add conditions that should always apply here
 
@@ -74,13 +74,13 @@ class WorkflowDesignSearch extends WorkflowDesign
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'status' => $this->status,
-            'worker_id' => $this->worker_id,
+            'Design.status' => $this->status,
+            'Design.worker_id' => $this->worker_id,
         ]);
 
-        if (!empty($this->time)) {
-            $timeRang = array_filter(explode(' - ', $this->time));
-            $query->andWhere(['between', 'created_at', $timeRang[0], $timeRang[1]]);
+        if (!empty($this->date_range)) {
+            $timeRang = array_filter(explode(' - ', $this->date_range));
+            $query->andWhere(['between', 'Design.created_at', $timeRang[0], $timeRang[1]]);
         }
 
         $query->andFilterWhere(['like', 'Order.order_sn', $this->order_sn]);

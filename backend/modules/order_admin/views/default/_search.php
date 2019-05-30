@@ -1,8 +1,10 @@
 <?php
 
 use common\models\goods\Goods;
+use common\models\order\Order;
 use common\models\order\searchs\OrderSearch;
 use common\utils\I18NUitl;
+use kartik\daterange\DateRangePicker;
 use kartik\widgets\Select2;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -42,7 +44,7 @@ use yii\widgets\ActiveForm;
             Select2::widget([
                 'model' => $model,
                 'attribute' => 'goods_id',
-                'data' => ArrayHelper::map(Goods::find()->all(), 'id', 'name'),
+                'data' => ArrayHelper::map(Goods::find()->all(), 'id', 'goods_name'),
                 'options' => ['placeholder' => Yii::t('app', 'Goods')],
                 'pluginOptions' => ['allowClear' => true],
                 'pluginEvents' => ['change' => 'function(){ submitForm()}']
@@ -70,8 +72,8 @@ use yii\widgets\ActiveForm;
             <?=
             Select2::widget([
                 'model' => $model,
-                'attribute' => 'status',
-                'data' => Order::$statusKeyMap,
+                'attribute' => 'order_status',
+                'data' => Order::$orderStatusNameMap,
                 'options' => ['placeholder' => Yii::t('app', 'Status')],
                 'pluginOptions' => ['allowClear' => true],
                 'pluginEvents' => ['change' => 'function(){ submitForm()}']

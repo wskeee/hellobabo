@@ -1,18 +1,21 @@
 <?php
 
+use backend\modules\order_admin\assets\OrderModuleAsset;
 use common\models\order\WorkflowDesign;
 use common\modules\rbac\components\ResourceHelper;
 use common\utils\I18NUitl;
+use common\widgets\btnloader\BtnLoaderAsset;
+use kartik\growl\GrowlAsset;
 use yii\web\View;
 use yii\web\YiiAsset;
-use yii\widgets\DetailView;
 
+OrderModuleAsset::register($this);
 YiiAsset::register($this);
 
 /* @var $this View */
 /* @var $model WorkflowDesign */
 
-$this->title = $model->id;
+$this->title = I18NUitl::t('app', '{Design}{Detail}：') . $model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Workflow Designs'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -31,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ]]);
         } else if ($model->status == WorkflowDesign::STATUS_RUNGING) {
             //结束
-            ResourceHelper::a(I18NUitl::t('app', '{End}{Design}'), ['end', 'id' => $model->id], [
+            echo ResourceHelper::a(I18NUitl::t('app', '{End}{Design}'), ['end', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
                 'data' => [
                     'confirm' => Yii::t('app', '你确定要做该操作吗？'),
@@ -41,21 +44,11 @@ $this->params['breadcrumbs'][] = $this->title;
         ?>
     </p>
 
-    <?=
-    DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'order_id',
-            'order_sn',
-            'status',
-            'start_at',
-            'end_at',
-            'worker_id',
-            'created_at',
-            'updated_at',
-        ],
-    ])
-    ?>
+    <!-- 基本信息 -->
+    <?= $this->render('_view_baseinfo', ['model' => $model]) ?>
+    <!-- 初始信息 -->
+    <?= $this->render('_view_initinfo', ['model' => $model]) ?>
+    <!-- 场景信息 -->
+    <?= $this->render('_view_sceneinfo', ['model' => $model]) ?>
 
 </div>

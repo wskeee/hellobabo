@@ -11,8 +11,9 @@ use common\models\order\Order;
  */
 class OrderSearch extends Order
 {
+
     public $date_range;
-    
+
     /**
      * {@inheritdoc}
      */
@@ -20,7 +21,7 @@ class OrderSearch extends Order
     {
         return [
             [['goods_id', 'spec_id', 'order_status', 'work_status', 'country', 'province', 'city', 'district', 'town', 'is_recommend', 'recommend_by', 'created_by',], 'integer'],
-            [['order_sn', 'goods_name', 'spec_key', 'spec_key_name', 'consignee',], 'safe'],
+            [['order_sn', 'goods_name', 'spec_key', 'spec_key_name', 'consignee', 'date_range'], 'safe'],
             [['goods_price', 'order_amount'], 'number'],
         ];
     }
@@ -58,7 +59,7 @@ class OrderSearch extends Order
             // $query->where('0=1');
             return $dataProvider;
         }
-        
+
         if (!empty($this->date_range)) {
             $timeRang = array_filter(explode(' - ', $this->date_range));
             $query->andWhere(['between', 'created_at', $timeRang[0], $timeRang[1]]);
@@ -81,12 +82,13 @@ class OrderSearch extends Order
         ]);
 
         $query->andFilterWhere(['like', 'order_sn', $this->order_sn])
-            ->andFilterWhere(['like', 'goods_name', $this->goods_name])
-            ->andFilterWhere(['like', 'spec_key_name', $this->spec_key_name])
-            ->andFilterWhere(['like', 'pay_sn', $this->pay_sn])
-            ->andFilterWhere(['like', 'consignee', $this->consignee])
-            ->andFilterWhere(['like', 'phone', $this->phone]);
+                ->andFilterWhere(['like', 'goods_name', $this->goods_name])
+                ->andFilterWhere(['like', 'spec_key_name', $this->spec_key_name])
+                ->andFilterWhere(['like', 'pay_sn', $this->pay_sn])
+                ->andFilterWhere(['like', 'consignee', $this->consignee])
+                ->andFilterWhere(['like', 'phone', $this->phone]);
 
         return $dataProvider;
     }
+
 }

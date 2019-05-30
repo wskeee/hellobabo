@@ -160,7 +160,7 @@ return [
     'Aliases' => '别名',
     'Value' => '值',
     'Content' => '内容',
-    'Image' => '图像',
+    'Image' => '图片',
     'Icon' => '图标',
     'Link' => '链接',
     'Site' => '场地',

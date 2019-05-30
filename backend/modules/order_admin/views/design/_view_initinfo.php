@@ -1,21 +1,21 @@
 <?php
 
-use common\models\order\Order;
-use common\models\order\OrderGoodsMaterial;
+use common\models\order\WorkflowDesign;
 use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
 
-/* @var $model Order */
+/* @var $model WorkflowDesign */
 ?>
 <div class="wsk-panel goods-info">
-    <div class="title">素材信息</div>
+    <div class="title">
+        素材信息
+    </div>
     <div class="body">
         <?=
         GridView::widget([
-            'dataProvider' => new ArrayDataProvider(['allModels' => $model->orderGoodsMaterials,]),
-           // 'filterModel' => new OrderGoodsMaterial(),
-            'tableOptions' => ['class' => 'table table-striped table-bordered wsk-table'],
+            'dataProvider' => new ArrayDataProvider(['allModels' => $model->order->orderGoodsMaterials,]),
+            // 'filterModel' => new OrderGoodsMaterial(),
             'layout' => "{items}",
             'columns' => [
                 [
