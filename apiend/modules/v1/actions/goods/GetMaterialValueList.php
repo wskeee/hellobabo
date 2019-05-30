@@ -5,6 +5,7 @@ namespace apiend\modules\v1\actions\goods;
 use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
 use common\models\goods\GoodsMaterialValue;
+use yii\helpers\ArrayHelper;
 
 /**
  * 获取素材列表
@@ -25,7 +26,7 @@ class GetMaterialValueList extends BaseAction
                             'is_del' => 0,
                         ])->all();
 
-        return new Response(Response::CODE_COMMON_OK, null, $list);
+        return new Response(Response::CODE_COMMON_OK, null, ArrayHelper::index($list, 'id'));
     }
 
 }

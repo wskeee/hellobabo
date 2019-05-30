@@ -9,6 +9,7 @@ use apiend\modules\v1\actions\order\GetOrderDetail;
 use apiend\modules\v1\actions\order\GetOrderList;
 use apiend\modules\v1\actions\order\Init;
 use apiend\modules\v1\actions\order\InitReady;
+use apiend\modules\v1\actions\order\OrderGoodsSceneReady;
 use apiend\modules\v1\actions\order\OrderReady;
 use apiend\modules\v1\actions\order\Pay;
 use apiend\modules\v1\actions\order\SaveGoodsMaterial;
@@ -33,6 +34,7 @@ class OrderController extends ApiController
             'init-ready' => ['get'],
             'init' => ['post'],
             'save-goods-material' => ['post'],
+            'order-goods-scene-ready' => ['get'],
             'get-list' => ['get'],
             'get-order-detail' => ['get'],
             'ready' => ['get'],
@@ -52,6 +54,7 @@ class OrderController extends ApiController
             'init-ready' => ['class' => InitReady::class],
             'init' => ['class' => Init::class],
             'save-goods-material' => ['class' => SaveGoodsMaterial::class],
+            'order-goods-scene-ready' => ['class' => OrderGoodsSceneReady::class],
             'get-list' => ['class' => GetOrderList::class],
             'get-detail' => ['class' => GetOrderDetail::class],
             'ready' => ['class' => OrderReady::class],

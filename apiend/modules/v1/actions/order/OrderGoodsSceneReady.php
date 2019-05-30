@@ -42,7 +42,7 @@ class OrderGoodsSceneReady extends BaseAction
 
 
         return new Response(Response::CODE_COMMON_OK, null, [
-            'scenes' => $list,
+            'scenes' => ArrayHelper::index($list, null, 'group_id'),
             'groups' => $groups,
             'order_scenes' => $order_scenes,
         ]);
