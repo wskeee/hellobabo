@@ -3,6 +3,8 @@
 namespace common\models\order;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%workflow_delivery}}".
@@ -24,13 +26,13 @@ use Yii;
  * @property string $shipping_name 物流名称
  * @property string $shipping_price 运费
  * @property string $invoice_no 物流单号
- * @property string $note ''
+ * @property string $note '用户留言'
  * @property int $send_type 发货方式 0自填快递 1无需物流
  * @property int $worker_id 发货人ID，关联admin_user,id
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
  */
-class WorkflowDelivery extends \yii\db\ActiveRecord
+class WorkflowDelivery extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -38,6 +40,11 @@ class WorkflowDelivery extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%workflow_delivery}}';
+    }
+    
+    public function behaviors()
+    {
+        return [TimestampBehavior::class];
     }
 
     /**

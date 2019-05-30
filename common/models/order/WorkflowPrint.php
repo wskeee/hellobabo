@@ -18,6 +18,9 @@ use yii\db\ActiveRecord;
  * @property int $worker_id 打印人id,关联admin_user表id字段
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
+ * 
+ * @property Order $order 订单
+ * @property AdminUser $worder 操作人
  */
 class WorkflowPrint extends ActiveRecord
 {
