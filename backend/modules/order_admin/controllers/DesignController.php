@@ -4,6 +4,8 @@ namespace backend\modules\order_admin\controllers;
 
 use apiend\models\Response;
 use common\components\aliyuncs\Aliyun;
+use common\models\order\Order;
+use common\models\order\OrderAction;
 use common\models\order\OrderGoodsScene;
 use common\models\order\searchs\WorkflowDesignSearch;
 use common\models\order\WorkflowDesign;
@@ -128,6 +130,10 @@ class DesignController extends Controller
             $model->start_at = time();
             $model->status = WorkflowDesign::STATUS_RUNGING;
             $model->save();
+            if($model->save()){
+                //记录订单日志 
+                OrderAction::saveLog([$model->order_id], '开始设计', '绘本设计已开始！');
+            }
         }
 
         return $this->redirect(['view', 'id' => $id]);
@@ -145,6 +151,10 @@ class DesignController extends Controller
                 $model->end_at = time();
                 $model->status = WorkflowDesign::STATUS_ENDED;
                 $model->save();
+                
+                //更改订单为待发货
+                $model->order->design_at = time();
+                $model->order->save();
 
                 $print = new WorkflowPrint([
                     'order_id' => $model->order_id,
@@ -152,6 +162,8 @@ class DesignController extends Controller
                     'status' => WorkflowPrint::STATUS_WAIT_START,
                 ]);
                 $print->save();
+                //记录订单日志 
+                OrderAction::saveLog([$model->order_id], '结束设计', '绘本设计已完成！');
                 $tran->commit();
             } catch (\Exception $ex) {
                 $tran->rollBack();

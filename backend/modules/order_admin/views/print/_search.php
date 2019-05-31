@@ -1,5 +1,6 @@
 <?php
 
+use common\models\AdminUser;
 use common\models\order\searchs\WorkflowPrintSearch;
 use common\models\order\WorkflowPrint;
 use common\utils\I18NUitl;
@@ -44,6 +45,22 @@ use yii\widgets\ActiveForm;
                 'placeholder' => I18NUitl::t('app', 'Contacter'),
                 'onBlur' => 'submitForm()',
             ]);
+            ?>
+        </div>
+    </div>
+    
+    <!-- 工作人员 -->
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown" style="width:150px">
+            <?=
+            Select2::widget([
+                'model' => $model,
+                'attribute' => 'worker_id',
+                'data' => AdminUser::getUserByType(AdminUser::TYPE_GENERAL),
+                'options' => ['placeholder' => $model->getAttributeLabel('worker_id')],
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' => ['change' => 'function(){ submitForm()}']
+            ])
             ?>
         </div>
     </div>

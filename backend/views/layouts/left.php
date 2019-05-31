@@ -78,6 +78,7 @@ use common\widgets\Menu;
                             ['label' => '订单列表', 'icon' => 'circle-o', 'url' => ['/order_admin/default/index']],
                             ['label' => '设计', 'icon' => 'circle-o', 'url' => ['/order_admin/design/index']],
                             ['label' => '打印', 'icon' => 'circle-o', 'url' => ['/order_admin/print/index']],
+                            ['label' => '发货', 'icon' => 'circle-o', 'url' => ['/order_admin/delivery/index']],
                             ['label' => '回收站', 'icon' => 'circle-o', 'url' => ['/goods_admin/recycle/index']],
                         ],
                     ],
@@ -86,9 +87,10 @@ use common\widgets\Menu;
                         'icon' => 'bars',
                         'url' => '#',
                         'items' => [
-                            ['label' => '商品分类配置', 'icon' => 'circle-o', 'url' => ['/goods_config/category/index']],
-                            ['label' => '商品模型配置', 'icon' => 'circle-o', 'url' => ['/goods_config/goods-model/index']],
-                            ['label' => '场景分组配置', 'icon' => 'circle-o', 'url' => ['/goods_config/scene-group/index']],
+                            ['label' => '商品分类', 'icon' => 'circle-o', 'url' => ['/goods_config/category/index']],
+                            ['label' => '商品模型', 'icon' => 'circle-o', 'url' => ['/goods_config/goods-model/index']],
+                            ['label' => '场景分组', 'icon' => 'circle-o', 'url' => ['/goods_config/scene-group/index']],
+                            ['label' => '快递公司', 'icon' => 'circle-o', 'url' => ['/goods_config/express/index']],
                         ],
                     ],
                     [

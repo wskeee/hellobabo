@@ -1,8 +1,8 @@
 <?php
 
 use common\models\AdminUser;
-use common\models\order\searchs\WorkflowDesignSearch;
-use common\models\order\WorkflowDesign;
+use common\models\order\searchs\WorkflowDeliverySearch;
+use common\models\order\WorkflowDelivery;
 use common\utils\I18NUitl;
 use kartik\daterange\DateRangePicker;
 use kartik\widgets\Select2;
@@ -11,11 +11,11 @@ use yii\web\View;
 use yii\widgets\ActiveForm;
 
 /* @var $this View */
-/* @var $model WorkflowDesignSearch */
+/* @var $model WorkflowDeliverySearch */
 /* @var $form ActiveForm */
 ?>
 
-<div class="workflow-design-search pull-right">
+<div class="workflow-delivery-search pull-right">
 
     <?php $form = ActiveForm::begin([
         'id' => 'search-form',
@@ -72,7 +72,7 @@ use yii\widgets\ActiveForm;
             Select2::widget([
                 'model' => $model,
                 'attribute' => 'status',
-                'data' => WorkflowDesign::$statusNameMap,
+                'data' => WorkflowDelivery::$statusNameMap,
                 'options' => ['placeholder' => Yii::t('app', 'Status')],
                 'pluginOptions' => ['allowClear' => true],
                 'pluginEvents' => ['change' => 'function(){ submitForm()}']

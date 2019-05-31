@@ -4,6 +4,8 @@ namespace backend\modules\order_admin\controllers;
 
 use apiend\models\Response;
 use common\components\aliyuncs\Aliyun;
+use common\models\order\Order;
+use common\models\order\OrderAction;
 use common\models\order\OrderGoodsScene;
 use common\models\order\searchs\WorkflowPrintSearch;
 use common\models\order\WorkflowDelivery;
@@ -20,6 +22,7 @@ use ZipArchive;
  */
 class PrintController extends Controller
 {
+
     /**
      * {@inheritdoc}
      */
@@ -45,8 +48,8 @@ class PrintController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -59,7 +62,7 @@ class PrintController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+                    'model' => $this->findModel($id),
         ]);
     }
 
@@ -77,7 +80,7 @@ class PrintController extends Controller
         }
 
         return $this->render('create', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -97,7 +100,7 @@ class PrintController extends Controller
         }
 
         return $this->render('update', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -114,7 +117,7 @@ class PrintController extends Controller
 
         return $this->redirect(['index']);
     }
-    
+
     /**
      * 开始任务
      * @param int $id 设计ID
@@ -126,7 +129,10 @@ class PrintController extends Controller
             $model->worker_id = \Yii::$app->user->id;
             $model->start_at = time();
             $model->status = WorkflowPrint::STATUS_RUNGING;
-            $model->save();
+            if($model->save()){
+                //记录订单日志 
+                OrderAction::saveLog([$model->order_id], '开始打印', '绘本打印已开始！');
+            }
         }
 
         return $this->redirect(['view', 'id' => $id]);
@@ -144,6 +150,11 @@ class PrintController extends Controller
                 $model->end_at = time();
                 $model->status = WorkflowPrint::STATUS_ENDED;
                 $model->save();
+                
+                //更改订单为待发货
+                $model->order->print_at = time();
+                $model->order->order_status = Order::ORDER_STATUS_WAIT_DELIVER;
+                $model->order->save();
 
                 $print = new WorkflowDelivery([
                     'order_id' => $model->order_id,
@@ -158,10 +169,15 @@ class PrintController extends Controller
                     'district' => $model->order->district,
                     'town' => $model->order->town,
                     'address' => $model->order->address,
-                    'note' => $model->order->note,
+                    'user_note' => $model->order->user_note,
                     'status' => WorkflowPrint::STATUS_WAIT_START,
                 ]);
                 $print->save();
+                
+                
+                //记录订单日志 
+                OrderAction::saveLog([$model->order_id], '结束打印', '绘本打印已完成！');
+                
                 $tran->commit();
             } catch (\Exception $ex) {
                 $tran->rollBack();
@@ -219,4 +235,5 @@ class PrintController extends Controller
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
+
 }

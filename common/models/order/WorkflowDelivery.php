@@ -2,6 +2,8 @@
 
 namespace common\models\order;
 
+use common\models\AdminUser;
+use common\utils\I18NUitl;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -22,18 +24,52 @@ use yii\db\ActiveRecord;
  * @property int $district 区ID，关联region,id
  * @property int $town 镇ID，关联region,id
  * @property string $address 详细地址
+ * @property string $user_note 用户留言
  * @property string $shipping_code 物流code，关联shipping,code
  * @property string $shipping_name 物流名称
  * @property string $shipping_price 运费
  * @property string $invoice_no 物流单号
  * @property string $note '用户留言'
+ * @property int $status 状态'
  * @property int $send_type 发货方式 0自填快递 1无需物流
  * @property int $worker_id 发货人ID，关联admin_user,id
+ * @property int $start_at 开始时间
+ * @property int $end_at   发货时间
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
+ * 
+ * @property Order $order 订单
+ * @property AdminUser $worker 发货员
  */
 class WorkflowDelivery extends ActiveRecord
 {
+
+    const STATUS_WAIT_START = 0;   //待开始
+    const STATUS_RUNGING = 1;       //未完成
+    const STATUS_ENDED = 2;         //已完成
+    const SEND_TYPE_GENERAL = 0; //0自填快递 
+    const SEND_TYPE_NONE = 1; //1无需物流
+
+    /**
+     * 状态名称
+     * @var type 
+     */
+
+    public static $statusNameMap = [
+        self::STATUS_WAIT_START => '待开始',
+        self::STATUS_RUNGING => '制作中',
+        self::STATUS_ENDED => '已完成',
+    ];
+
+    /**
+     * 发货方式
+     * @var type 
+     */
+    public static $sendTypeNameMap = [
+        self::SEND_TYPE_GENERAL => '自填快递',
+        self::SEND_TYPE_NONE => '无需物流',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -41,7 +77,7 @@ class WorkflowDelivery extends ActiveRecord
     {
         return '{{%workflow_delivery}}';
     }
-    
+
     public function behaviors()
     {
         return [TimestampBehavior::class];
@@ -53,9 +89,10 @@ class WorkflowDelivery extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'order_id', 'user_id', 'country', 'province', 'city', 'district', 'town', 'send_type', 'worker_id', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'order_id', 'user_id', 'country', 'province', 'city', 'district', 'town', 'send_type', 'worker_id', 'start_at', 'end_at', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['shipping_code','shipping_price','invoice_no'], 'required'],
             [['shipping_price'], 'number'],
-            [['note'], 'string'],
+            [['note','user_note'], 'string'],
             [['order_sn', 'phone'], 'string', 'max' => 20],
             [['consignee', 'shipping_name'], 'string', 'max' => 64],
             [['zipcode'], 'string', 'max' => 6],
@@ -84,15 +121,38 @@ class WorkflowDelivery extends ActiveRecord
             'district' => Yii::t('app', 'District'),
             'town' => Yii::t('app', 'Town'),
             'address' => Yii::t('app', 'Address'),
+            'user_note' => Yii::t('app', 'User Note'),
             'shipping_code' => Yii::t('app', 'Shipping Code'),
-            'shipping_name' => Yii::t('app', 'Shipping Name'),
+            'shipping_name' => Yii::t('app', 'Shipping'),
             'shipping_price' => Yii::t('app', 'Shipping Price'),
+            'start_at' => Yii::t('app', 'Start At'),
+            'end_at' => Yii::t('app', 'Shipping At'),
             'invoice_no' => Yii::t('app', 'Invoice No'),
-            'note' => Yii::t('app', 'Note'),
-            'send_type' => Yii::t('app', 'Send Type'),
-            'worker_id' => Yii::t('app', 'Worker'),
+            'note' => Yii::t('app', 'Remark'),
+            'status' => Yii::t('app', 'Status'),
+            'send_type' => I18NUitl::t('app', '{Delivery}{Type}'),
+            'worker_id' => Yii::t('app', 'Shipper'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
+
+    /**
+     * 操作人
+     * @return QueryRecord
+     */
+    public function getWorker()
+    {
+        return $this->hasOne(AdminUser::class, ['id' => 'worker_id']);
+    }
+
+    /**
+     * 订单
+     * @return QueryRecord
+     */
+    public function getOrder()
+    {
+        return $this->hasOne(Order::class, ['id' => 'order_id']);
+    }
+
 }

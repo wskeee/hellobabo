@@ -361,6 +361,8 @@ return [
     'Scene' => '场景',
     'Group' => '分组',
     'Groups' => '分组列表',
+    'Expresses' => '快递公司列表',
+    'Express' => '快递公司',
     
     //后台-运营管理
     'Purchaser' => '购买人',
@@ -395,6 +397,14 @@ return [
     'Print' => '打印',
     'Prints' => '打印列表',
     'Printer' => '打印师',
+    'Deliveries' => '发货列表',
+    'Delivery' => '发货',
+    'Shipper' => '发货人',
+    'Shipping' => '快递公司',
+    'Shipping Code' => '快递公司',
+    'Shipping Name' => '快递公司名称',
+    'Shipping Price' => '快递价格',
+    'Invoice No' => '快递单号',
     
     
     
@@ -460,7 +470,7 @@ return [
     'Verifier' => '审核人',
     'Job Title' => '职称',
     'Auditing' => '审核',
-    'Remarks' => '备注',
+    'Remark' => '备注',
     'Reset' => '重置',
     'Solve' => '解决',
     'Processer' => '处理人',
