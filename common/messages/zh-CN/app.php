@@ -386,12 +386,16 @@ return [
     'Print At' => '打印时间',
     'Shipping At' => '发货时间',
     'Confirm At' => '确认时间',
+    'Start At' => '开始时间',
+    'End At' => '结束时间',
     'Design' => '设计',
     'Designs' => '设计列表',
     'Designer' => '设计师',
     'Contacter' => '联系人',
-    'Start At' => '开始时间',
-    'End At' => '结束时间',
+    'Print' => '打印',
+    'Prints' => '打印列表',
+    'Printer' => '打印师',
+    
     
     
     //后台-定时任务

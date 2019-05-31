@@ -2,13 +2,18 @@
 
 namespace backend\modules\order_admin\controllers;
 
+use apiend\models\Response;
+use common\components\aliyuncs\Aliyun;
+use common\models\order\OrderGoodsScene;
 use common\models\order\searchs\WorkflowPrintSearch;
 use common\models\order\WorkflowDelivery;
 use common\models\order\WorkflowPrint;
+use OSS\OssClient;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use ZipArchive;
 
 /**
  * PrintController implements the CRUD actions for WorkflowPrint model.
@@ -172,7 +177,31 @@ class PrintController extends Controller
      */
     public function actionBatchDownloadFinishedImg()
     {
-        
+        $ids = Yii::$app->request->post('selection', []);
+        $models = OrderGoodsScene::findAll(['id' => $ids]); //获取需要下载的场景图片
+        $zip = new ZipArchive();
+        $zipName = uniqid();
+        $zipPath = "upload/download/$zipName.zip";
+
+        /* @var $model OrderGoodsScene */
+        foreach ($models as $model) {
+            $filename = "upload/download/" . pathinfo($model->finish_url, PATHINFO_BASENAME);
+            $ext = pathinfo($model->source_url, PATHINFO_EXTENSION);
+            //下载oss文件
+            $object = Aliyun::getObjectKeyFormUrl($model->user_img_url);
+            Aliyun::getOss()->getOutputObject($object, [OssClient::OSS_FILE_DOWNLOAD => $filename]);
+            //var_dump($zipPath,$zip->open($zipPath, ZipArchive::OVERWRITE));exit;
+            //添加文件到zip
+            if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
+                $zip->addFile($filename, "{$model->name}.$ext");
+                $zip->close();
+            } else {
+                Yii::$app->response->format = 'json';
+                return new Response(Response::CODE_COMMON_UNKNOWN, '打包文件出错！');
+            }
+        }
+        //发送文件
+        Yii::$app->response->sendFile($zipPath);
     }
 
     /**

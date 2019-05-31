@@ -1,6 +1,5 @@
 <?php
 
-use backend\modules\order_admin\assets\OrderModuleAsset;
 use common\models\order\searchs\WorkflowDesignSearch;
 use common\models\order\WorkflowDesign;
 use common\modules\rbac\components\ResourceHelper;
@@ -15,6 +14,12 @@ use yii\web\View;
 
 $this->title = Yii::t('app', 'Designs');
 $this->params['breadcrumbs'][] = $this->title;
+//指派状态颜色
+$assignColors = [
+    WorkflowDesign::STATUS_WAIT_START => 'wsk-color-danger',
+    WorkflowDesign::STATUS_RUNGING => 'wsk-color-primary',
+    WorkflowDesign::STATUS_ENDED => 'wsk-color-success',
+];
 ?>
 <div class="workflow-design-index">
 
@@ -54,6 +59,9 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'status',
                 'headerOptions' => ['style' => 'width:80px;'],
+                'contentOptions' => function($model)use($assignColors) {
+                    return ['class' => $assignColors[$model->status]];
+                },
                 'value' => function($model) {
                     return WorkflowDesign::$statusNameMap[$model->status];
                 }

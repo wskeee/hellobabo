@@ -41,7 +41,7 @@ class WorkflowDesignSearch extends WorkflowDesign
             'consignee' => Yii::t('app', 'Contacter'),
             'start_at' => Yii::t('app', 'Start At'),
             'end_at' => Yii::t('app', 'End At'),
-            'time' => Yii::t('app', 'Time'),
+            'date_range' => Yii::t('app', 'Time'),
         ];
     }
 

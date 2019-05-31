@@ -1,44 +1,46 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\DetailView;
+use common\models\order\WorkflowPrint;
+use common\modules\rbac\components\ResourceHelper;
+use common\utils\I18NUitl;
+use yii\web\View;
+use yii\web\YiiAsset;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\order\WorkflowPrint */
+/* @var $this View */
+/* @var $model WorkflowPrint */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Workflow Prints'), 'url' => ['index']];
+$this->title = I18NUitl::t('app', '{Print}{Detail}：').$model->id;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Prints'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+YiiAsset::register($this);
 ?>
 <div class="workflow-print-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
-        <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
+        <?php
+        if ($model->status == WorkflowPrint::STATUS_WAIT_START) {
+            //开始
+            echo ResourceHelper::a(I18NUitl::t('app', '{Start}{Print}'), ['start', 'id' => $model->id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => Yii::t('app', '你确定要做该操作吗？'),
+                    'data' => 'post',
+            ]]);
+        } else if ($model->status == WorkflowPrint::STATUS_RUNGING) {
+            //结束
+            echo ResourceHelper::a(I18NUitl::t('app', '{End}{Print}'), ['end', 'id' => $model->id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => Yii::t('app', '你确定要做该操作吗？'),
+                    'data' => 'post',
+            ]]);
+        }
+        ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'order_id',
-            'order_sn',
-            'status',
-            'start_at',
-            'end_at',
-            'worker_id',
-            'created_at',
-            'updated_at',
-        ],
-    ]) ?>
+    <!-- 基本信息 -->
+    <?= $this->render('_view_baseinfo', ['model' => $model]) ?>
+    <!-- 场景信息 -->
+    <?= $this->render('_view_sceneinfo', ['model' => $model]) ?>
 
 </div>

@@ -291,6 +291,11 @@ a.desc:after {
 * 公共样式
 *
 *****************************************************/
+/** 字体颜色 */
+.wsk-color-default{color: #666;}
+.wsk-color-primary{color: #3c8dbc;}
+.wsk-color-success{color: #28B28B;}
+.wsk-color-danger{color: #dd4b39;}
 /** 排版 */
 
 /** 模态框  */

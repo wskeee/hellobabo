@@ -2,33 +2,46 @@
 
 namespace common\models\order\searchs;
 
-use yii\base\Model;
-use yii\data\ActiveDataProvider;
+use common\models\order\Order;
 use common\models\order\WorkflowPrint;
+use Yii;
+use yii\data\ActiveDataProvider;
 
 /**
  * WorkflowPrintSearch represents the model behind the search form of `common\models\order\WorkflowPrint`.
  */
 class WorkflowPrintSearch extends WorkflowPrint
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['id', 'order_id', 'status', 'start_at', 'end_at', 'worker_id', 'created_at', 'updated_at'], 'integer'],
-            [['order_sn'], 'safe'],
-        ];
-    }
+    public $order_sn; //订单sn
+    public $consignee; //联系人
+    public $date_range; //时间段内任务 格式：2019-04-10 - 2019-04-15
 
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
+
+    public function rules()
     {
-        // bypass scenarios() implementation in the parent class
-        return Model::scenarios();
+        return [
+            [['status', 'worker_id',], 'integer'],
+            [['date_range',], 'string'],
+            [['order_sn', 'consignee'], 'safe'],
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return parent::attributeLabels();
+        return [
+            'order_sn' => Yii::t('app', 'Order Sn'),
+            'goods_name' => Yii::t('app', 'Goods'),
+            'spec_key_name' => Yii::t('app', 'Spec'),
+            'status' => Yii::t('app', 'Status'),
+            'consignee' => Yii::t('app', 'Contacter'),
+            'start_at' => Yii::t('app', 'Start At'),
+            'end_at' => Yii::t('app', 'End At'),
+            'date_range' => Yii::t('app', 'Time'),
+        ];
     }
 
     /**
@@ -40,7 +53,7 @@ class WorkflowPrintSearch extends WorkflowPrint
      */
     public function search($params)
     {
-        $query = WorkflowPrint::find();
+        $query = WorkflowPrint::find()->from(['Print' => WorkflowPrint::tableName()]);
 
         // add conditions that should always apply here
 
@@ -55,20 +68,22 @@ class WorkflowPrintSearch extends WorkflowPrint
             // $query->where('0=1');
             return $dataProvider;
         }
+        
+        $query->leftJoin(['Order' => Order::tableName()], 'Order.id = order_id');
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'order_id' => $this->order_id,
-            'status' => $this->status,
-            'start_at' => $this->start_at,
-            'end_at' => $this->end_at,
-            'worker_id' => $this->worker_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'Print.status' => $this->status,
+            'Print.worker_id' => $this->worker_id,
         ]);
 
-        $query->andFilterWhere(['like', 'order_sn', $this->order_sn]);
+        if (!empty($this->date_range)) {
+            $timeRang = array_filter(explode(' - ', $this->date_range));
+            $query->andWhere(['between', 'Print.created_at', $timeRang[0], $timeRang[1]]);
+        }
+
+        $query->andFilterWhere(['like', 'Order.order_sn', $this->order_sn]);
+        $query->andFilterWhere(['like', 'Order.consignee', $this->consignee]);
 
         return $dataProvider;
     }

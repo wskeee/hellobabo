@@ -2,6 +2,7 @@
 
 namespace common\models\order;
 
+use common\models\AdminUser;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -75,7 +76,7 @@ class WorkflowPrint extends ActiveRecord
             'status' => Yii::t('app', 'Status'),
             'start_at' => Yii::t('app', 'Start At'),
             'end_at' => Yii::t('app', 'End At'),
-            'worker_id' => Yii::t('app', 'Worker'),
+            'worker_id' => Yii::t('app', 'Printer'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
