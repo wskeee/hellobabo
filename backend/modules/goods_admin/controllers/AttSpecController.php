@@ -136,12 +136,23 @@ class AttSpecController extends GridViewChangeSelfController
             GoodsSpecPrice::updateAll(['is_del' => 1], ['goods_id' => $goods_id]);
             foreach ($specs as $spec) {
                 //准备数据
-                $rows[] = [$goods_id, $spec['goods_cost'], $spec['goods_price'], $spec['spec_key'], $spec['spec_key_name'], $spec['spec_img_url'], $spec['spec_des'], $spec['store_count'],0];
+                $rows[] = [
+                    $goods_id, 
+                    $spec['goods_cost'], 
+                    $spec['goods_price'], 
+                    $spec['scene_num'], 
+                    $spec['spec_key'], 
+                    $spec['spec_key_name'], 
+                    $spec['spec_img_url'], 
+                    $spec['spec_des'], 
+                    $spec['store_count'],
+                    0,
+                ];
             }
             //更新选择类型引用数据
             MysqlUtil::batchInsertDuplicateUpdate(GoodsSpecPrice::tableName(), 
-                    ['goods_id', 'goods_cost', 'goods_price', 'spec_key', 'spec_key_name', 'spec_img_url', 'spec_des', 'store_count','is_del'], $rows, 
-                    ['goods_cost', 'goods_price', 'spec_key_name', 'spec_img_url', 'spec_des', 'store_count','is_del']);
+                    ['goods_id', 'goods_cost', 'goods_price', 'scene_num', 'spec_key', 'spec_key_name', 'spec_img_url', 'spec_des', 'store_count','is_del'], $rows, 
+                    ['goods_cost', 'goods_price','scene_num', 'spec_key_name', 'spec_img_url', 'spec_des', 'store_count','is_del']);
         } catch (\Exception $ex) {
             return new ApiResponse(ApiResponse::CODE_COMMON_SAVE_DB_FAIL, $ex->getMessage(), $ex);
         }

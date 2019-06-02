@@ -16,23 +16,23 @@ use yii\helpers\ArrayHelper;
  *
  * @author Administrator
  */
-class SaveGoodsScene extends BaseAction
+class SaveOrderGoodsScene extends BaseAction
 {
     /* 必须参数 */
 
-    protected $requiredParams = ['order_id', 'scenes'];
+    protected $requiredParams = ['order_id', 'scenes_ids'];
 
     public function run()
     {
         $order_id = $this->getSecretParam('order_id');
         //用户选择的场景数据
-        $scenes_post = $this->getSecretParam('scenes');
-        $scenes_post_sort = ArrayHelper::map($scenes_post, 'id', 'sort_order');
-
-        $scenes = GoodsScene::findAll(['id' => ArrayHelper::getColumn($scenes_post, 'scene_id')]);
+        $scenes_ids = explode(',',$this->getSecretParam('scenes_ids',[]));
+        
+        $scenes = ArrayHelper::index(GoodsScene::findAll(['id' => $scenes_ids]), 'id');
         $rows = [];
         /* @var $scene GoodsScene */
-        foreach ($scenes as $scene) {
+        foreach ($scenes_ids as $index => $scene_id) {
+            $scene = $scenes[$scene_id];
             $rows [] = [
                 $order_id,
                 $scene->id,
@@ -40,7 +40,7 @@ class SaveGoodsScene extends BaseAction
                 $scene->effect_url,
                 $scene->demo_url,
                 $scene->source_url,
-                $scenes_post_sort[$scene->id],
+                $index,
                 $scene->is_required,
                 $scene->des,
                 0,
@@ -52,8 +52,8 @@ class SaveGoodsScene extends BaseAction
             OrderGoodsScene::updateAll(['is_del' => 1], ['order_id' => $order_id]);
             //重新插入新记录
             MysqlUtil::batchInsertDuplicateUpdate(OrderGoodsScene::tableName(), [
-                        'order_id', 'scene_id', 'name', 'effect_url', 'demo_url', 'source_url', 'sort_order', 'is_required', 'des', 'is_del'], $rows, ['sort_order', 'is_del'])
-                    ->execute();
+                        'order_id', 'scene_id', 'name', 'effect_url', 'demo_url', 'source_url', 'sort_order', 'is_required', 'des', 'is_del'], 
+                    $rows, ['sort_order', 'is_del']);
             $tran->commit();
             return new Response(Response::CODE_COMMON_OK);
         } catch (Exception $ex) {

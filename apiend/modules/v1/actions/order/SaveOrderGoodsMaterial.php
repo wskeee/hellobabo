@@ -12,7 +12,7 @@ use common\models\order\OrderGoodsMaterial;
  *
  * @author Administrator
  */
-class SaveGoodsMaterial extends BaseAction
+class SaveOrderGoodsMaterial extends BaseAction
 {
     /* 必须参数 */
 

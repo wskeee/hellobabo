@@ -34,7 +34,7 @@ class InitReady extends BaseAction
         //已经选择的素材
         $orderGoodsMaterials = ArrayHelper::index(OrderGoodsMaterial::find()->where(['order_id' => $order->id, 'is_del' => 0])->all(), 'material_id');
         //已经选择的场景
-        $orderGoodsScenes = OrderGoodsScene::find()->where(['order_id' => $order->id, 'is_del' => 0])->all();
+        $orderGoodsScenes = OrderGoodsScene::find()->where(['order_id' => $order->id, 'is_del' => 0])->orderBy(['sort_order' => SORT_ASC])->all();
 
 
         return new Response(Response::CODE_COMMON_OK, null, [

@@ -342,7 +342,9 @@ return [
     'Fill' => '填充',
     'Price Placeholder' => '*价钱（元）',
     'Store Placeholder' => '*数量（个）',
+    'Scene Num Placeholder' => '*场景数（个）',
     'Consignee' => '收货人',
+    'Scene Num' => '场景数',
     
     //后台-商品配置
     'Storage' => '存储',

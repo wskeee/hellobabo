@@ -5,6 +5,7 @@ namespace apiend\modules\v1\actions\order;
 use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
 use common\models\order\Order;
+use common\models\order\OrderAction;
 
 /**
  * 设置绘本已初始

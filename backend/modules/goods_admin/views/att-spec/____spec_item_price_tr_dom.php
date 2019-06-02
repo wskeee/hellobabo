@@ -22,5 +22,14 @@
             onkeyup="inputNumCheck($(this))" 
             onblur="inputNumCheck($(this))" />
     </td>
+    <td>
+        <input 
+            name="scene_num" 
+            class="form-control" 
+            value="{%scene_num%}" 
+            onchange="priceItemChanged(\'{%spec_key%}\',\'scene_num\',$(this));" 
+            onkeyup="inputNumCheck($(this))" 
+            onblur="inputNumCheck($(this))" />
+    </td>
     <td></td>
 </tr>

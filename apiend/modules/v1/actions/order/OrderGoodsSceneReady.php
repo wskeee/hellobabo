@@ -6,7 +6,9 @@ use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
 use common\models\goods\GoodsScene;
 use common\models\goods\SceneGroup;
+use common\models\order\Order;
 use common\models\order\OrderGoodsScene;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -25,6 +27,12 @@ class OrderGoodsSceneReady extends BaseAction
     {
         $order_id = $this->getSecretParam('order_id');
         $goods_id = $this->getSecretParam('goods_id');
+        
+        $order = Order::findOne(['id' => $order_id]);
+        
+        if($order == null){
+            return new Response(Response::CODE_COMMON_NOT_FOUND,null,null,['param' => Yii::t('app', 'Order')]);
+        }
 
         //场景列表
         $list = GoodsScene::find()->where([
@@ -42,6 +50,7 @@ class OrderGoodsSceneReady extends BaseAction
 
 
         return new Response(Response::CODE_COMMON_OK, null, [
+            'scene_num' => $order->scene_num,
             'scenes' => ArrayHelper::index($list, null, 'group_id'),
             'groups' => $groups,
             'order_scenes' => $order_scenes,

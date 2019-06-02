@@ -31,18 +31,18 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
             'tableOptions' => ['class' => 'table table-striped table-bordered wsk-table'],
             'layout' => "{items}\n{pager}",
             'columns' => [
-                [
+                    [
                     'attribute' => 'name',
                     'headerOptions' => ['style' => 'width:120px']
                 ],
-                [
+                    [
                     'label' => I18NUitl::t('app', '{Spec}{Item}'),
                     'format' => 'raw',
                     'value' => function($model) {
                         return "<div class='spec-box' data-id='$model->id'></div>";
                     }
                 ],
-                [
+                    [
                     'class' => 'yii\grid\ActionColumn',
                     'buttons' => [
                         'add' => function($url, $specModel) use($model) {
@@ -73,8 +73,9 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
                     <!-- 固定列 -->
                     <th><?= Yii::t('app', 'Image') ?></th>
                     <th><?= Yii::t('app', 'Des') ?></th>
-                    <th><?= Html::textInput('spec_item_price_input', null, ['class' => 'form-control', 'placeholder' => Yii::t('app', 'Price Placeholder')]) ?></th>
-                    <th><?= Html::textInput('spec_item_store_input', null, ['class' => 'form-control', 'placeholder' => Yii::t('app', 'Store Placeholder')]) ?></th>
+                    <th style = 'width:130px;'><?= Html::textInput('spec_item_price_input', null, ['class' => 'form-control', 'placeholder' => Yii::t('app', 'Price Placeholder')]) ?></th>
+                    <th style = 'width:130px;'><?= Html::textInput('spec_item_store_input', null, ['class' => 'form-control', 'placeholder' => Yii::t('app', 'Store Placeholder')]) ?></th>
+                    <th style = 'width:130px;'><?= Html::textInput('spec_item_scene_num_input', null, ['class' => 'form-control', 'placeholder' => Yii::t('app', 'Scene Num Placeholder')]) ?></th>
                     <th><?= Yii::t('app', 'Action') ?></th>
                 </tr>
             </thead>
@@ -402,7 +403,7 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
             //记录 spec_id = spec_name
             spec_name_map[spec_item['spec_id']] = spec_key_names[index];
         });
-        
+
         //添加动态列
         $.each(specs, function (index, spec_id) {
             d_tr += '<td>' + spec_name_map[spec_id] + '</td>';
@@ -464,7 +465,7 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
         var result = [];
         for (var i in args[0]) {
             //已选择才会加入计算
-            if(spec_items[args[0][i]].selected){
+            if (spec_items[args[0][i]].selected) {
                 result.push([args[0][i]]);
             }
         }

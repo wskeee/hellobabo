@@ -12,7 +12,8 @@ use apiend\modules\v1\actions\order\InitReady;
 use apiend\modules\v1\actions\order\OrderGoodsSceneReady;
 use apiend\modules\v1\actions\order\OrderReady;
 use apiend\modules\v1\actions\order\Pay;
-use apiend\modules\v1\actions\order\SaveGoodsMaterial;
+use apiend\modules\v1\actions\order\SaveOrderGoodsMaterial;
+use apiend\modules\v1\actions\order\SaveOrderGoodsScene;
 
 /**
  * 套餐
@@ -33,8 +34,9 @@ class OrderController extends ApiController
             'check-pay' => ['get'],
             'init-ready' => ['get'],
             'init' => ['post'],
-            'save-goods-material' => ['post'],
+            'save-order-goods-material' => ['post'],
             'order-goods-scene-ready' => ['get'],
+            'save-order-goods-scene' => ['post'],
             'get-list' => ['get'],
             'get-order-detail' => ['get'],
             'ready' => ['get'],
@@ -53,8 +55,9 @@ class OrderController extends ApiController
             'check-pay' => ['class' => CheckPay::class],
             'init-ready' => ['class' => InitReady::class],
             'init' => ['class' => Init::class],
-            'save-goods-material' => ['class' => SaveGoodsMaterial::class],
+            'save-order-goods-material' => ['class' => SaveOrderGoodsMaterial::class],
             'order-goods-scene-ready' => ['class' => OrderGoodsSceneReady::class],
+            'save-order-goods-scene' => ['class' => SaveOrderGoodsScene::class],
             'get-list' => ['class' => GetOrderList::class],
             'get-detail' => ['class' => GetOrderDetail::class],
             'ready' => ['class' => OrderReady::class],

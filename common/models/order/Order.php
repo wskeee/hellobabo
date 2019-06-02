@@ -18,6 +18,7 @@ use yii\db\Exception;
  * @property string $goods_name 订单名称
  * @property string $goods_price 商品价格
  * @property int $goods_num 购买数
+ * @property int $scene_num 购买场景数
  * @property int $spec_id 规格id
  * @property string $spec_key 商品规格key
  * @property string $spec_key_name 规格对应的中文名字
@@ -119,7 +120,7 @@ class Order extends ActiveRecord
     {
         return [
                 [['order_sn', 'goods_id'], 'required'],
-                [['goods_id', 'goods_num', 'spec_id', 'order_status', 'work_status', 'pay_at', 'init_at', 'upload_finish_at', 'design_at', 'print_at', 'shipping_at', 'confirm_at', 'address_id', 'is_recommend', 'recommend_by', 'created_by', 'created_at', 'updated_at'], 'integer'],
+                [['goods_id', 'goods_num','scene_num', 'spec_id', 'order_status', 'work_status', 'pay_at', 'init_at', 'upload_finish_at', 'design_at', 'print_at', 'shipping_at', 'confirm_at', 'address_id', 'is_recommend', 'recommend_by', 'created_by', 'created_at', 'updated_at'], 'integer'],
                 [['country', 'province', 'city', 'district', 'town',], 'integer'],
                 [['zipcode'], 'string', 'max' => 6],
                 [['address'], 'string', 'max' => 255],
@@ -144,6 +145,7 @@ class Order extends ActiveRecord
             'goods_name' => Yii::t('app', 'Goods'),
             'goods_price' => Yii::t('app', 'Goods Price'),
             'goods_num' => Yii::t('app', 'Goods Num'),
+            'scene_num' => Yii::t('app', 'Scene Num'),
             'spec_id' => Yii::t('app', 'Spec ID'),
             'spec_key' => Yii::t('app', 'Spec Key'),
             'spec_key_name' => Yii::t('app', 'Spec'),

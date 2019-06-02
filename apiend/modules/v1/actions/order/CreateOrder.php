@@ -46,6 +46,7 @@ class CreateOrder extends BaseAction
             'goods_name' => $goods->goods_name, //商品名
             'goods_price' => $spec_price->goods_price, //商品价格
             'goods_num' => $goods_num, //购买数量
+            'scene_num' => $spec_price->scene_num, //购买场景数量
             'spec_id' => $spec_price->id, //价格ID
             'spec_key' => $spec_price->spec_key, //价格项ID
             'spec_key_name' => $spec_price->spec_key_name, //价格项名
