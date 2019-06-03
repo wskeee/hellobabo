@@ -13,7 +13,7 @@ use Yii;
  * 初始绘本准备
  * 返回绘本素材和场景
  */
-class InitReady extends BaseAction
+class UploadImageReady extends BaseAction
 {
 
     public function run()
@@ -26,11 +26,10 @@ class InitReady extends BaseAction
         if (!$order) {
             return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => Yii::t('app', 'Order')]);
         }
-        $scenes = OrderGoodsScene::find()->where(['order_id' => $order_id, 'is_del' => 0])->all();
+        $scenes = OrderGoodsScene::find()->where(['order_id' => $order_id, 'is_del' => 0])->orderBy(['sort_order' => SORT_ASC])->all();
 
         return new Response(Response::CODE_COMMON_OK, null, [
-            'order_status' => $order->order_status,
-            'order_status_text' => Order::$orderStatusNameMap[$order->order_status],
+            'order' => $order,
             'scenes' => $scenes,
         ]);
     }
