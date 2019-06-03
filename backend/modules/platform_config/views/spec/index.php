@@ -19,7 +19,7 @@ use yii\web\View;
     <div class="wsk-panel">
         <div class="title">
             <?= Yii::t('app', 'Spec') ?>
-            <?= Html::a(I18NUitl::t('app', '{Add}{Spec}'), ['/goods_config/spec/create', 'model_id' => $goodsModel->id], ['class' => ['btn btn-primary pull-right'],]) ?>
+            <?= Html::a(I18NUitl::t('app', '{Add}{Spec}'), ['/platform_config/spec/create', 'model_id' => $goodsModel->id], ['class' => ['btn btn-primary pull-right'],]) ?>
         </div>
         <div class="body">
             <?=
@@ -37,7 +37,7 @@ use yii\web\View;
                         'headerOptions' => ['style' => 'width:100px'],
                         'plugOptions' => [
                             'type' => 'input',
-                            'url' => '/goods_config/spec/change-value'
+                            'url' => '/platform_config/spec/change-value'
                         ],
                     ],
                     [
@@ -47,7 +47,7 @@ use yii\web\View;
                         'plugOptions' => [
                             'labels' => ['禁用', '启用'],
                             'values' => [1, 0],
-                            'url' => '/goods_config/spec/change-value'
+                            'url' => '/platform_config/spec/change-value'
                         ],
                     ],
                     //'des',
@@ -55,10 +55,10 @@ use yii\web\View;
                         'class' => 'yii\grid\ActionColumn',
                         'buttons' => [
                             'updata' => function ($url, $model) {
-                                return Html::a(Yii::t('yii', 'Update'), ['/goods_config/spec/update', 'id' => $model->id], ['class' => 'btn btn-default']);
+                                return Html::a(Yii::t('yii', 'Update'), ['/platform_config/spec/update', 'id' => $model->id], ['class' => 'btn btn-default']);
                             },
                             'delete' => function ($url, $model) {
-                                return Html::a(Yii::t('yii', 'Delete'), ['/goods_config/spec/delete', 'id' => $model->id], ['class' => 'btn btn-danger',
+                                return Html::a(Yii::t('yii', 'Delete'), ['/platform_config/spec/delete', 'id' => $model->id], ['class' => 'btn btn-danger',
                                             'data' => [
                                                 'pjax' => 0,
                                                 'confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
