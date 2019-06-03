@@ -1,16 +1,16 @@
 <?php
 
-namespace backend\modules\goods_config;
+namespace backend\modules\platform_config;
 
 /**
- * goods_config module definition class
+ * platform_config module definition class
  */
 class Module extends \yii\base\Module
 {
     /**
      * {@inheritdoc}
      */
-    public $controllerNamespace = 'backend\modules\goods_config\controllers';
+    public $controllerNamespace = 'backend\modules\platform_config\controllers';
 
     /**
      * {@inheritdoc}

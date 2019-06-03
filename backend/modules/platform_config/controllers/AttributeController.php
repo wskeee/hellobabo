@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\modules\goods_config\controllers;
+namespace backend\modules\platform_config\controllers;
 
 use common\models\goods\GoodsAttribute;
 use common\models\goods\searchs\GoodsAttributeValueSearch;
@@ -38,7 +38,7 @@ class AttributeController extends GridViewChangeSelfController
      */
     public function actionIndex()
     {
-        //请查看/goods_config/goods-model/view
+        //请查看/platform_config/goods-model/view
     }
 
     /**
@@ -69,7 +69,7 @@ class AttributeController extends GridViewChangeSelfController
         $model->loadDefaultValues();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/goods_config/goods-model/view', 'id' => $model->model_id]);
+            return $this->redirect(['/platform_config/goods-model/view', 'id' => $model->model_id]);
         }
         
         return $this->render('create', [
@@ -89,7 +89,7 @@ class AttributeController extends GridViewChangeSelfController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/goods_config/goods-model/view', 'id' => $model->model_id]);
+            return $this->redirect(['/platform_config/goods-model/view', 'id' => $model->model_id]);
         }
 
         return $this->render('update', [
@@ -109,7 +109,7 @@ class AttributeController extends GridViewChangeSelfController
         $model = $this->findModel($id);
         $model->delete();
 
-        $this->redirect(['/goods_config/goods-model/view', 'id' => $model->model_id]);
+        $this->redirect(['/platform_config/goods-model/view', 'id' => $model->model_id]);
     }
 
     /**

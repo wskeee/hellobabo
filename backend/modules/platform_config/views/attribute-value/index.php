@@ -29,7 +29,7 @@ use yii\web\View;
                 'class' => GridViewChangeSelfColumn::class,
                 'plugOptions' => [
                     'type' => 'input',
-                    'url' => Url::to(['/goods_config/attribute-value/change-value'], true),
+                    'url' => Url::to(['/platform_config/attribute-value/change-value'], true),
                 ],
             ],
             [
@@ -39,14 +39,14 @@ use yii\web\View;
                 'plugOptions' => [
                     'labels' => ['禁用', '启用'],
                     'values' => [1, 0],
-                    'url' => Url::to(['/goods_config/attribute-value/change-value'], true),
+                    'url' => Url::to(['/platform_config/attribute-value/change-value'], true),
                 ],
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'buttons' => [
                     'delete' => function ($url, $model) {
-                        return Html::a(Yii::t('yii', 'Delete'), ['/goods_config/attribute-value/delete', 'id' => $model->id, 'attribute_id' => $model->attribute_id], [
+                        return Html::a(Yii::t('yii', 'Delete'), ['/platform_config/attribute-value/delete', 'id' => $model->id, 'attribute_id' => $model->attribute_id], [
                                     'class' => 'btn btn-danger',
                                     'data' => [
                                         'pjax' => 0,

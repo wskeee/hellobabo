@@ -1,24 +1,22 @@
 <?php
 
-namespace backend\modules\goods_config\controllers;
+namespace backend\modules\platform_config\controllers;
 
+use common\models\goods\GoodsSpec;
+use common\widgets\grid\GridViewChangeSelfController;
 use Yii;
-use common\models\platform\Express;
-use common\models\platform\searchs\ExpressSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 
 /**
- * ExpressController implements the CRUD actions for Express model.
+ * GoodsSpecController implements the CRUD actions for GoodsSpec model.
  */
-class ExpressController extends Controller
-{
+class SpecController extends GridViewChangeSelfController {
+
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -30,98 +28,89 @@ class ExpressController extends Controller
     }
 
     /**
-     * Lists all Express models.
+     * Lists all GoodsSpec models.
      * @return mixed
      */
-    public function actionIndex()
-    {
-        $searchModel = new ExpressSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+    public function actionIndex() {
+        //查看/platform_config/goods-model/view
     }
 
     /**
-     * Displays a single Express model.
+     * Displays a single GoodsSpec model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
+    public function actionView($id) {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+                    'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Express model.
+     * Creates a new GoodsSpec model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
-        $model = new Express();
+    public function actionCreate($model_id) {
+        $model = new GoodsSpec(['model_id' => $model_id]);
+        $model->loadDefaultValues();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/platform_config/goods-model/view', 'id' => $model->model_id]);
         }
 
         return $this->render('create', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
     /**
-     * Updates an existing Express model.
+     * Updates an existing GoodsSpec model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/platform_config/goods-model/view', 'id' => $model->model_id]);
         }
 
         return $this->render('update', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
     /**
-     * Deletes an existing Express model.
+     * Deletes an existing GoodsSpec model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+    public function actionDelete($id) {
+        $model = $this->findModel($id);
+        $model->delete();
 
-        return $this->redirect(['index']);
+        $this->redirect(['/platform_config/goods-model/view', 'id' => $model->model_id]);
     }
 
     /**
-     * Finds the Express model based on its primary key value.
+     * Finds the GoodsSpec model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Express the loaded model
+     * @return GoodsSpec the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
-        if (($model = Express::findOne($id)) !== null) {
+    protected function findModel($id) {
+        if (($model = GoodsSpec::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
+
 }

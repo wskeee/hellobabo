@@ -1,18 +1,20 @@
 <?php
 
-namespace backend\modules\goods_config\controllers;
+namespace backend\modules\platform_config\controllers;
 
-use common\models\goods\SceneGroup;
-use common\models\goods\searchs\SceneGroupSearch;
-use common\widgets\grid\GridViewChangeSelfController;
+use common\models\goods\GoodsAttribute;
+use common\models\goods\GoodsModel;
+use common\models\goods\GoodsSpec;
+use common\models\goods\searchs\GoodsModelSearch;
 use Yii;
 use yii\filters\VerbFilter;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 /**
- * SceneGroupController implements the CRUD actions for SceneGroup model.
+ * GoodsModelController implements the CRUD actions for GoodsModel model.
  */
-class SceneGroupController extends GridViewChangeSelfController
+class GoodsModelController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -30,12 +32,12 @@ class SceneGroupController extends GridViewChangeSelfController
     }
 
     /**
-     * Lists all SceneGroup models.
+     * Lists all GoodsModel models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new SceneGroupSearch();
+        $searchModel = new GoodsModelSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,29 +47,34 @@ class SceneGroupController extends GridViewChangeSelfController
     }
 
     /**
-     * Displays a single SceneGroup model.
+     * Displays a single GoodsModel model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
+        $attrs = GoodsAttribute::find()->where(['model_id' => $id])->orderBy('sort_order')->all();
+        $specs = GoodsSpec::find()->where(['model_id' => $id])->orderBy('sort_order')->all();
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'attrs' => $attrs,
+            'specs' => $specs,
         ]);
     }
 
     /**
-     * Creates a new SceneGroup model.
+     * Creates a new GoodsModel model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new SceneGroup();
+        $model = new GoodsModel();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -76,7 +83,7 @@ class SceneGroupController extends GridViewChangeSelfController
     }
 
     /**
-     * Updates an existing SceneGroup model.
+     * Updates an existing GoodsModel model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -87,7 +94,7 @@ class SceneGroupController extends GridViewChangeSelfController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -96,7 +103,7 @@ class SceneGroupController extends GridViewChangeSelfController
     }
 
     /**
-     * Deletes an existing SceneGroup model.
+     * Deletes an existing GoodsModel model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -110,15 +117,15 @@ class SceneGroupController extends GridViewChangeSelfController
     }
 
     /**
-     * Finds the SceneGroup model based on its primary key value.
+     * Finds the GoodsModel model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return SceneGroup the loaded model
+     * @return GoodsModel the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = SceneGroup::findOne($id)) !== null) {
+        if (($model = GoodsModel::findOne($id)) !== null) {
             return $model;
         }
 

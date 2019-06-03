@@ -20,7 +20,7 @@ use yii\web\View;
     <div class="wsk-panel">
         <div class="title">
             <?= Yii::t('app', 'Attribute') ?>
-            <?= Html::a(I18NUitl::t('app', '{Add}{Attribute}'), ['/goods_config/attribute/create', 'model_id' => $goodsModel->id], ['class' => ['btn btn-primary pull-right'],]) ?>
+            <?= Html::a(I18NUitl::t('app', '{Add}{Attribute}'), ['/platform_config/attribute/create', 'model_id' => $goodsModel->id], ['class' => ['btn btn-primary pull-right'],]) ?>
         </div>
         <div class="body">
             <?=
@@ -42,14 +42,14 @@ use yii\web\View;
                         'attribute' => 'is_required',
                         'class' => GridViewChangeSelfColumn::class,
                         'plugOptions' => [
-                            'url' => '/goods_config/attribute/change-value'
+                            'url' => '/platform_config/attribute/change-value'
                         ],
                     ],
                     [
                         'attribute' => 'index_type',
                         'class' => GridViewChangeSelfColumn::class,
                         'plugOptions' => [
-                            'url' => '/goods_config/attribute/change-value'
+                            'url' => '/platform_config/attribute/change-value'
                         ],
                     ],
                     [
@@ -58,7 +58,7 @@ use yii\web\View;
                         'headerOptions' => ['style' => 'width:100px'],
                         'plugOptions' => [
                             'type' => 'input',
-                            'url' => '/goods_config/attribute/change-value'
+                            'url' => '/platform_config/attribute/change-value'
                         ],
                     ],
                     [
@@ -68,20 +68,20 @@ use yii\web\View;
                         'plugOptions' => [
                             'labels' => ['禁用', '启用'],
                             'values' => [1, 0],
-                            'url' => '/goods_config/attribute/change-value'
+                            'url' => '/platform_config/attribute/change-value'
                         ],
                     ],
                     [
                         'class' => 'yii\grid\ActionColumn',
                         'buttons' => [
                             'updata' => function ($url, $model) {
-                                return Html::a(Yii::t('yii', 'Update'), ['/goods_config/attribute/update', 'id' => $model->id], ['class' => 'btn btn-default']);
+                                return Html::a(Yii::t('yii', 'Update'), ['/platform_config/attribute/update', 'id' => $model->id], ['class' => 'btn btn-default']);
                             },
                             'view' => function($url, $model) {
-                                return Html::a(I18NUitl::t('app', '{Config}{Value}'), ['/goods_config/attribute/view', 'id' => $model->id], ['class' => 'btn btn-primary']);
+                                return Html::a(I18NUitl::t('app', '{Config}{Value}'), ['/platform_config/attribute/view', 'id' => $model->id], ['class' => 'btn btn-primary']);
                             },
                             'delete' => function ($url, $model) {
-                                return Html::a(Yii::t('yii', 'Delete'), ['/goods_config/attribute/delete', 'id' => $model->id], ['class' => 'btn btn-danger',
+                                return Html::a(Yii::t('yii', 'Delete'), ['/platform_config/attribute/delete', 'id' => $model->id], ['class' => 'btn btn-danger',
                                             'data' => [
                                                 'pjax' => 0,
                                                 'confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),

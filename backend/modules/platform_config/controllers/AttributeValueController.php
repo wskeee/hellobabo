@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\modules\goods_config\controllers;
+namespace backend\modules\platform_config\controllers;
 
 use common\models\api\ApiResponse;
 use common\models\goods\GoodsAttributeValue;

@@ -10,7 +10,7 @@ use yii\web\YiiAsset;
 /* @var $model GoodsAttribute */
 
 $this->title = I18NUitl::t('app', "{Goods}{Attribute}：{Name}", ['Name' => $model->name]);
-$this->params['breadcrumbs'][] = ['label' => I18NUitl::t('app', '{Model}:{Name}', ['Name' => $model->goodsModel->name]), 'url' => ['/goods_config/goods-model/view', 'id' => $model->model_id]];
+$this->params['breadcrumbs'][] = ['label' => I18NUitl::t('app', '{Model}:{Name}', ['Name' => $model->goodsModel->name]), 'url' => ['/platform_config/goods-model/view', 'id' => $model->model_id]];
 $this->params['breadcrumbs'][] = $this->title;
 YiiAsset::register($this);
 ?>

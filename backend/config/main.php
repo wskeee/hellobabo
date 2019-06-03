@@ -77,8 +77,8 @@ return [
             'class' => 'backend\modules\goods_admin\Module',
         ],
         //素材配置
-        'goods_config' => [
-            'class' => 'backend\modules\goods_config\Module',
+        'platform_config' => [
+            'class' => 'backend\modules\platform_config\Module',
         ],
         //订单管理
         'order_admin' => [
