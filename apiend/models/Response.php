@@ -31,6 +31,11 @@ class Response extends ApiResponse{
     /** 第三方账号已存在 */
     const CODE_USER_AUTH_ACCOUNT_EXISTS = '10104';
     
+    /* 提现金额校验失败 */
+    const CODE_USER_MONEY_VERIFICATION_FAILED = '10150';
+    /* 提现失败 */
+    const CODE_USER_MONEY_WITHDRAWAL_FAILED = '10151';
+    
     
     //--------------------------------------------------------------------------------------------------------------
     //
@@ -76,6 +81,9 @@ class Response extends ApiResponse{
             self::CODE_USER_PHONE_HAS_REGISTERED => '该手机号已经注册',
             self::CODE_USER_REGISTER_FAILED => '注册失败',
             self::CODE_USER_AUTH_ACCOUNT_EXISTS => '第三方账号已存在',
+            
+            self::CODE_USER_MONEY_VERIFICATION_FAILED => '金额校验失败',
+            self::CODE_USER_MONEY_WITHDRAWAL_FAILED => '提现失败：{param}',
             
             /* SMS */
             self::CODE_SMS_AUTH_FAILED => '验证码不匹对',

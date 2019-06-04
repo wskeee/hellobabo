@@ -2,7 +2,8 @@
 
 namespace console\controllers;
 
-use common\models\Crontab;
+use common\models\system\Crontab;
+use Yii;
 use yii\console\Controller;
 use yii\console\ExitCode;
 
@@ -49,11 +50,11 @@ class CrontabController extends Controller {
 
         $pool = [];
         $startExectime = $this->getCurrentTime();
-        $php_path = \Yii::$app->params['php_path'];
+        $php_path = Yii::$app->params['php_path'];
+        $yii_path = dirname(dirname(__DIR__)).'/yii';
       
         foreach ($tasks as $task) {
-
-            $pool[] = proc_open("$php_path yii $task->route", [], $pipe);
+            $pool[] = proc_open("$php_path $yii_path $task->route", [], $pipe);
         }
 
         // 回收子进程

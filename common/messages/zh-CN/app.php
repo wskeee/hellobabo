@@ -287,7 +287,12 @@ return [
     'Log' => '日志',
     'Result' => '结果',
     'Feedback' => '反馈',
-    'Check' => '检查',
+    'Issue' => '反馈',
+    'Issue By' => '反馈人',
+    'Issue At' => '反馈时间',
+    'Handled At' => '处理时间',
+    'Handled By' => '处理人',
+    'Check' => '审核',
     'Route' => '路径',
     'Size' => '大小',
     'Reason' => '原因',
@@ -312,7 +317,7 @@ return [
     'Bitrate' => '码率',
     'Format' => '格式',
     'Operate' => '操作',
-    'Handled By' => '审核人',
+    //'Handled By' => '审核人',
     'Illustration' => '说明',
     'Recycle Bin' => '回收站',
     'Recovery' => '还原',
@@ -407,7 +412,15 @@ return [
     'Shipping Name' => '快递公司名称',
     'Shipping Price' => '快递价格',
     'Invoice No' => '快递单号',
-    
+    'Withdrawals' => '提现列表',
+    'Withdrawal' => '提现',
+    'Need Check' => '人工审核',
+    'Check At' => '审核时间',
+    'Tran Sn' => '交易编号',
+    'Pay Realname' => '提现人',
+    'Pay At' => '付款时间',
+    'Pay Error Code' => '付款错误',
+    'Pwd Key' => '密钥',
     
     
     //后台-定时任务
@@ -475,6 +488,7 @@ return [
     'Remark' => '备注',
     'Reset' => '重置',
     'Solve' => '解决',
+    'UnSolve' => '未解决',
     'Processer' => '处理人',
     'Feedbacker' => '反馈者',
     

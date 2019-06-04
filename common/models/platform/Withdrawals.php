@@ -34,7 +34,7 @@ use yii\db\ActiveRecord;
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
  * 
- * @property AdminUser $user 提现人
+ * @property User $user 提现人
  * @property AdminUser $checker 审核人
  */
 class Withdrawals extends ActiveRecord {
@@ -147,7 +147,7 @@ class Withdrawals extends ActiveRecord {
                 $this->save();
             } else {
                 /* @var $payment Application */
-                $payment = Yii::$app->wechat->payment;
+                //$payment = Yii::$app->wechat->payment;
                 /*
                   $message = $payment->transfer->toBalance([
                   'partner_trade_no' => $this->order_sn, // 商户订单号，需保持唯一性(只能是字母或者数字，不能包含有符号)

@@ -1,9 +1,7 @@
 <?php
+
 $params = array_merge(
-    require __DIR__ . '/../../common/config/params.php',
-    require __DIR__ . '/../../common/config/params-local.php',
-    require __DIR__ . '/params.php',
-    require __DIR__ . '/params-local.php'
+        require __DIR__ . '/../../common/config/params.php', require __DIR__ . '/../../common/config/params-local.php', require __DIR__ . '/params.php', require __DIR__ . '/params-local.php'
 );
 
 return [
@@ -38,7 +36,6 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        
         'urlManager' => [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => false,
@@ -48,7 +45,6 @@ return [
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
             ],
         ],
-        
         'authManager' => [
             'class' => 'common\modules\rbac\RbacManager',
             'cache' => [
@@ -63,7 +59,6 @@ return [
         'rbac' => [
             'class' => 'common\modules\rbac\Module',
         ],
-        
         //权限控制
         'user_admin' => [
             'class' => 'backend\modules\user_admin\Module',
@@ -88,10 +83,9 @@ return [
 //        'statistics' => [
 //            'class' => 'backend\modules\statistics\Module',
 //        ],
-        //帮助中心管理
-//        'helpcenter_admin' => [
-//            'class' => 'backend\modules\helpcenter_admin\Module',
-//        ],
+        'platform_admin' => [
+            'class' => 'backend\modules\platform_admin\Module',
+        ],
         //reids缓存管理
         'rediscache_admin' => [
             'class' => 'backend\modules\rediscache_admin\Module',
@@ -108,10 +102,6 @@ return [
             'external/*',
             'gii/*',
             'debug/*',
-            'media_admin/media/tran-complete',
-            'media_admin/media/check-transcode',
-            'rediscache_admin/*',
-            'media_admin/default/index',
         // The actions listed here will be allowed to everyone including guests.
         // So, 'admin/*' should not appear here in the production, of course.
         // But in the earlier stages of your development, you may probably want to

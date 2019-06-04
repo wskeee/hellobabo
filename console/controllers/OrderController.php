@@ -2,94 +2,73 @@
 
 namespace console\controllers;
 
-use common\models\order\Order;
-use common\models\order\OrderAction;
-use common\models\order\PlayApprove;
-use Yii;
+use common\models\platform\Goods;
+use common\models\platform\Order;
+use common\models\platform\OrderActionLog;
 use yii\console\Controller;
 use yii\console\ExitCode;
-use yii\db\Exception;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 /**
  * 订单定时任务
  *
  * @author Administrator
  */
-class OrderController extends Controller{
+class OrderController extends Controller {
+
     /**
      * 检查订单是否在限期内完成支付
      * 
-     * 如果订单没有在限期内完成支付即设置该订单【作废】
+     * 如果订单创建后未在5分钟内支付，即订单作废
      */
-    public function actionCheckPlay(){
+    public function actionCheckPlay() {
         //
         //do something
         //
-        $orders = (new Query())
-                ->select(['id', 'order_status', 'created_at'])
+        $result = (new Query())
+                ->select(['id', 'goods_id'])
                 ->from(['Order' => Order::tableName()])
-                ->andFilterWhere(['or',
-                    ['order_status' => Order::ORDER_STATUS_READING_PAYING], //待付款
-                    ['order_status' => Order::ORDER_STATUS_AUDIT_FAILURE],  //审核失败
-                ])->all();
-        $invalidIds = [];
-        // 循环拿出所有需要作废的订单ID
-        foreach ($orders as $order) {
-            if(strtotime("+7 day", $order['created_at']) <= time()){
-                $invalidIds[] += $order['id'];
-            }
-        }
-        try {
-            Yii::$app->db->createCommand()->update(Order::tableName(), [
-                'order_status' => Order::ORDER_STATUS_INVALID, 'updated_at' => time()], ['in', 'id', $invalidIds])->execute();
-            $models = Order::findAll(['id' => $invalidIds]);
-            // 保存订单操作记录
-            foreach ($models as $model){
-                OrderAction::savaOrderAction($model->id, '作废订单', '系统定时操作', $model->order_status, $model->play_status);
-            }
-        } catch (Exception $ex) {
-            $ex->getMessage();
-        }
-        
-        return ExitCode::OK;
-    }
-    
-    
-    /**
-     * 检查订单是否确认
-     * 
-     * 如果订单在【支付审核通过】7天后还没有【确认开通】即自动设置该订单状态为【确认开通】
-     */
-    public function actionCheckConfirm(){
-        //
-        //do something
-        //
-        $orders = (new Query())
-                ->select(['Order.id', 'Order.order_status', 'PlayApprove.handled_at AS handled_at'])
-                ->from(['Order' => Order::tableName()])
-                ->where(['order_status' => Order::ORDER_STATUS_TO_BE_CONFIRMED])    //待确认
-                ->leftJoin(['PlayApprove' => PlayApprove::tableName()], '(PlayApprove.order_id = Order.id AND PlayApprove.result = 1)')
+                ->where(['order_status' => Order::STATUS_WAITPAY])
+                ->andFilterWhere(['<', 'created_at', strtotime("-5 minute", time())])
                 ->all();
-        $confirmIds = [];
-        // 循环拿出所有需要确认的订单ID
-        foreach ($orders as $order) {
-            if(strtotime("+7 day", $order['handled_at']) <= time()){
-                $confirmIds[] += $order['id'];
-            }       
-        }
-        try {
-            Yii::$app->db->createCommand()->update(Order::tableName(), ['order_status' => Order::ORDER_STATUS_CONFIRMED,
-                'confirm_at' => time(), 'updated_at' => time()], ['in', 'id', $confirmIds])->execute();
-            $models = Order::findAll(['id' => $confirmIds]);
-            // 保存订单操作记录
-            foreach ($models as $model){
-                OrderAction::savaOrderAction($model->id, '确认订单', '系统定时操作', $model->order_status, $model->play_status);
-            }
-        } catch (Exception $ex) {
-            $ex->getMessage();
-        }
         
+        if (count($result) > 0) {
+            //作废订单
+            Order::updateAll([
+                'order_status' => Order::STATUS_INVALID,
+                'updated_at' => time(),
+                    ], ['id' => ArrayHelper::getColumn($result, 'id')]);
+
+            //重置设备状态 
+            Goods::updateAll(['status' => Goods::STATUS_FREE], ['id' => ArrayHelper::getColumn($result, 'goods_id')]);
+
+            OrderActionLog::saveLog(ArrayHelper::getColumn($result, 'id'), '过期作废', '订单过期，系统自动作废');
+        }
+
         return ExitCode::OK;
     }
+
+    /**
+     * 检查订单是否已经完成
+     * 
+     */
+    public function actionCheckConfirm() {
+        //
+        //do something
+        //
+        $orders = Order::find()
+                ->where(['order_status' => Order::STATUS_PAYED])    //待确认
+                ->andWhere(['<=', 'end_at', time()])
+                ->all();
+
+        /* @var $order Order */
+        foreach ($orders as $order) {
+            $order->finish();
+        }
+
+        OrderActionLog::saveLog(ArrayHelper::getColumn($orders, 'id'), '订单确认', '系统自动确认！');
+        return ExitCode::OK;
+    }
+
 }
