@@ -4,6 +4,7 @@ namespace apiend\modules\v1\controllers;
 
 use apiend\controllers\ApiController;
 use apiend\modules\v1\actions\system\GetRegion;
+use apiend\modules\v1\actions\system\Upload;
 
 /**
  * 系统接口
@@ -17,10 +18,11 @@ class SystemController extends ApiController
     {
         $behaviors = parent::behaviors();
         $behaviors['authenticator']['optional'] = [
-            
+            'upload-file'
         ];
         $behaviors['verbs']['actions'] = [
             'get-region' => ['get'],
+            'upload-file' => ['post'],
         ];
         return $behaviors;
     }
@@ -32,6 +34,7 @@ class SystemController extends ApiController
     {
         return [
             'get-region' => ['class' => GetRegion::class],
+            'upload-file' => ['class' => Upload::class],
         ];
     }
 
