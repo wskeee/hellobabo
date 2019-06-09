@@ -35,7 +35,7 @@ class CancelOrder extends BaseAction
         $tran = Yii::$app->db->beginTransaction();
         try {
             if ($order->save()) {
-                OrderAction::saveLog($order_id, '订单取消', '客户自行取消订单');
+                OrderAction::saveLog([$order_id], '订单取消', '客户自行取消订单');
                 $tran->commit();
                 return new Response(Response::CODE_COMMON_OK);
             } else {

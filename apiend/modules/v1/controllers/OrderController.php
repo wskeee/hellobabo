@@ -3,8 +3,10 @@
 namespace apiend\modules\v1\controllers;
 
 use apiend\controllers\ApiController;
+use apiend\modules\v1\actions\order\CancelOrder;
 use apiend\modules\v1\actions\order\CheckPay;
 use apiend\modules\v1\actions\order\ClearSceneUserImage;
+use apiend\modules\v1\actions\order\ConfirmOrder;
 use apiend\modules\v1\actions\order\CreateOrder;
 use apiend\modules\v1\actions\order\GetOrderDetail;
 use apiend\modules\v1\actions\order\GetOrderList;
@@ -33,6 +35,7 @@ class OrderController extends ApiController
         $behaviors['authenticator']['optional'] = [
         ];
         $behaviors['verbs']['actions'] = [
+            'ready' => ['get'],
             'create-order' => ['post'],
             'pay' => ['post'],
             'check-pay' => ['get'],
@@ -46,7 +49,8 @@ class OrderController extends ApiController
             'save-scene-user-img' => ['post'],
             'get-list' => ['get'],
             'get-order-detail' => ['get'],
-            'ready' => ['get'],
+            'cancel' => ['post'],
+            'confirm' => ['post'],
         ];
         return $behaviors;
     }
@@ -57,6 +61,7 @@ class OrderController extends ApiController
     public function actions()
     {
         return [
+            'ready' => ['class' => OrderReady::class],
             'create' => ['class' => CreateOrder::class],
             'pay' => ['class' => Pay::class],
             'check-pay' => ['class' => CheckPay::class],
@@ -71,7 +76,8 @@ class OrderController extends ApiController
             'clear-scene-user-img' => ['class' => ClearSceneUserImage::class],
             'get-list' => ['class' => GetOrderList::class],
             'get-detail' => ['class' => GetOrderDetail::class],
-            'ready' => ['class' => OrderReady::class],
+            'cancel' => ['class' => CancelOrder::class],
+            'confirm' => ['class' => ConfirmOrder::class],
         ];
     }
 
