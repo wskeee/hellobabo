@@ -12,6 +12,7 @@ use common\models\order\WorkflowDelivery;
 use common\models\order\WorkflowPrint;
 use OSS\OssClient;
 use Yii;
+use yii\base\UserException;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -149,12 +150,11 @@ class PrintController extends Controller
             try {
                 $model->end_at = time();
                 $model->status = WorkflowPrint::STATUS_ENDED;
-                $model->save();
                 
                 //更改订单为待发货
                 $model->order->print_at = time();
                 $model->order->order_status = Order::ORDER_STATUS_WAIT_DELIVER;
-                $model->order->save();
+                
 
                 $print = new WorkflowDelivery([
                     'order_id' => $model->order_id,
@@ -172,13 +172,16 @@ class PrintController extends Controller
                     'user_note' => $model->order->user_note,
                     'status' => WorkflowPrint::STATUS_WAIT_START,
                 ]);
-                $print->save();
+                $print->setScenario(WorkflowDelivery::SCENARIO_CREATE);
                 
+                if($model->save() && $model->order->save() && $print->save()){
+                    //记录订单日志 
+                    OrderAction::saveLog([$model->order_id], '结束打印', '绘本打印已完成！');
+                    $tran->commit();
+                }else{
+                    throw new UserException(implode(',', $model->getErrorSummary(true) + $model->order->getErrorSummary(true) + $print->getErrorSummary(true)));
+                }
                 
-                //记录订单日志 
-                OrderAction::saveLog([$model->order_id], '结束打印', '绘本打印已完成！');
-                
-                $tran->commit();
             } catch (\Exception $ex) {
                 $tran->rollBack();
                 Yii::$app->session->addFlash('danger', $ex->getMessage());

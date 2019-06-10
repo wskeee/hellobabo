@@ -64,4 +64,17 @@ class Config extends ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
+    
+    /**
+     * 获取配置值
+     * @param string $config_name
+     */
+    public static function getValue($config_name){
+        $config = self::findOne(['config_name' => $config_name]);
+        if($config){
+            return $config->config_value;
+        }else{
+            return null;
+        }
+    }
 }

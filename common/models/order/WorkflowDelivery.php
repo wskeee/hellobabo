@@ -44,6 +44,8 @@ use yii\db\ActiveRecord;
 class WorkflowDelivery extends ActiveRecord
 {
 
+    /** 创建场景 */
+    const SCENARIO_CREATE = 'create';
     const STATUS_WAIT_START = 0;   //待开始
     const STATUS_RUNGING = 1;       //未完成
     const STATUS_ENDED = 2;         //已完成
@@ -70,6 +72,20 @@ class WorkflowDelivery extends ActiveRecord
         self::SEND_TYPE_NONE => '无需物流',
     ];
 
+    public function scenarios()
+    {
+        return [
+            self::SCENARIO_CREATE =>
+                ['order_id', 'user_id', 'country', 'province', 'city', 'district', 'status', 'order_sn',
+                'phone', 'user_note', 'consignee', 'zipcode', 'address'],
+            self::SCENARIO_DEFAULT => [
+                'order_id', 'user_id', 'country', 'province', 'city', 'district', 'status', 'order_sn',
+                'phone', 'user_note', 'consignee', 'zipcode', 'address',
+                'send_type', 'worker_id', 'start_at', 'end_at','shipping_name',
+                'shipping_code', 'shipping_price', 'invoice_no'],
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -89,16 +105,15 @@ class WorkflowDelivery extends ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'order_id', 'user_id', 'country', 'province', 'city', 'district', 'town', 'send_type', 'worker_id', 'start_at', 'end_at', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['shipping_code','shipping_price','invoice_no'], 'required'],
-            [['shipping_price'], 'number'],
-            [['note','user_note'], 'string'],
-            [['order_sn', 'phone'], 'string', 'max' => 20],
-            [['consignee', 'shipping_name'], 'string', 'max' => 64],
-            [['zipcode'], 'string', 'max' => 6],
-            [['address', 'invoice_no'], 'string', 'max' => 255],
-            [['shipping_code'], 'string', 'max' => 32],
-            [['id'], 'unique'],
+                [['order_id', 'user_id', 'country', 'province', 'city', 'district', 'town', 'send_type', 'worker_id', 'start_at', 'end_at', 'status', 'created_at', 'updated_at'], 'integer'],
+                [['shipping_code', 'shipping_price', 'invoice_no'], 'required', 'on' => [self::SCENARIO_DEFAULT]],
+                [['shipping_price'], 'number'],
+                [['note', 'user_note'], 'string'],
+                [['order_sn', 'phone'], 'string', 'max' => 20],
+                [['consignee', 'shipping_name'], 'string', 'max' => 64],
+                [['zipcode'], 'string', 'max' => 6],
+                [['address', 'invoice_no'], 'string', 'max' => 255],
+                [['shipping_code'], 'string', 'max' => 32],
         ];
     }
 

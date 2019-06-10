@@ -3,9 +3,13 @@
 namespace common\models\order;
 
 use common\components\redis\RedisService;
+use common\models\goods\Goods;
+use common\models\platform\WalletLog;
+use common\models\system\Config;
 use common\models\User;
 use common\utils\I18NUitl;
 use Yii;
+use yii\base\UserException;
 use yii\db\ActiveRecord;
 use yii\db\Exception;
 
@@ -120,7 +124,7 @@ class Order extends ActiveRecord
     {
         return [
                 [['order_sn', 'goods_id'], 'required'],
-                [['goods_id', 'goods_num','scene_num', 'spec_id', 'order_status', 'work_status', 'pay_at', 'init_at', 'upload_finish_at', 'design_at', 'print_at', 'shipping_at', 'confirm_at', 'address_id', 'is_recommend', 'recommend_by', 'created_by', 'created_at', 'updated_at'], 'integer'],
+                [['goods_id', 'goods_num', 'scene_num', 'spec_id', 'order_status', 'work_status', 'pay_at', 'init_at', 'upload_finish_at', 'design_at', 'print_at', 'shipping_at', 'confirm_at', 'address_id', 'is_recommend', 'recommend_by', 'created_by', 'created_at', 'updated_at'], 'integer'],
                 [['country', 'province', 'city', 'district', 'town',], 'integer'],
                 [['zipcode'], 'string', 'max' => 6],
                 [['address'], 'string', 'max' => 255],
@@ -235,64 +239,162 @@ class Order extends ActiveRecord
             return false;
         }
     }
-    
+
+    /**
+     * 订单确认
+     * 
+     */
+    public function finish()
+    {
+        if ($this->order_status != self::ORDER_STATUS_WAIT_CONFIRM) {
+            return "订单无法确认！当前状态为：".self::$orderStatusNameMap[$this->order_status];
+        }
+        $time = time();
+        //是否为推荐
+        $is_recommend = $this->is_recommend;
+        /* @var $referrer User */
+        $referrer = $is_recommend ? User::findOne(['id' => $this->recommend_by]) : null;
+        //商品
+        $goods = Goods::findOne(['id' => $this->goods_id]);
+
+        //检查推荐人金额是否正常
+        if ($is_recommend && !$referrer->moneyVerification()) {
+            //账号余额不对，终止结算
+            //...添加日志记录
+            OrderAction::saveLog([$order->id], '确认失败', "订单确认失败，发现账号余额不对，账号：{$account->id}");
+            return "订单确认失败，发现账号余额不对，请联系客户！";
+        }
+
+        $tran = \Yii::$app->db->beginTransaction();
+        try {
+            //订单
+            $this->order_status = self::ORDER_STATUS_CONFIRMED;
+            $this->confirm_at = $time;
+            $this->ar_save($this);
+
+            //商品
+            $goods->sale_count ++;
+            $this->ar_save($goods);
+            
+            //推荐
+            if ($is_recommend) {
+                $commission = Config::getValue('order_recommend_commission');
+                $order_recommend = new OrderRecommend([
+                    'order_id' => $this->id,
+                    'order_sn' => $this->order_sn,
+                    'order_amount' => $this->order_amount,
+                    'goods_name' => $this->goods_name,
+                    'commission' => $commission,
+                    'amount' => round(($commission > 1 ? $commission : $this->order_amount * $commission) * 100 / 100),
+                    'recommend_by' => $this->recommend_by,
+                    'created_by' => $this->created_by,
+                ]);
+                $this->ar_save($order_recommend);
+                
+                $referrer->money += $order_recommend->amount;
+                $referrer->makeVerification($referrer->id, $referrer->money);
+                $this->ar_save($referrer);
+
+                $wallet_log = new WalletLog([
+                    'user_id' => $referrer->id,
+                    'type' => WalletLog::TYPE_INCOME,
+                    'tran_sn' => $order_recommend->id,
+                    'tran_money' => $order_recommend->amount,
+                    'money_newest' => $referrer->money,
+                    'des' => '推荐奖励',
+                ]);
+                $this->ar_save($wallet_log);
+            }
+
+            //日志
+            OrderAction::saveLog([$this->id], '订单确认', '订单已完成！');
+            $tran->commit();
+            return true;
+        } catch (\Exception $ex) {
+            $tran->rollBack();
+            OrderAction::saveLog([$this->id], '订单确认失败', $ex->getMessage());
+            return "订单确认失败：{$ex->getMessage()}";
+        }
+    }
+
+    /**
+     * 模型保存
+     * @param ActiveRecord $ar
+     * 
+     * @throws Exception
+     */
+    private function ar_save($ar)
+    {
+        if (!$ar->save()) {
+            throw new UserException(implode(",", $ar->getErrorSummary(true)));
+        }
+    }
+
     /**
      * 检查是否已经支付
      * @return boolean 
      */
-    public function getIsPlyed(){
-        if(!$this->getIsValid()){
+    public function getIsPlyed()
+    {
+        if (!$this->getIsValid()) {
             //订单无效
             return false;
-        }else{
+        } else {
             return $this->order_status != self::ORDER_STATUS_WAIT_PAY && $this->order_status != self::ORDER_STATUS_PAY_FAIL;
         }
     }
+
     /**
      * 检查订单是否有效
      * @return boolean 
      */
-    public function getIsValid(){
+    public function getIsValid()
+    {
         return $this->order_status != self::ORDER_STATUS_CANCELED && $this->order_status != self::ORDER_STATUS_INVALID;
     }
-    
+
     /**
      * 
      * @return QueryRecord
      */
-    public function getCreater(){
+    public function getCreater()
+    {
         return $this->hasOne(User::class, ['id' => 'created_by']);
     }
-    
+
     /**
      * 推荐人
      * @return QueryRecord
      */
-    public function getReferrer(){
+    public function getReferrer()
+    {
         return $this->hasOne(User::class, ['id' => 'recommend_by']);
     }
-    
+
     /**
      * 订单素材
      * @return QueryRecord
      */
-    public function getOrderGoodsMaterials(){
+    public function getOrderGoodsMaterials()
+    {
         return $this->hasMany(OrderGoodsMaterial::class, ['order_id' => 'id'])->where(['is_del' => 0]);
     }
-    
+
     /**
      * 订单场景 
      * @return QueryRecord
      */
-    public function getOrderGoodsScenes(){
+    public function getOrderGoodsScenes()
+    {
         return $this->hasMany(OrderGoodsScene::class, ['order_id' => 'id'])->where(['is_del' => 0]);
     }
-    
+
     /**
      * 制作日志
      * @return QueryRecord
      */
-    public function getActionLogs(){
+    public function getActionLogs()
+    {
         return $this->hasMany(OrderAction::class, ['order_id' => 'id']);
     }
 

@@ -12,6 +12,7 @@ use Yii;
  * @property string $order_sn 订单编号,关联order,order_sn
  * @property string $order_amount 订单总额
  * @property string $goods_name 商品名称
+ * @property number $commission 佣金 小于1等于订单金额百份比，大于1等于实际金额
  * @property string $amount 参与奖励金额
  * @property int $recommend_by 推荐人id,关联admin_user表id字段
  * @property int $created_by 创建人（购买人）ID,关联user,id
@@ -36,7 +37,7 @@ class OrderRecommend extends \yii\db\ActiveRecord
         return [
             [['order_id', 'created_by'], 'required'],
             [['order_id', 'recommend_by', 'created_by', 'created_at', 'updated_at'], 'integer'],
-            [['order_amount', 'amount'], 'number'],
+            [['order_amount', 'amount','commission'], 'number'],
             [['order_sn'], 'string', 'max' => 20],
             [['goods_name'], 'string', 'max' => 255],
         ];
@@ -53,6 +54,7 @@ class OrderRecommend extends \yii\db\ActiveRecord
             'order_sn' => Yii::t('app', 'Order Sn'),
             'order_amount' => Yii::t('app', 'Order Amount'),
             'goods_name' => Yii::t('app', 'Goods Name'),
+            'commission' => Yii::t('app', 'Commission'),
             'amount' => Yii::t('app', 'Amount'),
             'recommend_by' => Yii::t('app', 'Recommend By'),
             'created_by' => Yii::t('app', 'Created By'),
