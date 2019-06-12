@@ -363,7 +363,6 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
             //合并id与值
             itemPrices[items.join('_')] = getItemName(items).join('_');
         });
-        console.log(itemPrices);
         //生成表格
         spec_item_prices = [];
         $table = $('.spec-price-box .table');
@@ -546,6 +545,7 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
         this.spec_key_name = spec_key_name;
         this.goods_cost = 0;
         this.goods_price = 0;
+        this.scene_num = 0;
         this.spec_img_url = '';
         this.spec_des = '';
         this.store_count = 0;
