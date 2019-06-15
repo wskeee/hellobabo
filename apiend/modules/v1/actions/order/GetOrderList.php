@@ -23,7 +23,7 @@ class GetOrderList extends BaseAction
         $orders = (new Query())
                 ->select([
                     'Order.id', 'Order.order_sn', 'Order.order_status', 'Order.created_at', 'Order.goods_name', 'Order.order_amount',
-                    'order.goods_img', 'Order.spec_key_name',
+                    'Order.goods_img', 'Order.spec_key_name',
                 ])
                 ->from(['Order' => Order::tableName()])
                 ->where(['Order.created_by' => Yii::$app->user->id])
@@ -34,7 +34,7 @@ class GetOrderList extends BaseAction
 
         foreach ($orders as &$order) {
             $order['order_status_text'] = Order::$orderStatusNameMap[$order['order_status']];
-            $order['created_time'] = date('Y-m-d H:i:s');
+            $order['created_time'] = date('Y-m-d H:i:s',$order['created_at']);
         }
 
         return new Response(Response::CODE_COMMON_OK, null, [
