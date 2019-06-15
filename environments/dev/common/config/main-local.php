@@ -16,9 +16,11 @@ return [
         ],
         'redis' => [
             'class' => 'yii\redis\Connection',
-            'hostname' => '172.16.163.111',
+            'hostname' => '127.0.0.1',
             'port' => 6379,
-            'database' => 7, //'unixSocket' => '/var/run/redis/redis.sock',			
+            'database' => 8, //'unixSocket' => '/var/run/redis/redis.sock',	
+            //生产机		
+            'password' => 'eE@wskeee',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
