@@ -10,6 +10,7 @@ use common\models\User;
 use common\utils\I18NUitl;
 use Yii;
 use yii\base\UserException;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Exception;
 
@@ -108,6 +109,11 @@ class Order extends ActiveRecord
         self::WORK_STATUS_PRINTING => '印刷中',
         self::WORK_STATUS_FINISH => '已完成',
     ];
+    
+    public function behaviors()
+    {
+        return [TimestampBehavior::class];
+    }
 
     /**
      * {@inheritdoc}
