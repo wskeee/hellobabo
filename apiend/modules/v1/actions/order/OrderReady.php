@@ -62,7 +62,7 @@ class OrderReady extends BaseAction
             'specs' => $specs, //规格
             'gsps' => ArrayHelper::index($gsps, 'spec_key'), //规格价格
             'gsp_key' => $gsp_key, //默认规格
-            'address' => $address->getDetail(),
+            'address' => $address ? $address->getDetail() : "",
         ]);
     }
 
