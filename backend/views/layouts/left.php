@@ -92,6 +92,7 @@ use common\widgets\Menu;
                             ['label' => '商品分类', 'icon' => 'circle-o', 'url' => ['/platform_config/category/index']],
                             ['label' => '商品模型', 'icon' => 'circle-o', 'url' => ['/platform_config/goods-model/index']],
                             ['label' => '场景分组', 'icon' => 'circle-o', 'url' => ['/platform_config/scene-group/index']],
+                            ['label' => '场景元素', 'icon' => 'circle-o', 'url' => ['/platform_config/element/index']],
                             ['label' => '快递公司', 'icon' => 'circle-o', 'url' => ['/platform_config/express/index']],
                         ],
                     ],

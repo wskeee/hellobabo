@@ -205,6 +205,7 @@ return [
     'Default' => '默认',
     'Selected' => '选中',
     'Thumb Image' => '缩略图',
+    'Thumb Url' => '缩略图',
   
     //提示消息
     "Can't be empty." => '不能为空。',
@@ -370,6 +371,10 @@ return [
     'Groups' => '分组列表',
     'Expresses' => '快递公司列表',
     'Express' => '快递公司',
+    'Element' => '场景元素',
+    'Elements' => '场景元素列表',
+    'Img Url' => '图片',
+    'Sound Url' => '声音',
     
     //后台-运营管理
     'Purchaser' => '购买人',
