@@ -20,17 +20,6 @@ class Login extends BaseAction
     {
         //微信认证code2Session data=[openid,session_key];
         $code = $this->getSecretParam('code');
-        /* 模拟登录 */
-        if (YII_DEBUG && $code == 111111) {
-            $user = User::findOne(['id' => 2]);
-
-            return new Response(Response::CODE_COMMON_OK, null, [
-                'openid' => '',
-                'token' => $user->access_token,
-                'token_expire_time' => $user->access_token_expire_time,
-            ]);
-            ;
-        }
         $data = Yii::$app->wechat->miniProgram->auth->session($code);
         if (!isset($data['openid'])) {
             return new Response(Response::CODE_COMMON_UNKNOWN, null, $data);

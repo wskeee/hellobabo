@@ -1,4 +1,5 @@
 <?php
+
 namespace common\models\order;
 
 use common\models\AdminUser;
@@ -21,6 +22,7 @@ use yii\db\Exception;
  */
 class OrderAction extends ActiveRecord
 {
+
     /**
      * {@inheritdoc}
      */
@@ -35,10 +37,10 @@ class OrderAction extends ActiveRecord
     public function rules()
     {
         return [
-            [['order_id'], 'required'],
-            [['order_id', 'created_by', 'created_at', 'updated_at'], 'integer'],
-            [['content'], 'string'],
-            [['title'], 'string', 'max' => 20],
+                [['order_id'], 'required'],
+                [['order_id', 'created_by', 'created_at', 'updated_at'], 'integer'],
+                [['content'], 'string'],
+                [['title'], 'string', 'max' => 20],
         ];
     }
 
@@ -57,7 +59,7 @@ class OrderAction extends ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
-    
+
     /**
      * 保存日志
      * @param array $ids     设备ID
@@ -66,15 +68,16 @@ class OrderAction extends ActiveRecord
      */
     public static function saveLog($ids, $title, $content)
     {
-        if(count($ids) == 0){
+        $ids = is_array($ids) ? $ids : [$ids];
+        if (count($ids) == 0) {
             return 0;
         }
-        try{
+        try {
             $created_by = Yii::$app->user->id;
         } catch (Exception $ex) {
             $created_by = 0;
         }
-        
+
         $time = time();
         foreach ($ids as $id) {
             $rows [] = [
@@ -87,12 +90,14 @@ class OrderAction extends ActiveRecord
         }
         return Yii::$app->db->createCommand()->batchInsert(self::tableName(), ['order_id', 'title', 'content', 'created_by', 'created_at', 'updated_at'], $rows)->execute();
     }
-    
+
     /**
      * 操作人
      * @return QueryRecord
      */
-    public function getCreater(){
+    public function getCreater()
+    {
         return $this->hasOne(AdminUser::class, ['id' => 'created_by']);
     }
+
 }

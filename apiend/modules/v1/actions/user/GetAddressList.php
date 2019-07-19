@@ -24,7 +24,7 @@ class GetAddressList extends BaseAction
         $user = Yii::$app->user->identity;
         $list = UserAddress::find()
                 ->where([
-                    'user_id' => $user,
+                    'user_id' => $user->id,
                     'is_del' => 0,
                 ])
                 ->orderBy(['is_default' => SORT_DESC])

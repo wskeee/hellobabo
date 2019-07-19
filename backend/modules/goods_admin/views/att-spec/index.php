@@ -39,6 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
+    <?php if($model->model_id !=0): ?>
     <!-- 属性 -->
     <div class="wsk-panel">
         <div class="title"><?= Yii::t('app', 'Attribute') ?></div>
@@ -56,6 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <a class="btn btn-success" onclick="saveF()"><?= Yii::t('app', 'Save') ?></a>
+    <?php endif; ?>
 </div>
 <script>
     function saveF() {
