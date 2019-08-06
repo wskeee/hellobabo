@@ -213,6 +213,7 @@ return [
     'Are you sure you want to disable this user?' => '你确定要禁用此用户？',
     'Are you sure you want to enable this user?' => '你确定要启用此用户？',
     'The requested page does not exist.' => '所请求的页面不存在。',
+    'Optional' => '选填',
     'Select Placeholder' => '请选择...',
     'Input Placeholder' => '请输入...',
     'The above error occurred while the Web server was processing your request.' => 'web服务器正在处理您的请求时发生上述错误。',
@@ -343,7 +344,7 @@ return [
     'Is Selected' => '是否选择',
     'Required Img' => '必须上图',
     'Up Img' => '上图',
-    'Immutable' => '不可改变',
+    'Immutable' => '不可选',
     'Item' => '项',
     'Fill' => '填充',
     'Price Placeholder' => '*价钱（元）',
@@ -351,6 +352,10 @@ return [
     'Scene Num Placeholder' => '*场景数（个）',
     'Consignee' => '收货人',
     'Scene Num' => '场景数',
+    'Pos' => '位置',
+    'Setting' => '设置',
+    'Goods Scene Page' => '场景页',
+    'Goods Scene Pages' => '场景页列表',
     
     //后台-商品配置
     'Storage' => '存储',
@@ -375,6 +380,14 @@ return [
     'Elements' => '场景元素列表',
     'Img Url' => '图片',
     'Sound Url' => '声音',
+    'Shooting Angle' => '拍摄角度',
+    'Shooting Angles' => '角度列表',
+    'Shooting Face' => '拍摄表情',
+    'Shooting Faces' => '表情列表',
+    'Shooting Action' => '拍摄动作',
+    'Page Source' => '源始模板',
+    'Page Source Id' => '源始模板ID',
+    'Page Is Required' => '必须传图',
     
     //后台-运营管理
     'Purchaser' => '购买人',

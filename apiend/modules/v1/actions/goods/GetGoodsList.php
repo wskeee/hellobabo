@@ -18,8 +18,6 @@ class GetGoodsList extends BaseAction
 
     public function run()
     {
-        /* @var $user User */
-        $user = Yii::$app->user->identity;
         $list = Goods::find()
                         ->where([
                             'status' => Goods::STATUS_PUBLISHED,

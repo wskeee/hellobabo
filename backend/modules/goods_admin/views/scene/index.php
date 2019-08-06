@@ -1,6 +1,7 @@
 <?php
 
 use common\models\goods\Goods;
+use common\models\goods\GoodsScene;
 use common\models\goods\searchs\GoodsSceneSearch;
 use common\utils\I18NUitl;
 use common\widgets\grid\GridViewChangeSelfColumn;
@@ -22,8 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="wsk-panel">
         <div class="title">
-            <?= I18NUitl::t('app', '{Scene}{Admin}') ?>
-            <?= Html::a(I18NUitl::t('app', '{Create}{Scene}'), ['create', 'goods_id' => $goodsModel->id], ['class' => 'btn btn-success pull-right']) ?>
+            <?= Html::a(I18NUitl::t('app', '{Create}{Scene}'), ['create', 'goods_id' => $goodsModel->id], ['class' => 'btn btn-success']) ?>
+            <?= $this->render('_search', ['model' => $searchModel, 'goodsModel' => $goodsModel]) ?>
         </div>
         <div class="body">
             <?=
@@ -36,27 +37,28 @@ $this->params['breadcrumbs'][] = $this->title;
                     ['class' => 'yii\grid\SerialColumn', 'headerOptions' => ['style' => 'width:60px']],
                     'name',
                     "group.name:text:{$searchModel->getAttributeLabel('group_id')}",
-                     [
+                    [
                         'attribute' => 'effect_url',
                         'format' => 'raw',
                         'headerOptions' => ['style' => 'width:100px'],
-                        'value' => function($model){
+                        'value' => function($model) {
                             return Html::img($model->effect_url, ['style' => 'height:64px']);
                         }
                     ],
-                    [
-                        'attribute' => 'demo_url',
-                        'format' => 'raw',
-                        'headerOptions' => ['style' => 'width:100px'],
-                        'value' => function($model){
-                            return Html::img($model->demo_url, ['style' => 'height:64px']);
-                        }
-                    ],
+                    /*
+                      [
+                      'attribute' => 'demo_url',
+                      'format' => 'raw',
+                      'headerOptions' => ['style' => 'width:100px'],
+                      'value' => function($model) {
+                      return Html::img($model->demo_url, ['style' => 'height:64px']);
+                      }
+                      ], */
                     [
                         'attribute' => 'source_url',
                         'format' => 'raw',
                         'headerOptions' => ['style' => 'width:74px'],
-                        'value' => function($model){
+                        'value' => function($model) {
                             return Html::img($model->source_url, ['style' => 'height:64px']);
                         }
                     ],
@@ -69,14 +71,15 @@ $this->params['breadcrumbs'][] = $this->title;
                             'url' => '/goods_admin/scene/change-value'
                         ],
                     ],
-                    [
-                        'attribute' => 'is_required',
-                        'class' => GridViewChangeSelfColumn::class,
-                        'headerOptions' => ['style' => 'width:80px'],
-                        'plugOptions' => [
-                            'url' => '/goods_admin/scene/change-value'
-                        ],
-                    ],
+                    /*
+                      [
+                      'attribute' => 'is_required',
+                      'class' => GridViewChangeSelfColumn::class,
+                      'headerOptions' => ['style' => 'width:80px'],
+                      'plugOptions' => [
+                      'url' => '/goods_admin/scene/change-value'
+                      ],
+                      ], */
                     [
                         'attribute' => 'immutable',
                         'class' => GridViewChangeSelfColumn::class,
@@ -84,6 +87,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         'plugOptions' => [
                             'url' => '/goods_admin/scene/change-value'
                         ],
+                    ],
+                    [
+                        'attribute' => 'pos',
+                        'value' => function($model) {
+                            return GoodsScene::$posNameMap[$model->pos];
+                        }
                     ],
                     [
                         'attribute' => 'sort_order',
@@ -97,6 +106,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'class' => 'yii\grid\ActionColumn',
                         'buttons' => [
+                            'setting' => function ($url, $model) {
+                                return Html::a(Yii::t('app', 'Setting'), ['/goods_admin/scene-page/index', 'scene_id' => $model->id], ['class' => 'btn btn-primary']);
+                            },
                             'updata' => function ($url, $model) {
                                 return Html::a(Yii::t('yii', 'Update'), ['/goods_admin/scene/update', 'id' => $model->id], ['class' => 'btn btn-default']);
                             },
@@ -111,7 +123,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             },
                         ],
                         'headerOptions' => ['style' => 'width:200px'],
-                        'template' => '{updata} {delete}',
+                        'template' => '{setting} {updata} {delete}',
                     ],
                 ],
             ]);

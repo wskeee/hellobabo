@@ -17,7 +17,13 @@ html,
 body {
     height: 100%;
 }
-
+.wrap-empty{
+    min-height: 100%;
+    height: auto;
+    margin: 0px;
+    padding: 0px;
+    background-color: #F2F2F2;
+}
 .wrap {
     min-height: 100%;
     height: auto;
