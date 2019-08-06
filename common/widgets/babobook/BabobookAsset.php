@@ -7,7 +7,7 @@ use yii\web\View;
 
 class BabobookAsset extends AssetBundle
 {
-    /* v1 */
+    /* v2 */
     public $css = [
         'css/style.css',
     ];
