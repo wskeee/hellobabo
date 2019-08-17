@@ -28,6 +28,7 @@ return [
     /* Webuploader 配置 */
     'webuploader' => [
         'savePath' => 'hellobabo/files/',
+        'unzipPath' => 'hellobabo/unzip/',
         'thumbPath' => 'hellobabo/thumb/'
     ],
     

@@ -1,6 +1,9 @@
 <?php
 return [
     'adminEmail' => 'admin@example.com',
+    /* api */
+    'api_secret_key' => 'hellobabo_api',
+
     // 微信小程序配置 具体可参考EasyWechat
     'wechatMiniProgramConfig' => [
         'app_id' => 'wx69f4a713347ecd2e',

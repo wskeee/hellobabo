@@ -1,51 +1,98 @@
 <?php
 
+use common\models\goods\Goods;
+use common\models\goods\SceneGroup;
+use common\models\goods\searchs\GoodsSceneSearch;
+use kartik\widgets\Select2;
 use yii\helpers\Html;
+use yii\web\View;
 use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\goods\searchs\GoodsSceneSearch */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $this View */
+/* @var $model GoodsSceneSearch */
+/* @var $goodsModel Goods */
+/* @var $form ActiveForm */
 ?>
 
-<div class="goods-scene-search">
+<div class="goods-scene-search pull-right">
 
-    <?php $form = ActiveForm::begin([
-        'action' => ['index'],
-        'method' => 'get',
-    ]); ?>
+    <?php
+    $form = ActiveForm::begin([
+                'id' => 'search-form',
+                'action' => ["index?goods_id={$goodsModel->id}"],
+                'method' => 'get',
+    ]);
+    ?>
 
-    <?= $form->field($model, 'id') ?>
-
-    <?= $form->field($model, 'goods_id') ?>
-
-    <?= $form->field($model, 'group_id') ?>
-
-    <?= $form->field($model, 'name') ?>
-
-    <?= $form->field($model, 'effect_url') ?>
-
-    <?php // echo $form->field($model, 'demo_url') ?>
-
-    <?php // echo $form->field($model, 'source_url') ?>
-
-    <?php // echo $form->field($model, 'sort_order') ?>
-
-    <?php // echo $form->field($model, 'immutable') ?>
-
-    <?php // echo $form->field($model, 'is_required') ?>
-
-    <?php // echo $form->field($model, 'is_selected') ?>
-
-    <?php // echo $form->field($model, 'is_del') ?>
-
-    <?php // echo $form->field($model, 'des') ?>
-
-    <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
+    <!-- 名称 -->
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown" style="width:120px">
+            <?=
+            Html::activeTextInput($model, 'name', [
+                'class' => 'form-control',
+                'placeholder' => Yii::t('app', 'Name'),
+                'onBlur' => 'submitForm()',])
+            ?>
+        </div>
     </div>
 
-    <?php ActiveForm::end(); ?>
+    <!-- 类型 -->
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown">
+            <?=
+            Select2::widget([
+                'model' => $model,
+                'attribute' => 'group_id',
+                'data' => SceneGroup::getGroup(),
+                'options' => ['placeholder' => Yii::t('app', 'Type')],
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' => ['change' => 'function(){ submitForm()}']
+            ])
+            ?>
+        </div>
+    </div>
+    
+    <!-- 已选 -->
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown">
+            <?=
+            Select2::widget([
+                'model' => $model,
+                'attribute' => 'is_selected',
+                'data' => ['否', '是'],
+                'options' => ['placeholder' => Yii::t('app', 'Is Selected')],
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' => ['change' => 'function(){ submitForm()}']
+            ])
+            ?>
+        </div>
+    </div>
+
+    <!-- 用户可选 -->
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown" >
+            <?=
+            Select2::widget([
+                'model' => $model,
+                'attribute' => 'immutable',
+                'data' => ['否', '是'],
+                'options' => ['placeholder' => Yii::t('app', 'Immutable')],
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' => ['change' => 'function(){ submitForm()}']
+            ])
+            ?>
+        </div>
+    </div>
+
+    
+
+<?php ActiveForm::end(); ?>
 
 </div>
+<script type="text/javascript">
+
+    // 提交表单    
+    function submitForm() {
+        $('#search-form').submit();
+    }
+</script>

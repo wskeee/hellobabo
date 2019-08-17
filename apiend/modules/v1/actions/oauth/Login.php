@@ -66,6 +66,7 @@ class Login extends BaseAction
             'openid' => $userAuth->identifier,
             'token' => $user->access_token,
             'token_expire_time' => $user->access_token_expire_time,
+            'user' => $user,
         ]);
     }
 

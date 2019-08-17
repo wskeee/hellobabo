@@ -17,7 +17,8 @@ use yii\redis\ActiveQuery;
  * @property string $demo_url 参考路径
  * @property string $source_url 源图路径
  * @property int $sort_order 排序
- * @property int $immutable 不可改变 0否 1是
+ * @property string $pos 位置 start,center,end
+ * @property int $immutable 不可选 0否 1是
  * @property int $is_required 是否必选 0否 1是
  * @property int $is_selected 默认选中 0否 1是
  * @property int $is_del 是否删除
@@ -28,6 +29,15 @@ use yii\redis\ActiveQuery;
  */
 class GoodsScene extends ActiveRecord
 {
+    const POS_START = 'start';
+    const POS_CENTER = 'center';
+    const POS_END = 'end';
+
+    public static $posNameMap = [
+        self::POS_START => '开头',
+        self::POS_CENTER => '中间',
+        self::POS_END => '结尾',
+    ];
 
     /**
      * {@inheritdoc}
@@ -46,6 +56,7 @@ class GoodsScene extends ActiveRecord
             [['goods_id', 'group_id', 'name'], 'required'],
             [['goods_id', 'group_id', 'sort_order', 'immutable', 'is_required', 'is_selected', 'is_del'], 'integer'],
             [['name'], 'string', 'max' => 20],
+            [['pos'], 'string', 'max' => 10],
             [['effect_url', 'demo_url', 'source_url', 'des'], 'string', 'max' => 255],
         ];
     }
@@ -64,6 +75,7 @@ class GoodsScene extends ActiveRecord
             'demo_url' => Yii::t('app', 'Demo Url'),
             'source_url' => Yii::t('app', 'Source Url'),
             'sort_order' => Yii::t('app', 'Sort Order'),
+            'pos' => Yii::t('app', 'Pos'),
             'immutable' => Yii::t('app', 'Immutable'),
             'is_required' => Yii::t('app', 'Required Img'),
             'is_selected' => Yii::t('app', 'Is Selected'),

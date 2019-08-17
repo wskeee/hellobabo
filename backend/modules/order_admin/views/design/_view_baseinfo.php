@@ -12,7 +12,7 @@ use yii\widgets\DetailView;
             <?=
             DetailView::widget([
                 'options' => ['class' => 'table table-striped table-bordered wsk-table-detail'],
-                'model' => $model,
+                'model' => $model,  
                 'attributes' => [
                     'order_sn',
                     'order.goods_name',

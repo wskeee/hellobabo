@@ -19,7 +19,9 @@ class GoodsController extends ApiController
     {
         $behaviors = parent::behaviors();
         $behaviors['authenticator']['optional'] = [
-            
+            'get-list',
+            'get-detail',
+            'get-material-value-list'
         ];
         $behaviors['verbs']['actions'] = [
             'get-list' => ['get'],

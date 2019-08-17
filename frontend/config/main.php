@@ -47,6 +47,9 @@ return [
         ],
     ],
     'modules' => [
+        'show' => [
+            'class' => 'frontend\modules\show\Module',
+        ],
     ],
     
     'params' => $params,
