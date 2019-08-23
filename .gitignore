@@ -13,6 +13,7 @@ nbproject
 .buildpath
 .project
 .settings
+.log
 
 # windows thumbnail cache
 Thumbs.db
@@ -44,4 +45,3 @@ phpunit.phar
 /apiend/runtime/
 /apiend/web/assets/
 /apiend/web/upload/
-/apiend/config/wechat.log
