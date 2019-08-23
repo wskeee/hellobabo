@@ -26,6 +26,7 @@ use yii\db\Query;
  * @property string $goods_des 描述/简介
  * @property string $cover_url 封面路径
  * @property string $video_url 视频地址
+ * @property string $show_urls 展示图片地址多个使用','分隔
  * @property int $status 普通状态 1待发布 2已发布 3已下架
  * @property string $tags 标签，多个使用逗号分隔
  * @property int $store_count 库存
@@ -99,9 +100,25 @@ class Goods extends ActiveRecord
             [['goods_sn'], 'string', 'max' => 20],
             [['goods_name'], 'string', 'max' => 100],
             [['goods_title'], 'string', 'max' => 50],
+            [['show_urls'], 'arrTostr'],
             [['goods_des', 'cover_url', 'video_url', 'tags'], 'string', 'max' => 255],
             [['tags'], 'tagVerify',],
         ];
+    }
+    
+    /**
+     * 数组转字符
+     * 
+     * @param string|array $att
+     * @return boolean
+     */
+    public function arrTostr($att){
+        $value = $this[$att];
+        if(is_array($value)){
+            $value = implode(',', array_filter($value));
+        }
+        $this[$att] = $value;
+        return true;
     }
 
     /**
@@ -140,6 +157,7 @@ class Goods extends ActiveRecord
             'goods_des' => Yii::t('app', 'Des'),
             'cover_url' => Yii::t('app', 'Cover'),
             'video_url' => Yii::t('app', 'Video'),
+            'show_urls' => Yii::t('app', 'Show Urls'),
             'status' => Yii::t('app', 'Status'),
             'tags' => Yii::t('app', 'Tag'),
             'store_count' => I18NUitl::t('app', '{Store}{Count}'),
@@ -155,7 +173,7 @@ class Goods extends ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
-
+   
     /**
      * @return ActiveQuery
      */

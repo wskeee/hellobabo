@@ -2,14 +2,13 @@
 
 namespace backend\modules\order_admin\controllers;
 
-use apiend\models\Response;
 use common\components\aliyuncs\Aliyun;
-use common\models\order\Order;
-use common\models\order\OrderAction;
-use common\models\order\OrderGoodsScene;
+use common\models\api\ApiResponse;
+use common\models\order\OrderGoods;
+use common\models\order\OrderGoodsAction;
+use common\models\order\OrderGoodsScenePage;
 use common\models\order\searchs\WorkflowDesignSearch;
 use common\models\order\WorkflowDesign;
-use common\models\order\WorkflowPrint;
 use OSS\OssClient;
 use Yii;
 use yii\filters\VerbFilter;
@@ -126,13 +125,17 @@ class DesignController extends Controller
     {
         $model = $this->findModel($id);
         if ($model->status == WorkflowDesign::STATUS_WAIT_START) {
+            // 修改当前任务为运行中状态
             $model->worker_id = \Yii::$app->user->id;
             $model->start_at = time();
             $model->status = WorkflowDesign::STATUS_RUNGING;
-            $model->save();
-            if($model->save()){
+
+            // 修改当前绘本为设计中状态
+            $model->orderGoods->status = OrderGoods::STATUS_DESIGNING;
+
+            if ($model->save() && $model->orderGoods->save()) {
                 //记录订单日志 
-                OrderAction::saveLog([$model->order_id], '开始设计', '绘本设计已开始！');
+                OrderGoodsAction::saveLog([$model->order_goods_id], '开始设计', '绘本设计已开始！');
             }
         }
 
@@ -145,26 +148,16 @@ class DesignController extends Controller
     public function actionEnd($id)
     {
         $model = $this->findModel($id);
-        if ($model->status == WorkflowDesign::STATUS_RUNGING) {
+        if ($model->status == WorkflowDesign::STATUS_RUNGING || $model->status == WorkflowDesign::STATUS_CHECK_FAIL) {
             $tran = Yii::$app->db->beginTransaction();
             try {
-                $model->end_at = time();
-                $model->status = WorkflowDesign::STATUS_ENDED;
-                $model->save();
-                
-                //更改订单为待发货
-                $model->order->design_at = time();
-                $model->order->save();
+                // 修改当前任务为审核状态
+                $model->status = WorkflowDesign::STATUS_CHECK;
+                // 修改当前绘本为设计审核状态
+                $model->orderGoods->status = OrderGoods::STATUS_DESIGN_CHECK;
 
-                $print = new WorkflowPrint([
-                    'order_id' => $model->order_id,
-                    'order_sn' => $model->order_sn,
-                    'status' => WorkflowPrint::STATUS_WAIT_START,
-                ]);
-                $print->save();
-                //记录订单日志 
-                OrderAction::saveLog([$model->order_id], '结束设计', '绘本设计已完成！');
-                $tran->commit();
+                if ($model->save() && $model->orderGoods->save())
+                    $tran->commit();
             } catch (\Exception $ex) {
                 $tran->rollBack();
                 Yii::$app->session->addFlash('danger', $ex->getMessage());
@@ -175,31 +168,70 @@ class DesignController extends Controller
     }
 
     /**
+     * 保存成品 
+     * 
+     * @param type $pid
+     * @param type $path
+     */
+    public function actionSaveProduct()
+    {
+        Yii::$app->response->format = 'json';
+        $pid = Yii::$app->request->post('pid');
+        $skin_url = Yii::$app->request->post('skin_url');
+        $adobe_id = Yii::$app->request->post('adobe_id');
+
+        if ($pid == '') {
+            return new ApiResponse(ApiResponse::CODE_COMMON_MISS_PARAM, null, null, ['param' => 'pid']);
+        }
+
+        $page = OrderGoodsScenePage::findOne(['id' => $pid]);
+        if (!$page) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_NOT_FOUND, null, null, ['param' => 'OrderGoodsScenePage']);
+        }
+
+        if ($skin_url == '') {
+            $page->finish_id = '';
+            $page->finish_url = '';
+            if ($page->save()) {
+                return new ApiResponse(ApiResponse::CODE_COMMON_OK);
+            }
+        } else {
+            $page->finish_id = $adobe_id;
+            $page->finish_url = $skin_url;
+            if ($page->save()) {
+                return new ApiResponse(ApiResponse::CODE_COMMON_OK);
+            }
+        }
+        return new ApiResponse(ApiResponse::CODE_COMMON_SAVE_DB_FAIL, implode(',', $page->getErrorSummary(true)));
+    }
+
+    /**
      * 下载用户上传的图片
      */
     public function actionBatchDownloadUserImg()
     {
         $ids = Yii::$app->request->post('selection', []);
-        $models = OrderGoodsScene::findAll(['id' => $ids]); //获取需要下载的场景图片
+        $models = OrderGoodsScenePage::find()->where(['id' => $ids])->all(); //获取需要下载的场景图片
         $zip = new ZipArchive();
         $zipName = uniqid();
         $zipPath = "upload/download/$zipName.zip";
 
-        /* @var $model OrderGoodsScene */
-        foreach ($models as $model) {
-            $filename = "upload/download/" . pathinfo($model->source_url, PATHINFO_BASENAME);
-            $ext = pathinfo($model->source_url, PATHINFO_EXTENSION);
+        /* @var $model OrderGoodsScenePage */
+        foreach ($models as $index => $model) {
+            if ($model->user_img_url == '')
+                continue;
+            $filename = "upload/download/" . pathinfo($model->user_img_url, PATHINFO_BASENAME);
+            $ext = pathinfo($model->user_img_url, PATHINFO_EXTENSION);
             //下载oss文件
             $object = Aliyun::getObjectKeyFormUrl($model->user_img_url);
             Aliyun::getOss()->getOutputObject($object, [OssClient::OSS_FILE_DOWNLOAD => $filename]);
-            //var_dump($zipPath,$zip->open($zipPath, ZipArchive::OVERWRITE));exit;
             //添加文件到zip
             if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
-                $zip->addFile($filename, "{$model->name}.$ext");
+                $zip->addFile($filename, "{$index}.$ext");
                 $zip->close();
             } else {
                 Yii::$app->response->format = 'json';
-                return new Response(Response::CODE_COMMON_UNKNOWN, '打包文件出错！');
+                return new ApiResponse(ApiResponse::CODE_COMMON_UNKNOWN, '打包文件出错！');
             }
         }
         //发送文件

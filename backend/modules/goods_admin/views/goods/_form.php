@@ -1,5 +1,6 @@
 <?php
 
+use backend\modules\goods_admin\assets\GoodsModuleAsset;
 use common\models\AdminUser;
 use common\models\goods\Goods;
 use common\models\goods\GoodsCategory;
@@ -14,7 +15,11 @@ use yii\widgets\ActiveForm;
 
 /* @var $this View */
 /* @var $model Goods */
+/* @var $goodsDetails GoodsDetail */
 /* @var $form ActiveForm */
+
+GoodsModuleAsset::register($this);
+$goodsDetails = $model->isNewRecord ? new GoodsDetail() : $model->goodsDetails;
 ?>
 
 <div class="goods-form">
@@ -38,28 +43,31 @@ use yii\widgets\ActiveForm;
     ?>
     <!-- 商品名称 -->
     <?= $form->field($model, 'goods_name')->textInput(['maxlength' => true]) ?>
-    
+
     <!-- 商品标题 -->
     <?= $form->field($model, 'goods_title')->textInput(['maxlength' => true]) ?>
+    
+    <!-- 封面 -->
+    <?= $form->field($model, 'cover_url')->widget(ImagePicker::class) ?>
+    
+    <!-- 视频 -->
+    <?= $form->field($model, 'video_url')->widget(VideoPicker::class) ?>
 
-    <!-- 封面和视频 -->
-    <div class="form-group">
-        <label class="col-sm-1 control-label form-label">
-            <?= $model->getAttributeLabel('cover_url') ?>
-        </label>
-        <div style="display: inline-block;padding-left: 15px;float: left;">
-            <?= ImagePicker::widget(['model' => $model, 'attribute' => 'cover_url',]) ?>
-        </div>
-        <label class="col-sm-1 control-label form-label">
-            <?= $model->getAttributeLabel('video_url') ?>
-        </label>
-        <div class="col-sm-2">
-            <?= VideoPicker::widget(['model' => $model, 'attribute' => 'video_url',]) ?>
+    <!-- 商品展示图片 -->
+    <div class="from-group tile-group">
+        <div class="group-item">
+            <label class="control-label form-label">
+                <?= $model->getAttributeLabel('show_urls') ?>
+            </label>
+            <div>
+                <?= Html::hiddenInput('Goods[show_urls][]') ?>
+                <?= ImagePicker::widget(['name' => 'Goods[show_urls][]', 'value' => $model->show_urls, 'pluginOptions' => ['fileNumLimit' => 5]]) ?>
+            </div>
         </div>
     </div>
 
     <!-- 设置商品是否需要初始 -->
-    <?= $form->field($model, 'init_required')->checkbox(['title' => '开启后在上传相片前需要初始绘本', 'style' => 'margin: 13px 0;'], false) ?>
+    <?php $form->field($model, 'init_required')->checkbox(['title' => '开启后在上传相片前需要初始绘本', 'style' => 'margin: 13px 0;'], false) ?>
 
     <!-- 作者 -->
     <?=
@@ -77,6 +85,19 @@ use yii\widgets\ActiveForm;
 
     <!-- 商品详情 -->
     <?php $form->field($model->isNewRecord ? new GoodsDetail() : $model->goodsDetails, 'content')->widget(UEDitor::class) ?>
+    
+    <!-- 移动商品详情 -->
+    <div class="from-group tile-group">
+        <div class="group-item">
+            <label class="control-label form-label">
+                <?= $goodsDetails->getAttributeLabel('mobile_content') ?>
+            </label>
+            <div>
+                <?= Html::hiddenInput('GoodsDetail[mobile_content][]') ?>
+                <?= ImagePicker::widget(['name' => 'GoodsDetail[mobile_content][]', 'value' => $goodsDetails->mobile_content, 'pluginOptions' => ['fileNumLimit' => 20]]) ?>
+            </div>
+        </div>
+    </div>
 
     <div class="form-group">
         <label class="col-sm-1 control-label form-label"></label>

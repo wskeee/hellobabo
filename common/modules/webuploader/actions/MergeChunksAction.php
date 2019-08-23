@@ -128,7 +128,7 @@ class MergeChunksAction extends BaseAction
                 if ($isAdobe) {
                     // zip 路径换成 解压后
                     $dbFile->metadata = json_encode([
-                        'adoble_id' => AdobeUtil::analyse($uploadPath),
+                        'adobe_id' => AdobeUtil::analyse($uploadPath),
                     ]);
                 }
 

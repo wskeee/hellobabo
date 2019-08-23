@@ -11,6 +11,24 @@
  *
 ********************************************************************************/
 /********************************************************
+ * 商品创建
+*********************************************************/
+.goods-form{}
+.goods-form .tile-group{
+    display: flex;
+    margin-bottom: 15px;
+    color: #999;
+}
+.goods-form .tile-group .control-label{
+    width: 125px;
+    margin-right: 15px;
+}
+.goods-form .tile-group .group-item{
+    display: flex;
+    flex-direction: row;
+}
+
+/********************************************************
  * 商品列表
 *********************************************************/
 .goods-index .btn-box{
@@ -20,12 +38,18 @@
  * 商品详情页
 *********************************************************/
 .goods-view .goods-content-box{
+    display: flex;
+    justify-content: center;
     border: solid 1px #e4e4e4;
     padding: 20px;
     background: #f2f2f2;
 }
 .goods-view .goods-content-box img{
     width: 100%;
+}
+.goods-view .goods-content-box .rich-content{
+    max-width: 1000px;
+    background: #fff;
 }
 /********************************************************
  * 商品属性及规格

@@ -130,6 +130,8 @@ class GoodsController extends Controller
                     GoodsTagRef::saveGoodsTagRef($model->id, $tags);
                 }
                 return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                \Yii::$app->session->setFlash('error', $model->getErrorSummary(true));
             }
         }
         return $this->render('update', [

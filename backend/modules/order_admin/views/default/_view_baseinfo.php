@@ -15,8 +15,6 @@
                 'attributes' => [
                     'id',
                     'order_sn',
-                    'goods_name',
-                    'spec_key_name',
                     'order_amount',
                     [
                         'attribute' => 'order_status',
@@ -51,14 +49,6 @@
                     [
                         'attribute' => 'pay_at',
                         'value' => $model->pay_at == 0 ? null : date('Y-m-d H:i:s', $model->pay_at)
-                    ],
-                    [
-                        'attribute' => 'init_at',
-                        'value' => $model->init_at == 0 ? null : date('Y-m-d H:i:s', $model->init_at)
-                    ],
-                    [
-                        'attribute' => 'upload_finish_at',
-                        'value' => $model->upload_finish_at == 0 ? null : date('Y-m-d H:i:s', $model->upload_finish_at)
                     ],
                     [
                         'attribute' => 'shipping_at',

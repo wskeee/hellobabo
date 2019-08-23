@@ -158,7 +158,6 @@ class BaseUser extends ActiveRecord implements IdentityInterface{
     {
         // 解码nickname
         $this->nickname = $this->emojiDecode($this->nickname);
-        $this->avatar = Aliyun::absolutePath(!empty($this->avatar) ? $this->avatar : 'upload/avatars/default.jpg');
     }
     
     /**

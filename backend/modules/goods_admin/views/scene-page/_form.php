@@ -44,16 +44,25 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'effect_url')->widget(ImagePicker::class) ?>
 
     <!-- 源始ID -->
-    <?= $form->field($model, 'source_id')->textInput(['maxlength' => true]) ?>
+    <?= Html::activeHiddenInput($model, 'source_id') ?>
 
     <!-- 源始模板 -->
     <?=
-    $form->field($model, 'source_url')->widget(FilePicker::class, ['pluginOptions' => [
+    $form->field($model, 'source_url')->widget(FilePicker::class, [
+        'pluginOptions' => [
+            'formData' => [
+                'is_adobe' => 1,
+            ],
             'accept' => [
                 'extensions' => 'zip',
                 'mimeTypes' => 'application/zip',
             ]
-    ]])
+        ],
+        'pluginEvents' => [
+            "fileDequeued" => "fileDequeued",
+            'uploadComplete' => "uploadComplete",
+        ]
+    ])
     ?>
 
     <!-- 位置 -->
@@ -66,12 +75,39 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'is_required')->checkbox() ?>
 
-<?= $form->field($model, 'des')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'des')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
-<?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
     </div>
 
-<?php ActiveForm::end(); ?>
+    <?php ActiveForm::end(); ?>
 
 </div>
+<script>
+    /**
+     * 清除源文件
+     * 
+     * @param {type} evt
+     * @param {type} file
+     * @returns {undefined}
+     */
+    function fileDequeued(evt,file){
+        $source_id = $('#goodsscenepage-source_id');
+        $source_id.val("");
+        console.log($source_id.val());
+    }
+    
+    /**
+     * 源文件上传完成
+     * 
+     * @param {type} evt
+     * @param {type} dbFile
+     * @param {type} file
+     * @returns {undefined}
+     */
+    function uploadComplete(evt,dbFile,file){
+        $source_id = $('#goodsscenepage-source_id');
+        $source_id.val(dbFile.metadata.adobe_id);
+    }
+</script>

@@ -1,5 +1,6 @@
-<?php
+ <?php
 
+use backend\modules\order_admin\assets\OrderModuleAsset;
 use common\models\order\searchs\WorkflowDesignSearch;
 use common\models\order\WorkflowDesign;
 use common\modules\rbac\components\ResourceHelper;
@@ -12,12 +13,16 @@ use yii\web\View;
 /* @var $searchModel WorkflowDesignSearch */
 /* @var $dataProvider ActiveDataProvider */
 
+OrderModuleAsset::register($this);
+
 $this->title = Yii::t('app', 'Designs');
 $this->params['breadcrumbs'][] = $this->title;
 //指派状态颜色
 $assignColors = [
     WorkflowDesign::STATUS_WAIT_START => 'wsk-color-danger',
     WorkflowDesign::STATUS_RUNGING => 'wsk-color-primary',
+    WorkflowDesign::STATUS_CHECK => 'wsk-color-primary',
+    WorkflowDesign::STATUS_CHECK_FAIL => 'wsk-color-danger',
     WorkflowDesign::STATUS_ENDED => 'wsk-color-success',
 ];
 ?>
@@ -41,11 +46,11 @@ $assignColors = [
                 'headerOptions' => ['style' => 'width:120px;'],
             ],
             [
-                'attribute' => 'order.goods_name',
+                'attribute' => 'orderGoods.goods_name',
                 'headerOptions' => ['style' => 'width:120px;'],
             ],
             [
-                'attribute' => 'order.spec_key_name',
+                'attribute' => 'orderGoods.spec_key_name',
             ],
             [
                 'attribute' => 'order.consignee',

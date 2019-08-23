@@ -63,12 +63,11 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        echo json_encode(\common\models\system\Region::getRegionByJson(3),JSON_UNESCAPED_UNICODE);
         exit;
-        
+
         return $this->render('spec');
     }
-    
+
     /**
      * Login action.
      *

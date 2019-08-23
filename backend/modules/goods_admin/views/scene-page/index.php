@@ -99,6 +99,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     'updata' => function ($url, $model) {
                         return Html::a(Yii::t('yii', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-default', 'style' => 'margin-bottom: 5px;']);
                     },
+                    'preview' => function ($url, $model) {
+                        return Html::a(Yii::t('app', 'Preview'), null, [
+                                    'class' => 'btn btn-default',
+                                    'style' => 'margin-bottom: 5px;',
+                                    'href' => Yii::$app->params['hellobabo']['source_preview_url'] . "?page_ids={$model->id}",
+                                    'target' => '_blank',
+                        ]);
+                    },
                     'delete' => function ($url, $model) {
                         return Html::a(Yii::t('yii', 'Delete'), ['delete', 'id' => $model->id], ['class' => 'btn btn-danger',
                                     'data' => [
@@ -110,7 +118,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                 ],
                 'headerOptions' => ['style' => 'width:120px'],
-                'template' => '<div style="display:flex;flex-direction: column;">{setting} {updata} {delete}</div>',
+                'template' => '<div style="display:flex;flex-direction: column;">{setting} {updata} {preview} {delete}</div>',
             ],
         ],
     ]);

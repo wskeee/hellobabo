@@ -1,5 +1,6 @@
 <?php
 
+use backend\modules\order_admin\assets\OrderModuleAsset;
 use common\models\order\Order;
 use common\models\order\searchs\OrderSearch;
 use common\modules\rbac\components\ResourceHelper;
@@ -12,6 +13,7 @@ use yii\web\View;
 
 GrowlAsset::register($this);
 BtnLoaderAsset::register($this);
+OrderModuleAsset::register($this);
 
 /* @var $this View */
 /* @var $searchModel OrderSearch */
@@ -46,8 +48,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'order_sn',
                 'headerOptions' => ['style' => 'width:120px;'],
             ],
-            'goods_name',
-            'spec_key_name',
             [
                 'attribute' => 'order_amount',
                 'format' => 'currency',
@@ -58,14 +58,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => ['style' => 'width:80px;'],
                 'value' => function($model) {
                     return Order::$orderStatusNameMap[$model->order_status];
-                }
-            ],
-            [
-                'attribute' => 'creater.nickname',
-                'headerOptions' => ['style' => 'width:80px;'],
-                'label' => $searchModel->getAttributeLabel('created_by'),
-                'value' => function($model) {
-                    return $model->creater->nickname;
                 }
             ],
             [

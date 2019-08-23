@@ -11,6 +11,7 @@ use common\models\goods\GoodsScene;
  */
 class GoodsSceneSearch extends GoodsScene
 {
+
     /**
      * {@inheritdoc}
      */
@@ -46,6 +47,9 @@ class GoodsSceneSearch extends GoodsScene
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 200,
+            ],
         ]);
 
         $this->load($params);
@@ -69,13 +73,14 @@ class GoodsSceneSearch extends GoodsScene
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'effect_url', $this->effect_url])
-            ->andFilterWhere(['like', 'demo_url', $this->demo_url])
-            ->andFilterWhere(['like', 'source_url', $this->source_url])
-            ->andFilterWhere(['like', 'des', $this->des]);
-        
+                ->andFilterWhere(['like', 'effect_url', $this->effect_url])
+                ->andFilterWhere(['like', 'demo_url', $this->demo_url])
+                ->andFilterWhere(['like', 'source_url', $this->source_url])
+                ->andFilterWhere(['like', 'des', $this->des]);
+
         $query->orderBy(['sort_order' => SORT_ASC]);
 
         return $dataProvider;
     }
+
 }

@@ -8,7 +8,7 @@ use yii\helpers\Html;
 /* @var $model Order */
 ?>
 <div class="wsk-panel goods-info">
-    <div class="title">场景信息</div>
+    <div class="title">操作信息</div>
     <div class="body">
         <?=
         GridView::widget([

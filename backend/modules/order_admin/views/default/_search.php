@@ -37,22 +37,6 @@ use yii\widgets\ActiveForm;
         </div>
     </div>
     
-    <!-- 绘本 -->
-    <div class="dep-dropdown-box">
-        <div class="dep-dropdown" style="width:150px">
-            <?=
-            Select2::widget([
-                'model' => $model,
-                'attribute' => 'goods_id',
-                'data' => ArrayHelper::map(Goods::find()->all(), 'id', 'goods_name'),
-                'options' => ['placeholder' => Yii::t('app', 'Goods')],
-                'pluginOptions' => ['allowClear' => true],
-                'pluginEvents' => ['change' => 'function(){ submitForm()}']
-            ])
-            ?>
-        </div>
-    </div>
-    
     <!-- 收货人 -->
     <div class="dep-dropdown-box">
         <div class="dep-dropdown" style="width:150px">
@@ -68,7 +52,7 @@ use yii\widgets\ActiveForm;
     
     <!-- 状态 -->
     <div class="dep-dropdown-box">
-        <div class="dep-dropdown" style="width:80px">
+        <div class="dep-dropdown" style="width:120px">
             <?=
             Select2::widget([
                 'model' => $model,

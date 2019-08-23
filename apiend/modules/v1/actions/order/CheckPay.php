@@ -34,8 +34,11 @@ class CheckPay extends BaseAction
                 $message = $payment->order->queryByOutTradeNumber($order->order_sn);
                 //未付款状态下，去微信查询订单状态
                 if ($message['return_code'] === 'SUCCESS') { // return_code 表示通信状态，不代表支付状态
-                    // 用户是否支付成功
-                    $order->pay($message);
+                    if ($message['result_code'] === 'SUCCESS' && $message['trade_state'] === 'SUCCESS') {
+                        $order->pay(true, $message);
+                    } else if ($message['result_code'] === 'SUCCESS' && $message['trade_state'] === 'FAIL') {
+                        $order->pay(false, $message);
+                    }
                 }
             }
             return new Response(Response::CODE_COMMON_OK, null, $order);
