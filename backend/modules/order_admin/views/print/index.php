@@ -22,6 +22,8 @@ $this->params['breadcrumbs'][] = $this->title;
 $assignColors = [
     WorkflowPrint::STATUS_WAIT_START => 'wsk-color-danger',
     WorkflowPrint::STATUS_RUNGING => 'wsk-color-primary',
+    WorkflowPrint::STATUS_CHECK => 'wsk-color-primary',
+    WorkflowPrint::STATUS_CHECK_FAIL => 'wsk-color-danger',
     WorkflowPrint::STATUS_ENDED => 'wsk-color-success',
 ];
 ?>
@@ -45,11 +47,11 @@ $assignColors = [
                 'headerOptions' => ['style' => 'width:120px;'],
             ],
             [
-                'attribute' => 'order.goods_name',
+                'attribute' => 'orderGoods.goods_name',
                 'headerOptions' => ['style' => 'width:120px;'],
             ],
             [
-                'attribute' => 'order.spec_key_name',
+                'attribute' => 'orderGoods.spec_key_name',
             ],
             [
                 'attribute' => 'order.consignee',
@@ -101,10 +103,9 @@ $assignColors = [
                 'format' => 'raw',
                 'value' => function($model) {
                     //订单
-                    $order_btn = ResourceHelper::a(I18NUitl::t('app', '{Order}'), ['/order_admin/default/view', 'id' => $model->order_id], ['class' => 'btn btn-default']);
-                    $view_btn = ResourceHelper::a(I18NUitl::t('app', '{Design}{Detail}'), ['view', 'id' => $model->id], ['class' => 'btn btn-default']);
+                    $view_btn = ResourceHelper::a(I18NUitl::t('app', '{Print}{Detail}'), ['view', 'id' => $model->id], ['class' => 'btn btn-default']);
 
-                    return "$view_btn $order_btn";
+                    return "$view_btn";
                 }
             ],
         ],

@@ -20,7 +20,7 @@ return [
             'port' => 6379,
             'database' => 8, //'unixSocket' => '/var/run/redis/redis.sock',	
             //生产机		
-            'password' => 'eE@wskeee',
+            'password' => 'eecn.cn',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',

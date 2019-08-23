@@ -2,21 +2,21 @@
 
 use common\models\order\WorkflowPrint;
 use yii\widgets\DetailView;
-    
-    /* @var $model WorkflowPrint */
+
+/* @var $model WorkflowPrint */
 ?>
 <div class="wsk-panel">
     <div class="title">基本信息</div>
-    <div class="body order-baseinfo">
-        <div>
+    <div class="body order-baseinfo" style="display:flex;">
+        <div style="flex:1;margin-right: 10px;">
             <?=
             DetailView::widget([
                 'options' => ['class' => 'table table-striped table-bordered wsk-table-detail'],
                 'model' => $model,
                 'attributes' => [
                     'order_sn',
-                    'order.goods_name',
-                    'order.spec_key_name',
+                    'orderGoods.goods_name',
+                    'orderGoods.spec_key_name',
                     [
                         'attribute' => 'order.consignee',
                         'value' => function($model) {
@@ -28,7 +28,7 @@ use yii\widgets\DetailView;
             ])
             ?>
         </div>
-        <div>
+        <div style="flex:1">
             <?=
             DetailView::widget([
                 'options' => ['class' => 'table table-striped table-bordered wsk-table-detail'],

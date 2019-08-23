@@ -16,19 +16,19 @@ class SaveOrderGoodsMaterial extends BaseAction
 {
     /* 必须参数 */
 
-    protected $requiredParams = ['order_id', 'material_id', 'material_value_id'];
+    protected $requiredParams = ['order_goods_id', 'material_id', 'material_value_id'];
 
     public function run()
     {
-        $order_id = $this->getSecretParam('order_id');
+        $order_goods_id = $this->getSecretParam('order_goods_id');
         $material_id = $this->getSecretParam('material_id');
         $value_id = $this->getSecretParam('material_value_id');
 
         $m_value = GoodsMaterialValue::findOne(['id' => $value_id]);
-        $model = OrderGoodsMaterial::findOne(['order_id' => $order_id, 'value_id' => $value_id]);
+        $model = OrderGoodsMaterial::findOne(['order_goods_id' => $order_goods_id, 'value_id' => $value_id]);
         if ($model == null) {
             $model = new OrderGoodsMaterial([
-                'order_id' => $order_id,
+                'order_goods_id' => $order_goods_id,
                 'material_id' => $material_id,
                 'value_id' => $m_value->id,
                 'value_name' => $m_value->name,
@@ -46,7 +46,7 @@ class SaveOrderGoodsMaterial extends BaseAction
         }
 
         //清除上次记录
-        OrderGoodsMaterial::updateAll(['is_del' => 1], ['order_id' => $order_id, 'material_id' => $material_id]);
+        OrderGoodsMaterial::updateAll(['is_del' => 1], ['order_goods_id' => $order_goods_id, 'material_id' => $material_id]);
         //重新保存
         if ($model->validate() && $model->save()) {
             return new Response(Response::CODE_COMMON_OK, null, $model);

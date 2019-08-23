@@ -8,8 +8,11 @@ use common\models\goods\Goods;
 use common\models\goods\GoodsSpecPrice;
 use common\models\order\Order;
 use common\models\order\OrderAction;
+use common\models\order\OrderGoods;
+use common\models\order\OrderGoodsAction;
 use common\models\UserAddress;
 use Yii;
+use yii\base\Exception;
 
 /**
  * 下单
@@ -39,41 +42,62 @@ class CreateOrder extends BaseAction
             return new Response(Response::CODE_ORDER_STORE_COUNT_OUT);
         }
 
-        $order = new Order([
-            'order_sn' => Order::getRandomSN(),
-            //商品
-            'goods_id' => $goods->id,
-            'goods_name' => $goods->goods_name, //商品名
-            'goods_img' => $spec_price->spec_img_url, //规格图片
-            'goods_price' => $spec_price->goods_price, //商品价格
-            'goods_num' => $goods_num, //购买数量
-            'scene_num' => $spec_price->scene_num, //购买场景数量
-            'spec_id' => $spec_price->id, //价格ID
-            'spec_key' => $spec_price->spec_key, //价格项ID
-            'spec_key_name' => $spec_price->spec_key_name, //价格项名
-            'order_amount' => $spec_price->goods_price * $goods_num, //订单总额使用套餐价格
-            //推荐
-            'is_recommend' => $recommend_by != null ? 1 : 0, //是否为推荐订单
-            'recommend_by' => $recommend_by, //推挤人ID
-            //收货地址
-            'address_id' => $address->id, //地址ID
-            'user_note' => $user_note, //留言
-            'consignee' => $address->consignee, //收货人
-            'zipcode' => $address->zipcode,
-            'phone' => $address->phone,
-            'province' => $address->province,
-            'city' => $address->city,
-            'district' => $address->district,
-            'town' => $address->town,
-            'address' => $address->address,
-            'created_by' => $user_id,
-        ]);
+        $tran = Yii::$app->db->beginTransaction();
 
-        if ($order->save()) {
-            OrderAction::saveLog([$order->id], '创建订单', '');
-            return new Response(Response::CODE_COMMON_OK, null, $order);
-        } else {
-            return new Response(Response::CODE_ORDER_CREATE_FAILED, '下单失败', $order->getErrorSummary(true));
+        try {
+            /* 创建订单 */
+            $order = new Order([
+                'order_sn'      => Order::getRandomSN(),
+                'order_amount'  => $spec_price->goods_price * $goods_num,        //订单总额使用套餐价格
+                //推荐
+                'is_recommend'  => $recommend_by != null ? 1 : 0,                //是否为推荐订单
+                'recommend_by'  => $recommend_by,                                //推挤人ID
+                //收货地址
+                'address_id'    => $address->id,                                   //地址ID
+                'user_note'     => $user_note,                                      //留言
+                'consignee'     => $address->consignee,                             //收货人
+                'zipcode'       => $address->zipcode,
+                'phone'         => $address->phone,
+                'province'      => $address->province,
+                'city'          => $address->city,
+                'district'      => $address->district,
+                'town'          => $address->town,
+                'address'       => $address->address,
+                'created_by'    => $user_id,
+            ]);
+            if ($order->save()) {
+                OrderAction::saveLog([$order->id], '创建订单', '');
+                /* 创建商品 */
+                $order_goods = new OrderGoods([
+                    'order_id'  => $order->id,
+                    'order_sn'  => $order->order_sn,
+                    'created_by'  => $user_id,
+                    //商品
+                    'goods_id' => $goods->id,
+                    'goods_name' => $goods->goods_name,                         //商品名
+                    'goods_img' => $goods->cover_url,                           //图片
+                    'goods_price' => $spec_price->goods_price,                  //商品价格
+                    'goods_num' => $goods_num,                                  //购买数量
+                    'scene_num' => $spec_price->scene_num,                      //购买场景数量
+                    'spec_id' => $spec_price->id,                               //价格ID
+                    'spec_key' => $spec_price->spec_key,                        //价格项ID
+                    'spec_key_name' => $spec_price->spec_key_name,              //价格项名
+                    'amount' => $spec_price->goods_price * $goods_num,          //总价
+                ]);
+                
+                if($order_goods->save()){
+                    OrderGoodsAction::saveLog([$order_goods->id], '订单创建', '');
+                    $tran->commit();
+                    return new Response(Response::CODE_COMMON_OK, null, $order);
+                }else{
+                    throw new Exception(implode(',', $order_goods->getErrorSummary(true)));
+                }
+            } else {
+                throw new Exception(implode(',', $order->getErrorSummary(true)));
+            }
+        } catch (Exception $ex) {
+            $tran->rollBack();
+            return new Response(Response::CODE_ORDER_CREATE_FAILED, '下单失败', $ex->getMessage());
         }
     }
 

@@ -20,9 +20,9 @@ class OrderSearch extends Order
     public function rules()
     {
         return [
-            [['goods_id', 'spec_id', 'order_status', 'work_status', 'country', 'province', 'city', 'district', 'town', 'is_recommend', 'recommend_by', 'created_by',], 'integer'],
-            [['order_sn', 'goods_name', 'spec_key', 'spec_key_name', 'consignee', 'date_range'], 'safe'],
-            [['goods_price', 'order_amount'], 'number'],
+            [['order_status', 'country', 'province', 'city', 'district', 'town', 'is_recommend', 'recommend_by', 'created_by',], 'integer'],
+            [['order_sn', 'consignee', 'date_range'], 'safe'],
+            [['order_amount'], 'number'],
         ];
     }
 
@@ -67,10 +67,7 @@ class OrderSearch extends Order
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'goods_id' => $this->goods_id,
-            'spec_id' => $this->spec_id,
             'order_status' => $this->order_status,
-            'work_status' => $this->work_status,
             'country' => $this->country,
             'province' => $this->province,
             'city' => $this->city,
@@ -82,8 +79,6 @@ class OrderSearch extends Order
         ]);
 
         $query->andFilterWhere(['like', 'order_sn', $this->order_sn])
-                ->andFilterWhere(['like', 'goods_name', $this->goods_name])
-                ->andFilterWhere(['like', 'spec_key_name', $this->spec_key_name])
                 ->andFilterWhere(['like', 'pay_sn', $this->pay_sn])
                 ->andFilterWhere(['like', 'consignee', $this->consignee])
                 ->andFilterWhere(['like', 'phone', $this->phone]);

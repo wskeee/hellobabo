@@ -3,12 +3,11 @@
 use common\models\order\Order;
 use yii\data\ArrayDataProvider;
 use yii\grid\GridView;
-use yii\helpers\Html;
 
 /* @var $model Order */
 ?>
 <div class="wsk-panel goods-info">
-    <div class="title">场景信息</div>
+    <div class="title">操作信息</div>
     <div class="body">
         <?=
         GridView::widget([
@@ -25,7 +24,7 @@ use yii\helpers\Html;
                     'attribute' => 'created_by',
                     'headerOptions' => ['style' => 'width:120px;'],
                     'value' => function($model) {
-                        return $model->created_by == 0 ? '用户' : $model->creater->nickname;
+                        return  $model->creater == null ? '用户' : $model->creater->nickname;
                     }
                 ],
                 [

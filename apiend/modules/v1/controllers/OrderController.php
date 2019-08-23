@@ -8,6 +8,7 @@ use apiend\modules\v1\actions\order\CheckPay;
 use apiend\modules\v1\actions\order\ClearSceneUserImage;
 use apiend\modules\v1\actions\order\ConfirmOrder;
 use apiend\modules\v1\actions\order\CreateOrder;
+use apiend\modules\v1\actions\order\GetMyOrderGoods;
 use apiend\modules\v1\actions\order\GetOrderDetail;
 use apiend\modules\v1\actions\order\GetOrderList;
 use apiend\modules\v1\actions\order\Init;
@@ -48,9 +49,11 @@ class OrderController extends ApiController
             'order-upload-img-submit' => ['post'],
             'save-scene-user-img' => ['post'],
             'get-list' => ['get'],
-            'get-order-detail' => ['get'],
+            'get-detail' => ['get'],
             'cancel' => ['post'],
             'confirm' => ['post'],
+            // 订单商品
+            'get-my-order-goods' => ['get'],
         ];
         return $behaviors;
     }
@@ -78,6 +81,8 @@ class OrderController extends ApiController
             'get-detail' => ['class' => GetOrderDetail::class],
             'cancel' => ['class' => CancelOrder::class],
             'confirm' => ['class' => ConfirmOrder::class],
+            // 订单商品
+            'get-my-order-goods' => ['class' => GetMyOrderGoods::class]
         ];
     }
 

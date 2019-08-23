@@ -62,6 +62,18 @@ GoodsModuleAsset::register($this);
                                 return Html::tag('video', '', ['style' => 'width:250px', 'src' => $model->video_url, 'controls' => 'controls']);
                             }
                         ],
+                        //封面
+                        [
+                            'attribute' => 'show_urls',
+                            'format' => 'raw',
+                            'value' => function($model) {
+                                $imgs = [];
+                                foreach(explode(',', $model->show_urls) as $url){
+                                    $imgs []= Html::img($url, ['style' => 'width:96px']);
+                                }
+                                return Html::tag('div', implode('', $imgs));
+                            }
+                        ],
                     ],
                 ])
                 ?>
@@ -99,7 +111,11 @@ GoodsModuleAsset::register($this);
         <div class="title">商品详情</div>
         <div class="body">
             <div class="goods-content-box">
-                <div class="rich-content"><?= $model->goodsDetails->content ?></div>
+                <div class="rich-content">
+                    <?php foreach(explode(',', $model->goodsDetails->mobile_content) as $url): ?>
+                    <img src="<?= $url ?>"/>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
     </div>

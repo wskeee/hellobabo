@@ -31,8 +31,9 @@ class PayCb extends Action
             //Yii::debug($payment->order->queryByOutTradeNumber($order->order_sn));
 
             if ($message['return_code'] === 'SUCCESS') { // return_code 表示通信状态，不代表支付状态
+                $bo = $message['result_code'] === 'SUCCESS';
                 // 用户是否支付成功
-                if ($order->pay($message)) {
+                if ($order->pay($bo, $message)) {
                     return true; // 返回处理完成
                 } else {
                     return $fail('通信失败，请稍后再通知我');

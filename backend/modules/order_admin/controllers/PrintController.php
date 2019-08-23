@@ -6,6 +6,8 @@ use apiend\models\Response;
 use common\components\aliyuncs\Aliyun;
 use common\models\order\Order;
 use common\models\order\OrderAction;
+use common\models\order\OrderGoods;
+use common\models\order\OrderGoodsAction;
 use common\models\order\OrderGoodsScene;
 use common\models\order\searchs\WorkflowPrintSearch;
 use common\models\order\WorkflowDelivery;
@@ -127,12 +129,16 @@ class PrintController extends Controller
     {
         $model = $this->findModel($id);
         if ($model->status == WorkflowPrint::STATUS_WAIT_START) {
+            // 修改当前任务为运行中状态
             $model->worker_id = \Yii::$app->user->id;
             $model->start_at = time();
             $model->status = WorkflowPrint::STATUS_RUNGING;
-            if($model->save()){
+            // 修改当前绘本为设计中状态
+            $model->orderGoods->status = OrderGoods::STATUS_PRINTING;
+
+            if ($model->save() && $model->orderGoods->save()) {
                 //记录订单日志 
-                OrderAction::saveLog([$model->order_id], '开始打印', '绘本打印已开始！');
+                OrderGoodsAction::saveLog([$model->order_id], '开始打印', '绘本打印已开始！');
             }
         }
 
@@ -145,43 +151,20 @@ class PrintController extends Controller
     public function actionEnd($id)
     {
         $model = $this->findModel($id);
-        if ($model->status == WorkflowPrint::STATUS_RUNGING) {
+        if ($model->status == WorkflowPrint::STATUS_RUNGING || $model->status == WorkflowPrint::STATUS_CHECK_FAIL) {
             $tran = Yii::$app->db->beginTransaction();
             try {
-                $model->end_at = time();
-                $model->status = WorkflowPrint::STATUS_ENDED;
-                
-                //更改订单为待发货
-                $model->order->print_at = time();
-                $model->order->order_status = Order::ORDER_STATUS_WAIT_DELIVER;
-                
+                // 设置审核状态
+                $model->status = WorkflowPrint::STATUS_CHECK;
 
-                $print = new WorkflowDelivery([
-                    'order_id' => $model->order_id,
-                    'order_sn' => $model->order_sn,
-                    'user_id' => $model->order->created_by,
-                    'consignee' => $model->order->consignee,
-                    'zipcode' => $model->order->zipcode,
-                    'phone' => $model->order->phone,
-                    'country' => $model->order->country,
-                    'province' => $model->order->province,
-                    'city' => $model->order->city,
-                    'district' => $model->order->district,
-                    'town' => $model->order->town,
-                    'address' => $model->order->address,
-                    'user_note' => $model->order->user_note,
-                    'status' => WorkflowPrint::STATUS_WAIT_START,
-                ]);
-                $print->setScenario(WorkflowDelivery::SCENARIO_CREATE);
-                
-                if($model->save() && $model->order->save() && $print->save()){
-                    //记录订单日志 
-                    OrderAction::saveLog([$model->order_id], '结束打印', '绘本打印已完成！');
+                // 修改当前绘本为设计审核状态
+                $model->orderGoods->status = OrderGoods::STATUS_PRINT_CHECK;
+
+                if ($model->save() && $model->orderGoods->save()) {
                     $tran->commit();
-                }else{
-                    throw new UserException(implode(',', $model->getErrorSummary(true) + $model->order->getErrorSummary(true) + $print->getErrorSummary(true)));
+                } else {
+                    throw new UserException(implode(',', $model->getErrorSummary(true) + $model->order->getErrorSummary(true)));
                 }
-                
             } catch (\Exception $ex) {
                 $tran->rollBack();
                 Yii::$app->session->addFlash('danger', $ex->getMessage());

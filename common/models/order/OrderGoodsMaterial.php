@@ -10,7 +10,7 @@ use yii\db\ActiveRecord;
  * This is the model class for table "{{%order_goods_material}}".
  *
  * @property int $id
- * @property int $order_id 订单ID，关联Order,id
+ * @property int $order_goods_id 订单ID，关联OrderGoods,id
  * @property int $material_id 素材id，关联goods_material表id字段
  * @property int $value_id 素材值id，关联goods_material_value表id字段
  * @property int $value_name 素材值名称
@@ -36,7 +36,7 @@ class OrderGoodsMaterial extends ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'material_id', 'value_id', 'is_del'], 'integer'],
+            [['order_goods_id', 'material_id', 'value_id', 'is_del'], 'integer'],
             [['material_id', 'value_id'], 'required'],
             [['value_name',], 'string', 'max' => 20],
             [['value_effect_url', 'value_source_url', 'value_des'], 'string', 'max' => 255],
@@ -50,7 +50,7 @@ class OrderGoodsMaterial extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'order_id' => Yii::t('app', 'Order ID'),
+            'order_goods_id' => I18NUitl::t('app', '{Order}{Goods}'),
             'material_id' => Yii::t('app', 'Material ID'),
             'value_id' => Yii::t('app', 'Material Value ID'),
             'value_name' => I18NUitl::t('app', '{Material}{Name}'),

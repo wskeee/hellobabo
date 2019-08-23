@@ -4,7 +4,7 @@ namespace apiend\modules\v1\actions\order;
 
 use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
-use common\models\order\OrderGoodsScene;
+use common\models\order\OrderGoodsScenePage;
 use Yii;
 
 /**
@@ -16,20 +16,20 @@ class SaveSceneUserImage extends BaseAction
 {
     /* 必须参数 */
 
-    protected $requiredParams = ['order_goods_scene_id', 'user_img_url'];
+    protected $requiredParams = ['ogp_id', 'user_img_url'];
 
     public function run()
     {
-        $order_goods_scene_id = $this->getSecretParam('order_goods_scene_id');
-        $order_goods_scene = OrderGoodsScene::findOne(['id' => $order_goods_scene_id, 'is_del' => 0]);
-        if ($order_goods_scene == null) {
-            return new Response(Response::CODE_COMMON_UNKNOWN, null, null, ['param' => Yii::t('app', 'Scene')]);
+        $ogp_id = $this->getSecretParam('ogp_id');
+        $page = OrderGoodsScenePage::findOne(['id' => $ogp_id, 'is_del' => 0]);
+        if ($page == null) {
+            return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => Yii::t('app', 'Scene')]);
         }
-        $order_goods_scene->user_img_url = $this->getSecretParam('user_img_url');
-        if ($order_goods_scene->save()) {
+        $page->user_img_url = $this->getSecretParam('user_img_url');
+        if ($page->save()) {
             return new Response(Response::CODE_COMMON_OK);
         } else {
-            return new Response(Response::CODE_COMMON_SAVE_DB_FAIL, null, $order_goods_scene->getErrorSummary(true));
+            return new Response(Response::CODE_COMMON_SAVE_DB_FAIL, null, $page->getErrorSummary(true));
         }
     }
 

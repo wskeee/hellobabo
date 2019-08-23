@@ -6,12 +6,14 @@ use common\components\getid3\MediaInfo;
 use common\modules\webuploader\models\Uploadfile;
 use common\modules\webuploader\models\UploadfileChunk;
 use common\modules\webuploader\models\UploadResponse;
+use common\utils\AdobeUtil;
 use common\utils\FfmpegUtil;
 use Imagine\Image\ManipulatorInterface;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\imagine\Image;
 use yii\web\HttpException;
+use function GuzzleHttp\json_encode;
 
 /**
  * 合并分片
@@ -23,9 +25,11 @@ use yii\web\HttpException;
  *
  * @author Administrator
  */
-class MergeChunksAction extends BaseAction {
+class MergeChunksAction extends BaseAction
+{
 
-    public function run() {
+    public function run()
+    {
         $params = $_REQUEST;
         //应用web路径，默认会放本应用的web下，通过设置root_path可改变目标路径
         $root_path = isset($params["root_path"]) ? $params["root_path"] . '/' : '';                             // 根目录
@@ -35,8 +39,9 @@ class MergeChunksAction extends BaseAction {
         $name = ArrayHelper::getValue($params, 'name', 'no_name.temp');                                         // 文件名
         //查询将要被替换的文件
         $replace_id = ArrayHelper::getValue($params, 'replace_id', '');                                         // 被替换文件id
-        $replace_file = Uploadfile::findOne(['id' => $replace_id]);                                             
-
+        $replace_file = Uploadfile::findOne(['id' => $replace_id]);
+        // adobe cc 文件
+        $isAdobe = ArrayHelper::getValue($params, 'is_adobe', 0);                                               // 设置后需要做特殊处理
         // Create target dir
         $this->mkdir($targetDir);
         $this->mkdir($uploadDir);
@@ -55,7 +60,7 @@ class MergeChunksAction extends BaseAction {
             return new UploadResponse(UploadResponse::CODE_COMMON_MISS_PARAM, null, null, ['param' => 'fileMd5']);
         } else {
             //查出所有分片记录
-            $fileChunks = UploadfileChunk::find()->where(['file_md5' => $fileMd5 , 'is_del' => 0])->orderBy('chunk_index')->all();
+            $fileChunks = UploadfileChunk::find()->where(['file_md5' => $fileMd5, 'is_del' => 0])->orderBy('chunk_index')->all();
             if ($fileChunks == null) {
                 return new UploadResponse(UploadResponse::CODE_FILE_CHUNKS_NOT_FOUND);
             } else {
@@ -69,13 +74,13 @@ class MergeChunksAction extends BaseAction {
                     }
                 }
                 //删除无用分片数据
-                if(count($unFoundChunks)>0){
+                if (count($unFoundChunks) > 0) {
                     UploadfileChunk::updateAll(['is_del' => 1], ['chunk_id' => $unFoundChunks]);
                 }
-                
+
                 //检查分片数量是否确
-                if(count($fileChunks) != $chunks){
-                    return new UploadResponse(UploadResponse::CODE_CHUNK_NUM_WRONG,"fc=$fileChunks,chunks=$chunks");
+                if (count($fileChunks) != $chunks) {
+                    return new UploadResponse(UploadResponse::CODE_CHUNK_NUM_WRONG, "fc=$fileChunks,chunks=$chunks");
                 }
 
                 if (!$out = @fopen($uploadPath, "wb")) {
@@ -114,11 +119,18 @@ class MergeChunksAction extends BaseAction {
                 $dbFile->thumb_url = $thumb_path;
                 $dbFile->created_by = Yii::$app->user->id;
                 $dbFile->size = $fileSize == 0 ? filesize($uploadPath) : $fileSize;
-                $dbFile->ext = strtolower(pathinfo($uploadPath,PATHINFO_EXTENSION));
+                $dbFile->ext = strtolower(pathinfo($uploadPath, PATHINFO_EXTENSION));
                 $dbFile->is_del = 0;
                 $dbFile->oss_upload_status = Uploadfile::OSS_UPLOAD_STATUS_NO;
                 $dbFile->oss_key = $replace_file == null ? "" : $replace_file->oss_key;
                 $dbFile->metadata = json_encode($info);
+
+                if ($isAdobe) {
+                    // zip 路径换成 解压后
+                    $dbFile->metadata = json_encode([
+                        'adobe_id' => AdobeUtil::analyse($uploadPath),
+                    ]);
+                }
 
                 if ($dbFile->save()) {
                     //删除临时文件
@@ -130,6 +142,11 @@ class MergeChunksAction extends BaseAction {
                     //上传到OSS
                     try {
                         $dbFile->uploadOSS();
+                        if ($isAdobe) {
+                            // zip 路径换成 解压后 skin 路径
+                            $dbFile->oss_key = AdobeUtil::getSkinPath($dbFile->oss_key, false);
+                            $dbFile->save();
+                        }
                     } catch (\Exception $ex) {
                         return new UploadResponse(UploadResponse::CODE_UPLOAD_OSS_FAIL, null, $ex->getMessage());
                     }
@@ -142,6 +159,7 @@ class MergeChunksAction extends BaseAction {
         }
         return new UploadResponse(UploadResponse::CODE_COMMON_UNKNOWN);
     }
+
     /**
      * 获取文件信息
      * 视频：width,height,duration,bitrate,thumb_path
@@ -149,7 +167,8 @@ class MergeChunksAction extends BaseAction {
      * 图片：thumb_path
      * @param string $filepath
      */
-    private function getFileInfo($filepath) {
+    private function getFileInfo($filepath)
+    {
         $info = ['duration' => 0, 'thumb_path' => ""];
         try {
             $filter = [
@@ -190,7 +209,8 @@ class MergeChunksAction extends BaseAction {
      * @param type $mode            模式：outbound填满高宽，inset等比缩放
      * @return string   生成缩略图路径
      */
-    private function createThumb($type, $filepath, $width = 128, $height = null, $mode = ManipulatorInterface::THUMBNAIL_OUTBOUND) {
+    private function createThumb($type, $filepath, $width = 128, $height = null, $mode = ManipulatorInterface::THUMBNAIL_OUTBOUND)
+    {
         $fileinfo = pathinfo($filepath);
         $thumbpath = $fileinfo['dirname'] . '/thumbs/' . $fileinfo['filename'] . '.jpg';
         $this->mkdir($fileinfo['dirname'] . '/thumbs/');
@@ -215,7 +235,8 @@ class MergeChunksAction extends BaseAction {
      * @returns {string}
      * @private
      */
-    private function getExt($suffix) {
+    private function getExt($suffix)
+    {
         //无法生成缩略图的文件图标
         $exts = [
             'doc' => ['doc', 'docx'],
@@ -244,11 +265,13 @@ class MergeChunksAction extends BaseAction {
      * 创建目录
      * @param string $path
      */
-    private function mkdir($path) {
+    private function mkdir($path)
+    {
         if (!file_exists($path)) {
             if (!(@mkdir($path, 0777, true))) {
                 throw new HttpException(500, '创建目录失败');
             }
         }
     }
+
 }

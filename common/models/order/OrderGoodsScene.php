@@ -14,9 +14,8 @@ use Yii;
  * @property string $effect_url 效果图路径
  * @property string $demo_url 参考路径
  * @property string $source_url 源图路径
- * @property string $user_img_url 用户上传的图片路径
- * @property string $finish_url 成品地址
  * @property int $sort_order 排序
+ * @property int $immutable 不可更改 0否 1是
  * @property int $is_required 是否必选 0否 1是
  * @property int $is_del 是否删除
  * @property string $des 备注
@@ -38,9 +37,9 @@ class OrderGoodsScene extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'scene_id', 'sort_order', 'is_required', 'is_del'], 'integer'],
+            [['order_id', 'scene_id', 'sort_order', 'immutable', 'is_required', 'is_del'], 'integer'],
             [['name'], 'string', 'max' => 20],
-            [['effect_url', 'demo_url', 'source_url', 'user_img_url', 'finish_url', 'des'], 'string', 'max' => 255],
+            [['effect_url', 'demo_url', 'source_url', 'des'], 'string', 'max' => 255],
         ];
     }
 
@@ -57,9 +56,8 @@ class OrderGoodsScene extends \yii\db\ActiveRecord
             'effect_url' => Yii::t('app', 'Effect Url'),
             'demo_url' => Yii::t('app', 'Demo Url'),
             'source_url' => Yii::t('app', 'Source Url'),
-            'user_img_url' => Yii::t('app', 'User Img Url'),
-            'finish_url' => Yii::t('app', 'Finish Url'),
             'sort_order' => Yii::t('app', 'Sort Order'),
+            'immutable' => Yii::t('app', 'Immutable'),
             'is_required' => Yii::t('app', 'Is Required'),
             'is_del' => Yii::t('app', 'Is Del'),
             'des' => Yii::t('app', 'Des'),

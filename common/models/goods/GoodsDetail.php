@@ -12,7 +12,8 @@ use yii\helpers\Html;
  *
  * @property int $id
  * @property int $goods_id 商品id，关联goods表id字段
- * @property string $content 描述/简介
+ * @property string $content 商品详情 描述/简介
+ * @property string $mobile_content 移动端商品详情
  *
  * @property Goods $goods
  */
@@ -36,8 +37,24 @@ class GoodsDetail extends ActiveRecord
             [['goods_id'], 'required'],
             [['goods_id'], 'integer'],
             [['content'], 'string'],
+            [['mobile_content'], 'arrTostr'],
             [['goods_id'], 'exist', 'skipOnError' => true, 'targetClass' => Goods::className(), 'targetAttribute' => ['goods_id' => 'id']],
         ];
+    }
+    
+    /**
+     * 数组转字符
+     * 
+     * @param string|array $att
+     * @return boolean
+     */
+    public function arrTostr($att){
+        $value = $this[$att];
+        if(is_array($value)){
+            $value = implode(',', array_filter($value));
+        }
+        $this[$att] = $value;
+        return true;
     }
 
     /**
@@ -49,6 +66,7 @@ class GoodsDetail extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'goods_id' => Yii::t('app', 'Goods'),
             'content' => Yii::t('app', 'Details'),
+            'mobile_content' => Yii::t('app', 'Details'),
         ];
     }
 

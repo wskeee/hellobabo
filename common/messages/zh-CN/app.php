@@ -356,6 +356,7 @@ return [
     'Setting' => '设置',
     'Goods Scene Page' => '场景页',
     'Goods Scene Pages' => '场景页列表',
+    'Show Urls' => '商品展示',
     
     //后台-商品配置
     'Storage' => '存储',

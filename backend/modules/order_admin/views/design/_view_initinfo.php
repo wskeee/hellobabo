@@ -14,7 +14,7 @@ use yii\helpers\Html;
     <div class="body">
         <?=
         GridView::widget([
-            'dataProvider' => new ArrayDataProvider(['allModels' => $model->order->orderGoodsMaterials,]),
+            'dataProvider' => new ArrayDataProvider(['allModels' => $model->orderGoods->orderGoodsMaterials,]),
             // 'filterModel' => new OrderGoodsMaterial(),
             'layout' => "{items}",
             'columns' => [

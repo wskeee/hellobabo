@@ -15,8 +15,8 @@ use yii\widgets\DetailView;
                 'model' => $model,  
                 'attributes' => [
                     'order_sn',
-                    'order.goods_name',
-                    'order.spec_key_name',
+                    'orderGoods.goods_name',
+                    'orderGoods.spec_key_name',
                     [
                         'attribute' => 'order.consignee',
                         'value' => function($model) {
