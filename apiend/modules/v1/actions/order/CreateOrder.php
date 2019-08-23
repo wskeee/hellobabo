@@ -75,7 +75,7 @@ class CreateOrder extends BaseAction
                     //商品
                     'goods_id' => $goods->id,
                     'goods_name' => $goods->goods_name,                         //商品名
-                    'goods_img' => $spec_price->spec_img_url,                   //规格图片
+                    'goods_img' => $goods->cover_url,                           //图片
                     'goods_price' => $spec_price->goods_price,                  //商品价格
                     'goods_num' => $goods_num,                                  //购买数量
                     'scene_num' => $spec_price->scene_num,                      //购买场景数量

@@ -210,14 +210,12 @@ class Order extends ActiveRecord
         $is_recommend = $this->is_recommend;
         /* @var $referrer User */
         $referrer = $is_recommend ? User::findOne(['id' => $this->recommend_by]) : null;
-        //商品
-        $goods = Goods::findOne(['id' => $this->goods_id]);
 
         //检查推荐人金额是否正常
         if ($is_recommend && !$referrer->moneyVerification()) {
             //账号余额不对，终止结算
             //...添加日志记录
-            OrderAction::saveLog([$order->id], '确认失败', "订单确认失败，发现账号余额不对，账号：{$account->id}");
+            OrderAction::saveLog([$order->id], '确认失败', "订单确认失败，发现账号余额不对，账号：{$referrer->id}");
             return "订单确认失败，发现账号余额不对，请联系客户！";
         }
 
@@ -228,10 +226,6 @@ class Order extends ActiveRecord
             $this->confirm_at = $time;
             $this->ar_save($this);
 
-            //商品
-            $goods->sale_count ++;
-            $this->ar_save($goods);
-
             //推荐
             if ($is_recommend) {
                 $commission = Config::getValue('order_recommend_commission');
@@ -239,7 +233,6 @@ class Order extends ActiveRecord
                     'order_id' => $this->id,
                     'order_sn' => $this->order_sn,
                     'order_amount' => $this->order_amount,
-                    'goods_name' => $this->goods_name,
                     'commission' => $commission,
                     'amount' => round(($commission > 1 ? $commission : $this->order_amount * $commission) * 100 / 100),
                     'recommend_by' => $this->recommend_by,

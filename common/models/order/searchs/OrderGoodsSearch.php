@@ -68,7 +68,7 @@ class OrderGoodsSearch extends OrderGoods
             'spec_id' => $this->spec_id,
             'scene_num' => $this->scene_num,
             'amount' => $this->amount,
-            'status' => !empty($this->status) ? $this->status : [OrderGoods::STATUS_UPLOAD_PIC_CHECK, OrderGoods::STATUS_DESIGN_CHECK, OrderGoods::STATUS_PRINT_CHECK],
+            'status' => $this->status,
             'init_at' => $this->init_at,
             'upload_finish_at' => $this->upload_finish_at,
             'design_at' => $this->design_at,

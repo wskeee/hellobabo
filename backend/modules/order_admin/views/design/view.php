@@ -62,6 +62,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <!-- 基本信息 -->
     <?= $this->render('_view_baseinfo', ['model' => $model]) ?>
+    <!-- 封面信息 -->
+    <?= $this->render('_view_coverinfo', ['model' => $model]) ?>
     <!-- 初始信息 -->
     <?= $this->render('_view_initinfo', ['model' => $model]) ?>
     <!-- 场景信息 -->

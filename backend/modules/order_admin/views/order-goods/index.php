@@ -90,7 +90,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'print_at',
                 'headerOptions' => ['style' => 'width:90px'],
                 'value' => function($model) {
-                    return $model->design_at == 0 ? null : date('Y-m-d H:i:s', $model->design_at);
+                    return $model->print_at == 0 ? null : date('Y-m-d H:i:s', $model->print_at);
                 }
             ],
             //'is_del',

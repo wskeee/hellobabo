@@ -29,6 +29,19 @@ class CheckPay extends BaseAction
 
         if ($order) {
             if ($order->order_status == Order::ORDER_STATUS_WAIT_PAY) {
+                // 模拟支付功能
+
+                $message = [
+                    'return_code' => 'SUCCESS',
+                    'result_code' => 'SUCCESS',
+                    'trade_state' => 'SUCCESS',
+                    'transaction_id' => strtoupper(md5(time())),
+                ];
+
+                $order->pay(true, $message);
+                return new Response(Response::CODE_COMMON_OK, null, $order);
+
+
                 /* @var $payment Application */
                 $payment = Yii::$app->wechat->payment;
                 $message = $payment->order->queryByOutTradeNumber($order->order_sn);

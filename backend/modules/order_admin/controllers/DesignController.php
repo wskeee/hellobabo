@@ -9,6 +9,7 @@ use common\models\order\OrderGoodsAction;
 use common\models\order\OrderGoodsScenePage;
 use common\models\order\searchs\WorkflowDesignSearch;
 use common\models\order\WorkflowDesign;
+use common\utils\I18NUitl;
 use OSS\OssClient;
 use Yii;
 use yii\filters\VerbFilter;
@@ -165,6 +166,34 @@ class DesignController extends Controller
         }
 
         return $this->redirect(['view', 'id' => $id]);
+    }
+
+    /**
+     * 保存用户封面
+     */
+    public function actionSaveUserCover()
+    {
+        Yii::$app->response->format = 'json';
+        $ogid = Yii::$app->request->post('ogid');
+        $cover_url = Yii::$app->request->post('cover_url');
+        if ($ogid == '') {
+            return new ApiResponse(ApiResponse::CODE_COMMON_MISS_PARAM, null, null, ['param' => 'pid']);
+        }
+        $model = OrderGoods::findOne(['id' => $ogid]);
+        if (!$model) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_NOT_FOUND, null, null, ['param' => I18NUitl::t('app', '{Order}{Goods}')]);
+        }
+        // 必须为设计阶段才可以上传封面
+        if (($model->status != OrderGoods::STATUS_DESIGNING && $model->status != OrderGoods::STATUS_DESIGN_CHECK_FAIL)) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_FORBIDDEN);
+        }
+        // 保存封面
+        $model->user_cover_url = $cover_url;
+        if ($model->save()) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_OK);
+        } else {
+            return new ApiResponse(ApiResponse::CODE_COMMON_SAVE_DB_FAIL, implode(',', $model->getErrorSummary(true)));
+        }
     }
 
     /**
