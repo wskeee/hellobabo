@@ -2,7 +2,10 @@
 
 namespace common\models\order;
 
+use common\models\User;
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%order_recommend}}".
@@ -18,8 +21,11 @@ use Yii;
  * @property int $created_by 创建人（购买人）ID,关联user,id
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
+ * 
+ * @property User $recommender 推荐人
+ * @property User $creater 购买人
  */
-class OrderRecommend extends \yii\db\ActiveRecord
+class OrderRecommend extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -27,6 +33,11 @@ class OrderRecommend extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%order_recommend}}';
+    }
+    
+    public function behaviors()
+    {
+        return [TimestampBehavior::class];
     }
 
     /**
@@ -61,5 +72,19 @@ class OrderRecommend extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+    
+    /**
+     * @return QueryRecord
+     */
+    public function getRecommender(){
+        return $this->hasOne(User::class, ['id' => 'recommend_by']);
+    }
+    
+    /**
+     * @return QueryRecord
+     */
+    public function getCreater(){
+        return $this->hasOne(User::class, ['id' => 'created_by']);
     }
 }

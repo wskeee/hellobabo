@@ -83,6 +83,7 @@ use common\widgets\Menu;
                             ['label' => '设计', 'icon' => 'circle-o', 'url' => ['/order_admin/design/index']],
                             ['label' => '打印', 'icon' => 'circle-o', 'url' => ['/order_admin/print/index']],
                             ['label' => '发货', 'icon' => 'circle-o', 'url' => ['/order_admin/delivery/index']],
+                            ['label' => '文章管理', 'icon' => 'circle-o', 'url' => ['/platform_admin/post/index']],
                         ],
                     ],
                     [
@@ -96,6 +97,7 @@ use common\widgets\Menu;
                             ['label' => '拍摄角度', 'icon' => 'circle-o', 'url' => ['/platform_config/shooting-angle/index']],
                             ['label' => '拍摄表情', 'icon' => 'circle-o', 'url' => ['/platform_config/shooting-face/index']],
                             ['label' => '快递公司', 'icon' => 'circle-o', 'url' => ['/platform_config/express/index']],
+                            ['label' => '文章类型', 'icon' => 'circle-o', 'url' => ['/platform_config/post-type/index']],
                         ],
                     ],
                     [

@@ -3,7 +3,6 @@
 namespace common\models\order;
 
 use common\components\redis\RedisService;
-use common\models\goods\Goods;
 use common\models\platform\WalletLog;
 use common\models\system\Config;
 use common\models\User;
@@ -215,7 +214,7 @@ class Order extends ActiveRecord
         if ($is_recommend && !$referrer->moneyVerification()) {
             //账号余额不对，终止结算
             //...添加日志记录
-            OrderAction::saveLog([$order->id], '确认失败', "订单确认失败，发现账号余额不对，账号：{$referrer->id}");
+            OrderAction::saveLog([$this->id], '确认失败', "订单确认失败，发现账号余额不对，账号：{$referrer->id}");
             return "订单确认失败，发现账号余额不对，请联系客户！";
         }
 
@@ -233,21 +232,23 @@ class Order extends ActiveRecord
                     'order_id' => $this->id,
                     'order_sn' => $this->order_sn,
                     'order_amount' => $this->order_amount,
+                    'goods_name' => $this->orderGoods[0]->goods_name,
                     'commission' => $commission,
-                    'amount' => round(($commission > 1 ? $commission : $this->order_amount * $commission) * 100 / 100),
+                    'amount' => floor(($commission > 1 ? $commission : $this->order_amount * $commission) * 100) / 100,
                     'recommend_by' => $this->recommend_by,
                     'created_by' => $this->created_by,
                 ]);
                 $this->ar_save($order_recommend);
-
-                $referrer->money += $order_recommend->amount;
-                $referrer->makeVerification($referrer->id, $referrer->money);
+                
+                $money = floor(($referrer->money + $order_recommend->amount) * 100) /100;
+                $referrer->money = $money;
+                $referrer->money_sign = $referrer->makeVerification($referrer->id, $money);
                 $this->ar_save($referrer);
 
                 $wallet_log = new WalletLog([
                     'user_id' => $referrer->id,
                     'type' => WalletLog::TYPE_INCOME,
-                    'tran_sn' => $order_recommend->id,
+                    'tran_sn' => $order_recommend->id . '',
                     'tran_money' => $order_recommend->amount,
                     'money_newest' => $referrer->money,
                     'des' => '推荐奖励',
@@ -328,7 +329,7 @@ class Order extends ActiveRecord
     {
         return $this->hasMany(OrderAction::class, ['order_id' => 'id']);
     }
-    
+
     /**
      * 绘本
      * @return QueryRecord
