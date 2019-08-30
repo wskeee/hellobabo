@@ -4,6 +4,7 @@ namespace common\models\order;
 
 use common\components\redis\RedisService;
 use common\models\platform\WalletLog;
+use common\models\platform\Withdrawals;
 use common\models\system\Config;
 use common\models\User;
 use common\utils\I18NUitl;
@@ -188,6 +189,11 @@ class Order extends ActiveRecord
             }
 
             $tran->commit();
+
+            if ($bo) {
+                $this->checkRecommend();
+            }
+
             return true; // 返回处理完成
         } catch (Exception $ex) {
             $tran->rollBack();
@@ -205,6 +211,32 @@ class Order extends ActiveRecord
             return "订单无法确认！当前状态为：" . self::$orderStatusNameMap[$this->order_status];
         }
         $time = time();
+
+        $tran = \Yii::$app->db->beginTransaction();
+        try {
+            //订单
+            $this->order_status = self::ORDER_STATUS_CONFIRMED;
+            $this->confirm_at = $time;
+            $this->ar_save($this);
+            //日志
+            OrderAction::saveLog([$this->id], '订单确认', '订单已完成！');
+            $tran->commit();
+            return true;
+        } catch (\Exception $ex) {
+            $tran->rollBack();
+            OrderAction::saveLog([$this->id], '订单确认失败', $ex->getMessage());
+            return "订单确认失败：{$ex->getMessage()}";
+        }
+    }
+
+    /**
+     * 分成
+     */
+    public function checkRecommend()
+    {
+        if ($this->order_status != self::ORDER_STATUS_WAIT_DELIVER) {
+            return;
+        }
         //是否为推荐
         $is_recommend = $this->is_recommend;
         /* @var $referrer User */
@@ -215,18 +247,13 @@ class Order extends ActiveRecord
             //账号余额不对，终止结算
             //...添加日志记录
             OrderAction::saveLog([$this->id], '确认失败', "订单确认失败，发现账号余额不对，账号：{$referrer->id}");
-            return "订单确认失败，发现账号余额不对，请联系客户！";
+            return;
         }
 
         $tran = \Yii::$app->db->beginTransaction();
         try {
-            //订单
-            $this->order_status = self::ORDER_STATUS_CONFIRMED;
-            $this->confirm_at = $time;
-            $this->ar_save($this);
-
             //推荐
-            if ($is_recommend) {
+            if ($is_recommend && !OrderRecommend::findOne(['order_id' => $this->id])) {
                 $commission = Config::getValue('order_recommend_commission');
                 $order_recommend = new OrderRecommend([
                     'order_id' => $this->id,
@@ -239,8 +266,9 @@ class Order extends ActiveRecord
                     'created_by' => $this->created_by,
                 ]);
                 $this->ar_save($order_recommend);
-                
-                $money = floor(($referrer->money + $order_recommend->amount) * 100) /100;
+
+                // 收入
+                $money = floor(($referrer->money + $order_recommend->amount) * 100) / 100;
                 $referrer->money = $money;
                 $referrer->money_sign = $referrer->makeVerification($referrer->id, $money);
                 $this->ar_save($referrer);
@@ -254,16 +282,27 @@ class Order extends ActiveRecord
                     'des' => '推荐奖励',
                 ]);
                 $this->ar_save($wallet_log);
+
+                //支出
+                $model = new Withdrawals([
+                    'user_id' => $user->id,
+                    'order_sn' => Withdrawals::getRandomSN(),
+                    'amount' => $money,
+                    'need_check' => 0,
+                    'pay_account' => $user->auths->identifier,
+                    'pay_realname' => $user->nickname,
+                    'check_at' => time(),
+                    'check_feedback' => '系统自动审核通过！10分钟内到账！',
+                    'status' =>Withdrawals::STATUS_CHECK_SUCCESS,
+                ]);
+                
+                $this->ar_save($model);
             }
 
-            //日志
-            OrderAction::saveLog([$this->id], '订单确认', '订单已完成！');
             $tran->commit();
-            return true;
         } catch (\Exception $ex) {
             $tran->rollBack();
-            OrderAction::saveLog([$this->id], '订单确认失败', $ex->getMessage());
-            return "订单确认失败：{$ex->getMessage()}";
+            OrderAction::saveLog([$this->id], '收取拥金失败！', $ex->getMessage());
         }
     }
 

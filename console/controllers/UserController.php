@@ -2,12 +2,9 @@
 
 namespace console\controllers;
 
-use common\models\platform\Order;
-use common\models\platform\OrderActionLog;
 use common\models\platform\Withdrawals;
 use yii\console\Controller;
 use yii\console\ExitCode;
-use yii\helpers\ArrayHelper;
 
 /**
  * 用户定时任务
