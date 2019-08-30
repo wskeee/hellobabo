@@ -285,12 +285,12 @@ class Order extends ActiveRecord
 
                 //支出
                 $model = new Withdrawals([
-                    'user_id' => $user->id,
+                    'user_id' => $referrer->id,
                     'order_sn' => Withdrawals::getRandomSN(),
                     'amount' => $money,
                     'need_check' => 0,
-                    'pay_account' => $user->auths->identifier,
-                    'pay_realname' => $user->nickname,
+                    'pay_account' => $referrer->auths->identifier,
+                    'pay_realname' => $referrer->nickname,
                     'check_at' => time(),
                     'check_feedback' => '系统自动审核通过！10分钟内到账！',
                     'status' =>Withdrawals::STATUS_CHECK_SUCCESS,
