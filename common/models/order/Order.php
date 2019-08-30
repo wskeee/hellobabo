@@ -287,7 +287,7 @@ class Order extends ActiveRecord
                 $model = new Withdrawals([
                     'user_id' => $referrer->id,
                     'order_sn' => Withdrawals::getRandomSN(),
-                    'amount' => $money,
+                    'amount' => $order_recommend->amount,
                     'need_check' => 0,
                     'pay_account' => $referrer->auths->identifier,
                     'pay_realname' => $referrer->nickname,
