@@ -1,0 +1,50 @@
+/*******************************************************************************
+ *
+ * 文章
+ *
+********************************************************************************/
+/* 列表 */
+.help-default-index{
+    height:100%;
+}
+.help-default-index .post-item{
+    padding: 10px 0;
+    border-top: solid 1px #f2f2f2;
+}
+
+.help-default-index .post-item:first-child{
+    border-top: none
+}
+.wsk-panel .wsk-head {
+    border-top: 1px solid #f2f2f2;
+}
+
+/* 文章详情 */
+.help-default-post{
+    background: #f2f2f2;
+    height: 100%;
+}
+.help-default-post .post-content{
+    padding: 15px;
+
+    background: #fff;
+}
+
+.help-default-post .post-content .p-title{
+    text-align: center;
+    padding: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    /*border-bottom: solid 1px #e4e4e4;*/
+    background: #fff; 
+    margin-bottom: 10px;
+}
+
+/* ui.li 还原原来样式 */
+.help-default-post .post-content li {
+    list-style: initial;
+}
+/* 设置图片最大宽度 */
+.help-default-post .post-content img{
+    max-width: 100%;
+}

@@ -50,6 +50,9 @@ return [
         'show' => [
             'class' => 'frontend\modules\show\Module',
         ],
+        'help' => [
+            'class' => 'frontend\modules\help\Module',
+        ],
     ],
     
     'params' => $params,

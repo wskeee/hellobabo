@@ -8,6 +8,7 @@ use apiend\modules\v1\actions\user\BindInfo;
 use apiend\modules\v1\actions\user\DecryptedData;
 use apiend\modules\v1\actions\user\DelAddress;
 use apiend\modules\v1\actions\user\GetAddressList;
+use apiend\modules\v1\actions\user\GetIncomeList;
 use apiend\modules\v1\actions\user\GetInfo;
 use apiend\modules\v1\actions\user\SetDefaultAddress;
 use apiend\modules\v1\actions\user\UpdateAddress;
@@ -37,6 +38,7 @@ class UserController extends ApiController
             'update-address' => ['post'],
             'update-address-ready' => ['get'],
             'set-default-address' => ['post'],
+            'get-income-list' => ['get'],
         ];
         return $behaviors;
     }
@@ -56,6 +58,7 @@ class UserController extends ApiController
             'update-address' => ['class' => UpdateAddress::class],
             'update-address-ready' => ['class' => UpdateAddressReady::class],
             'set-default-address' => ['class' => SetDefaultAddress::class],
+            'get-income-list' => ['class' => GetIncomeList::class],
         ];
     }
 
