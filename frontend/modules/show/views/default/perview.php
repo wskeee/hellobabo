@@ -12,7 +12,7 @@ foreach($app_data['scenes'] as $scene){
 ?>
 <div class="show-default-pg">
     <div id="animation_container" style="background-color:rgba(255, 255, 255, 1.00); ">
-        <canvas id="canvas"
+        <canvas id="book_canvas"
                 style="position: absolute; display: block; background-color:rgba(255, 255, 255, 1.00);"></canvas>
         <div id="dom_overlay_container"
              style="pointer-events:none; overflow:hidden; position: absolute; left: 0px; top: 0px; display: block;">
