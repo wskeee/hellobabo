@@ -20,9 +20,17 @@ class GetMyOrderGoods extends BaseAction
                 ->where(['created_by' => $user->id, 'is_del' => 0])
                 ->andWhere(['<>', 'status', OrderGoods::STATUS_UNREADY])
                 ->andWhere(['<>', 'status', OrderGoods::STATUS_INVALID])
+                ->orderBy(['created_at' => SORT_DESC])
                 ->all();
+        /* @var $goods OrderGoods */
+        foreach ($orderGoods as $goods) {
+            $item = $goods->toArray();
+            $item['created_time'] = date('Y-m-d H:i:s', $goods->created_at);
+            $item['commission'] = $goods->goods->commission;
+            $list [] = $item;
+        }
         return new Response(Response::CODE_COMMON_OK, null, [
-            'list' => $orderGoods
+            'list' => $list
         ]);
     }
 

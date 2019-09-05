@@ -2,6 +2,7 @@
 
 namespace common\models\order;
 
+use common\models\goods\Goods;
 use common\utils\I18NUitl;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -36,6 +37,7 @@ use yii\db\ActiveRecord;
  * @property int $updated_at 更新时间
  * 
  * @property Order $order 订单
+ * @property Goods $goods 商品
  * @property OrderGoodsMaterial[] $orderGoodsMaterials 订单素材
  * @property OrderGoodsScene[] $orderGoodsScenes 订单场景
  * @property OrderGoodsScenePage[] $orderGoodsScenePages 订单场景页
@@ -150,6 +152,15 @@ class OrderGoods extends ActiveRecord
     public function getOrder()
     {
         return $this->hasOne(Order::class, ['id' => 'order_id']);
+    }
+    
+    /**
+     * 商品
+     * @return QueryRecord
+     */
+    public function getGoods()
+    {
+        return $this->hasOne(Goods::class, ['id' => 'goods_id']);
     }
 
     /**
