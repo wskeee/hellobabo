@@ -29,6 +29,7 @@ class GetIncomeList extends BaseAction
                 ->all();
 
         /* @var $recommend OrderRecommend */
+        $list = [];
         foreach ($results as $recommend) {
             $item = $recommend->toArray();
             $item['buy_user'] = $recommend->creater->nickname;

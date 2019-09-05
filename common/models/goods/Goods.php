@@ -29,6 +29,7 @@ use yii\db\Query;
  * @property string $show_urls 展示图片地址多个使用','分隔
  * @property int $status 普通状态 1待发布 2已发布 3已下架
  * @property string $tags 标签，多个使用逗号分隔
+ * @property string $commission 拥金
  * @property int $store_count 库存
  * @property int $comment_count 评论数
  * @property int $click_count 查看/击数
@@ -96,7 +97,7 @@ class Goods extends ActiveRecord
         return [
             [['category_id', 'owner_id', 'goods_name'], 'required'],
             [['category_id', 'model_id', 'owner_id', 'status', 'store_count', 'comment_count', 'click_count', 'share_count', 'like_count', 'sale_count', 'init_required', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['goods_cost', 'goods_price'], 'number'],
+            [['goods_cost', 'goods_price', 'commission'], 'number'],
             [['goods_sn'], 'string', 'max' => 20],
             [['goods_name'], 'string', 'max' => 100],
             [['goods_title'], 'string', 'max' => 50],
@@ -105,16 +106,17 @@ class Goods extends ActiveRecord
             [['tags'], 'tagVerify',],
         ];
     }
-    
+
     /**
      * 数组转字符
      * 
      * @param string|array $att
      * @return boolean
      */
-    public function arrTostr($att){
+    public function arrTostr($att)
+    {
         $value = $this[$att];
-        if(is_array($value)){
+        if (is_array($value)) {
             $value = implode(',', array_filter($value));
         }
         $this[$att] = $value;
@@ -149,7 +151,7 @@ class Goods extends ActiveRecord
             'category_id' => Yii::t('app', 'Category'),
             'model_id' => Yii::t('app', 'Model'),
             'owner_id' => Yii::t('app', 'Owner'),
-            //'goods_sn' => I18NUitl::t('app', '{Goods}{SN}'),
+            'commission' => Yii::t('app', 'Commission'),
             'goods_name' => Yii::t('app', 'Name'),
             'goods_title' => Yii::t('app', 'Title'),
             'goods_cost' => Yii::t('app', 'Cost'),
@@ -173,7 +175,7 @@ class Goods extends ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
-   
+
     /**
      * @return ActiveQuery
      */
@@ -269,31 +271,32 @@ class Goods extends ActiveRecord
     {
         $query = (new Query())
                 ->select([
-                    'GoodsSpec.id as spec_id', 
-                    'GoodsSpecItem.goods_id', 
-                    'GoodsSpecItem.id', 
-                    'GoodsSpecItem.value', 
-                    ])
+                    'GoodsSpec.id as spec_id',
+                    'GoodsSpecItem.goods_id',
+                    'GoodsSpecItem.id',
+                    'GoodsSpecItem.value',
+                ])
                 ->from(['GoodsSpecItem' => GoodsSpecItem::tableName()])
                 ->leftJoin(['GoodsSpec' => GoodsSpec::tableName()], 'GoodsSpec.id = GoodsSpecItem.spec_id')
                 ->where([
-                    'GoodsSpecItem.goods_id' => $this->id,
-                    'GoodsSpec.model_id' => $this->model_id,
-                    'GoodsSpecItem.is_del' => 0,
-                    'GoodsSpec.is_del' => 0]);
+            'GoodsSpecItem.goods_id' => $this->id,
+            'GoodsSpec.model_id' => $this->model_id,
+            'GoodsSpecItem.is_del' => 0,
+            'GoodsSpec.is_del' => 0]);
         return $query->all();
     }
-    
+
     /**
      * 获取商品价格项
      * @return Array Description
      */
-    public function getGoodsSpecPrices(){
+    public function getGoodsSpecPrices()
+    {
         $query = (new Query())
                 ->from(['GoodsSpecPrice' => GoodsSpecPrice::tableName()])
                 ->where([
-                    'GoodsSpecPrice.goods_id' => $this->id,
-                    'GoodsSpecPrice.is_del' => 0]);
+            'GoodsSpecPrice.goods_id' => $this->id,
+            'GoodsSpecPrice.is_del' => 0]);
         return $query->all();
     }
 
