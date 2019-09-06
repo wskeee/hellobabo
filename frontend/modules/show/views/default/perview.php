@@ -10,7 +10,6 @@ foreach ($app_data['scenes'] as $scene) {
     $this->registerJsFile("{$scene['path']}skin.js");
 }
 ?>
-<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
 <div class="show-default-pg">
     <div id="animation_container" style="background-color:rgba(255, 255, 255, 1.00); ">
         <canvas id="book_canvas"
