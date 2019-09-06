@@ -487,10 +487,31 @@ a.desc:after {
 
 /*******************************************************************************
  *
+ * Picker 横向排列
+ *
+********************************************************************************/
+.picker-form-group{
+    display: flex;
+}
+
+.picker-form-group .item{
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+.picker-form-group .item label{
+    text-align: right;
+    color: #999999;
+    font-weight: bold;
+}
+
+/*******************************************************************************
+ *
  * 面板
  *
 ********************************************************************************/
- .wsk-panel {
+.wsk-panel {
     display: inline-block;
     width: 100%;
     border-radius: 0px;

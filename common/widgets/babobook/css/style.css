@@ -17,3 +17,34 @@ body {
     font-size: 40px;
     margin-top: 20px;
 }
+
+/* 浮动按钮 */
+.float-view {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    bottom: 40px;
+}
+
+.float-view div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.float-view .page-num-box {
+    flex: 1;
+}
+
+.float-view .page-num{
+    font-size: 20px !important;
+}
+
+.float-view .txt {
+    font-family: '微软雅黑';
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
+    font-size: 30px;
+    margin: 0 5px;
+}
