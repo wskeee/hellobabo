@@ -61,7 +61,7 @@ class Poster extends BaseAction
                     'fontColor' => '255,124,45', //字体颜色
                     'angle' => 0,],
                 [
-                    'text' => "向你分享了《 $goods_model->goods_name 》",
+                    'text' => "向你分享了绘本《 $goods_model->goods_name 》",
                     'left' => 142,
                     'top' => 85,
                     'fontPath' => Yii::getAlias('@apiend/web/css/msyh.ttf'), //字体文件
