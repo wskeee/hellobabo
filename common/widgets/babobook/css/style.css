@@ -24,7 +24,7 @@ body {
     display: flex;
     justify-content: center;
     width: 100%;
-    bottom: 40px;
+    bottom: 80px;
 }
 
 .float-view div {
@@ -42,7 +42,7 @@ body {
 }
 
 .float-view img{
-    width:200px;
+    width:150px;
 }
 
 .float-view .txt {
