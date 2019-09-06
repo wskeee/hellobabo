@@ -27,6 +27,8 @@ use yii\db\Query;
  * @property string $cover_url 封面路径
  * @property string $video_url 视频地址
  * @property string $show_urls 展示图片地址多个使用','分隔
+ * @property string $poster_url 海报图路径
+ * @property string $share_thumb_url 分享缩略图路径
  * @property int $status 普通状态 1待发布 2已发布 3已下架
  * @property string $tags 标签，多个使用逗号分隔
  * @property string $commission 拥金
@@ -102,7 +104,7 @@ class Goods extends ActiveRecord
             [['goods_name'], 'string', 'max' => 100],
             [['goods_title'], 'string', 'max' => 50],
             [['show_urls'], 'arrTostr'],
-            [['goods_des', 'cover_url', 'video_url', 'tags'], 'string', 'max' => 255],
+            [['goods_des', 'cover_url', 'video_url', 'poster_url', 'share_thumb_url', 'tags'], 'string', 'max' => 255],
             [['tags'], 'tagVerify',],
         ];
     }
@@ -160,6 +162,8 @@ class Goods extends ActiveRecord
             'cover_url' => Yii::t('app', 'Cover'),
             'video_url' => Yii::t('app', 'Video'),
             'show_urls' => Yii::t('app', 'Show Urls'),
+            'poster_url' => Yii::t('app', 'Poster'),
+            'share_thumb_url' => Yii::t('app', 'Share Thumb'),
             'status' => Yii::t('app', 'Status'),
             'tags' => Yii::t('app', 'Tag'),
             'store_count' => I18NUitl::t('app', '{Store}{Count}'),

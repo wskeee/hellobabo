@@ -2,8 +2,10 @@
 
 namespace frontend\modules\show\controllers;
 
+use common\models\goods\Goods;
 use common\models\goods\GoodsScene;
 use common\models\goods\GoodsScenePage;
+use common\models\order\OrderGoods;
 use common\models\order\OrderGoodsScenePage;
 use yii\db\Query;
 use yii\web\Controller;
@@ -26,7 +28,7 @@ class DefaultController extends Controller
     /**
      * 展示平台商品
      */
-    public function actionPg()
+    public function actionPg($gid = 2)
     {
         $query = (new Query())
                 ->select([
@@ -41,7 +43,7 @@ class DefaultController extends Controller
                 ->from(['Scene' => GoodsScene::tableName()])
                 ->leftJoin(['Page' => GoodsScenePage::tableName()], 'Scene.id = Page.scene_id')
                 ->where([
-                    'Scene.goods_id' => 2,
+                    'Scene.goods_id' => $gid,
                     'Scene.is_selected' => 1,
                     'Scene.is_del' => 0,
                     'Page.is_del' => 0,
@@ -54,9 +56,11 @@ class DefaultController extends Controller
         $pages = $query->all();
 
         /**
-         * 
+         * appData
          */
+        $goods = Goods::findOne(['id' => $gid]);
         $app_data = [
+            'goods' => ['gid' => $gid, 'type' => 1, 'commission' => $goods->commission],
             'common' => ['id' => "E4019F635D6CBC488C42C0A8B05F0249", 'path' => 'common/'],
         ];
         $scenes = [];
@@ -82,7 +86,10 @@ class DefaultController extends Controller
                 ->orderBy(['sort_order' => SORT_ASC])
                 ->all();
 
+        $orderGoods = OrderGoods::findOne(['id' => $ogid]);
+
         $app_data = [
+            'goods' => ['gid' => $orderGoods->goods->id, 'ogid' => $ogid, 'type' => 2, 'commission' => $orderGoods->goods->commission],
             'common' => ['id' => "E4019F635D6CBC488C42C0A8B05F0249", 'path' => 'common/'],
         ];
         $scenes = [];
@@ -99,7 +106,7 @@ class DefaultController extends Controller
 
         return $this->render('perview', ['app_data' => $app_data]);
     }
-    
+
     /**
      * 预览绘本 source 页
      * @param string $page_ids id,id,id 显示预览的页面id

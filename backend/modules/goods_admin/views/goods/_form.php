@@ -41,17 +41,36 @@ $goodsDetails = $model->isNewRecord ? new GoodsDetail() : $model->goodsDetails;
         'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
     ])
     ?>
+
     <!-- 商品名称 -->
     <?= $form->field($model, 'goods_name')->textInput(['maxlength' => true]) ?>
 
     <!-- 商品标题 -->
-    <?= $form->field($model, 'goods_title')->textInput(['maxlength' => true]) ?>
-    
-    <!-- 封面 -->
-    <?= $form->field($model, 'cover_url')->widget(ImagePicker::class) ?>
-    
-    <!-- 视频 -->
-    <?= $form->field($model, 'video_url')->widget(VideoPicker::class) ?>
+    <?= $form->field($model, 'goods_title')->textInput(['maxlength' => true]) ?>     
+
+    <div class="form-group picker-form-group">
+        <label class="control-label form-label">图片/视频</label>
+        <!-- 封面 -->
+        <div class="item">
+            <label><?= $model->getAttributeLabel('cover_url') ?></label>
+            <?= ImagePicker::widget(['model' => $model, 'attribute' => 'cover_url']) ?>
+        </div>
+        <!-- 视频 -->
+        <div class="item">
+            <label><?= $model->getAttributeLabel('video_url') ?></label>
+            <?= VideoPicker::widget(['model' => $model, 'attribute' => 'video_url']) ?>
+        </div>
+        <!-- 分享图 -->
+        <div class="item">
+            <label><?= $model->getAttributeLabel('poster_url') ?></label>
+            <?= ImagePicker::widget(['model' => $model, 'attribute' => 'poster_url']) ?>
+        </div>
+        <!-- 海报图 -->
+        <div class="item">
+            <label><?= $model->getAttributeLabel('share_thumb_url') ?></label>
+            <?= ImagePicker::widget(['model' => $model, 'attribute' => 'share_thumb_url']) ?>
+        </div>
+    </div>
 
     <!-- 商品展示图片 -->
     <div class="from-group tile-group">
@@ -68,6 +87,9 @@ $goodsDetails = $model->isNewRecord ? new GoodsDetail() : $model->goodsDetails;
 
     <!-- 设置商品是否需要初始 -->
     <?php $form->field($model, 'init_required')->checkbox(['title' => '开启后在上传相片前需要初始绘本', 'style' => 'margin: 13px 0;'], false) ?>
+    
+    <!-- 商品佣金 -->
+    <?= $form->field($model, 'commission')->textInput(['maxlength' => true, 'placeholder' => '请输入分享佣金']) ?>
 
     <!-- 作者 -->
     <?=
@@ -84,8 +106,8 @@ $goodsDetails = $model->isNewRecord ? new GoodsDetail() : $model->goodsDetails;
     <?= $form->field($model, 'goods_des')->textarea(['maxlength' => true, 'placeholder' => '简单描述商品']) ?>
 
     <!-- 商品详情 -->
-    <?php $form->field($model->isNewRecord ? new GoodsDetail() : $model->goodsDetails, 'content')->widget(UEDitor::class) ?>
-    
+    <?php //$form->field($model->isNewRecord ? new GoodsDetail() : $model->goodsDetails, 'content')->widget(UEDitor::class) ?>
+
     <!-- 移动商品详情 -->
     <div class="from-group tile-group">
         <div class="group-item">

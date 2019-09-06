@@ -86,7 +86,7 @@ class PosterUtils
         }
         //生成图片
         if (!empty($filename)) {
-            $res = imagejpeg($imageRes, $filename, 90); //保存到本地
+            $res = imagejpeg($imageRes, $filename, 100); //保存到本地
             imagedestroy($imageRes);
             if (!$res)
                 return false;

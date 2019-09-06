@@ -357,6 +357,9 @@ return [
     'Goods Scene Page' => '场景页',
     'Goods Scene Pages' => '场景页列表',
     'Show Urls' => '商品展示',
+    'Poster' => '海报',
+    'Share Thumb' => '分享缩略',
+    'Commission' => '佣金',
     
     //后台-商品配置
     'Storage' => '存储',
