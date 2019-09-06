@@ -13,6 +13,7 @@ class BabobookAsset extends AssetBundle
     ];
     public $js = [
         'vendor/createjs.min.js',
+        'jweixin-1.3.2.js',
         'app.bundle.js',
         'common/common.js',
     ];
