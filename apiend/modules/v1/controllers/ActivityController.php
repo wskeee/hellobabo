@@ -8,6 +8,7 @@ use apiend\modules\v1\actions\activity\GetDetail;
 use apiend\modules\v1\actions\activity\GetHand;
 use apiend\modules\v1\actions\activity\GetHandList;
 use apiend\modules\v1\actions\activity\GetNew;
+use apiend\modules\v1\actions\activity\GetRankHand;
 use apiend\modules\v1\actions\activity\HandVote;
 use apiend\modules\v1\actions\activity\SaveHand;
 
@@ -34,6 +35,7 @@ class ActivityController extends ApiController
             'get-hand' => ['get'],
             'get-hand-list' => ['get'],
             'hand-vote' => ['post'],
+            'get-rank-hand' => ['get'],
         ];
         return $behaviors;
     }
@@ -51,6 +53,7 @@ class ActivityController extends ApiController
             'get-hand' => ['class' => GetHand::class],
             'get-hand-list' => ['class' => GetHandList::class],
             'hand-vote' => ['class' => HandVote::class],
+            'get-rank-hand' => ['class' => GetRankHand::class],
         ];
     }
 

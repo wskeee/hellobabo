@@ -203,7 +203,7 @@ class VoteService
      * @param int $start        开始排序
      * @param int $end          结束排序
      */
-    public static function getHandWeekInfo($aid, $month = null, $week = null, $start = 0, $end = 2)
+    public static function getHandWeekRanklist($aid, $month = null, $week = null, $start = 0, $end = 2)
     {
         if ($month == null) {
             $month = date('Ym');
@@ -214,11 +214,9 @@ class VoteService
         $r = RedisService::getRedis();
         $key = self::getKey(self::REDIS_KEY_HAND_WEEK_COUNT, ['aid' => $aid]) . $month . '_' . $week;
 
-        $info = [
-            'rank' => self::convertRange($r->zrevrange($key, $start, $end, true)),
-        ];
+        $ranklist = self::convertRange($r->zrevrange($key, $start, $end, true));
 
-        return $info;
+        return $ranklist;
     }
 
     /**
@@ -229,7 +227,7 @@ class VoteService
      * @param int $start        开始排序
      * @param int $end          结束排序
      */
-    public static function getHandMonthInfo($aid, $month = null, $start = 0, $end = 4)
+    public static function getHandMonthRanklist($aid, $month = null, $start = 0, $end = 4)
     {
         if ($month == null) {
             $month = date('Ym');
@@ -237,10 +235,8 @@ class VoteService
         $r = RedisService::getRedis();
         $key = self::getKey(self::REDIS_KEY_HAND_MONTH_COUNT, ['aid' => $aid]) . $month;
 
-        $info = [
-            'rank' => self::convertRange($r->zrevrange($key, $start, $end, true)),
-        ];
-        return $info;
+        $ranklist = self::convertRange($r->zrevrange($key, $start, $end, true));
+        return $ranklist;
     }
 
     /**
@@ -250,17 +246,81 @@ class VoteService
      * @param int $start        开始排序
      * @param int $end          结束排序
      */
-    public static function getHandAllInfo($aid, $start = 0, $end = 4)
+    public static function getHandAllRanklist($aid, $start = 0, $end = 4)
     {
         $r = RedisService::getRedis();
         $key = self::getKey(self::REDIS_KEY_HAND_ALL_COUNT, ['aid' => $aid]);
 
-        $info = [
-            'rank' => self::convertRange($r->zrevrange($key, $start, $end, true)),
-            'max_hand' => $r->zcard($key),
-        ];
+        $ranklist = self::convertRange($r->zrevrange($key, $start, $end, true));
+        return $ranklist;
+    }
 
-        return $info;
+    /**
+     * 获取选手周排名
+     * 
+     * @param int $aid      活动ID
+     * @param int $hid      选手参选ID
+     * @param int $month    月份 201904
+     * @param int $week     1~6 周一致周日为一周
+     */
+    public static function getHandWeekRank($aid, $hid, $month = null, $week = null)
+    {
+        if ($month == null) {
+            $month = date('Ym');
+        }
+        if ($week == null) {
+            $week = DateUtil::getWeekOfMonth();
+        }
+        $r = RedisService::getRedis();
+        $key = self::getKey(self::REDIS_KEY_HAND_WEEK_COUNT, ['aid' => $aid]) . $month . '_' . $week;
+
+        return $r->zrevrank($key, $hid);
+    }
+    
+    /**
+     * 获取选手月排名
+     * 
+     * @param int $aid          活动ID
+     * @param int $hid          选手参选ID
+     * @param string $month     月份 201904
+     */
+    public static function getHandMonthRank($aid, $hid, $month = null)
+    {
+        if ($month == null) {
+            $month = date('Ym');
+        }
+        $r = RedisService::getRedis();
+        $key = self::getKey(self::REDIS_KEY_HAND_MONTH_COUNT, ['aid' => $aid]) . $month;
+
+        return $r->zrevrank($key, $hid);
+    }
+
+    /**
+     * 获取选手本次活动排名
+     * 
+     * @param int $aid      活动ID
+     * @param int $hid      参选ID
+     */
+    public static function getHandAllRank($aid, $hid)
+    {
+        $r = RedisService::getRedis();
+        $key = self::getKey(self::REDIS_KEY_HAND_ALL_COUNT, ['aid' => $aid]);
+
+        return $r->zrevrank($key, $hid);
+    }
+    
+    /**
+     * 获取活动总参选人数
+     * 
+     * @param int $aid      活动ID
+     * @return type
+     */
+    public static function getHandAllNum($aid)
+    {
+        $r = RedisService::getRedis();
+        $key = self::getKey(self::REDIS_KEY_HAND_ALL_COUNT, ['aid' => $aid]);
+
+        return $r->zcard($key);
     }
 
     /**
@@ -285,7 +345,7 @@ class VoteService
      */
     public static function getNum($activity_id)
     {
-        $key = self::getKey(self::REDIS_KEY_HAND_ALL_COUNT, ['aid' => $activity_id]);
+        $key = self::getKey(self::REDIS_KEY_HAND_NUM, ['aid' => $activity_id]);
         $r = RedisService::getRedis();
         //一秒内包括 99999 个自增ID
         if (!$r->exists($key)) {
