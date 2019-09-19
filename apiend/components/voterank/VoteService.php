@@ -45,10 +45,10 @@ class VoteService
         $hand_week_count_key = self::getKey(self::REDIS_KEY_HAND_WEEK_COUNT, ['aid' => $aid]) . date('Ym') . '_' . DateUtil::getWeekOfMonth();
         $hand_month_count_key = self::getKey(self::REDIS_KEY_HAND_MONTH_COUNT, ['aid' => $aid]) . date('Ym');
         $hand_all_count_key = self::getKey(self::REDIS_KEY_HAND_ALL_COUNT, ['aid' => $aid]);
-        $r->zadd($hand_day_count_key, $hid);
-        $r->zadd($hand_week_count_key, $hid);
-        $r->zadd($hand_month_count_key, $hid);
-        $r->zadd($hand_all_count_key, $hid);
+        $r->zadd($hand_day_count_key, [$hid => 0]);
+        $r->zadd($hand_week_count_key, [$hid => 0]);
+        $r->zadd($hand_month_count_key, [$hid => 0]);
+        $r->zadd($hand_all_count_key, [$hid => 0]);
     }
 
     /**
