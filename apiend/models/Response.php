@@ -64,6 +64,15 @@ class Response extends ApiResponse{
     const CODE_ORDER_PAY_REPEATED = '10302';
     /* 订单取消失败 */
     const CODE_ORDER_CANCEL_FAILED = '10303';
+    
+    //--------------------------------------------------------------------------------------------------------------
+    //
+    // ORDER CODE 值范围 = 10400-10499
+    // 
+    //--------------------------------------------------------------------------------------------------------------
+    /* 超过每日最大投票数 */
+    const CODE_VOTE_OVER_DAY_MAX = '10400';
+    
     //--------------------------------------------------------------------------------------------------------------
     //
     // 对应描述
@@ -96,6 +105,9 @@ class Response extends ApiResponse{
             self::CODE_ORDER_CREATE_FAILED => '下单失败！',
             self::CODE_ORDER_PAY_REPEATED => '重复支付！',
             self::CODE_ORDER_CANCEL_FAILED => '订单取消失败！',
+            
+            /* VOTE */
+            self::CODE_VOTE_OVER_DAY_MAX => '每天最多只能投 {param} 票'
         ];
     }
 }

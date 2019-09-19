@@ -7,7 +7,8 @@ namespace common\components\redis\datas;
  *
  * @author Administrator
  */
-class RedisSortedSet extends RedisBase {
+class RedisSortedSet extends RedisBase
+{
 
     /**
      * 增加元素
@@ -26,7 +27,8 @@ class RedisSortedSet extends RedisBase {
      *
      * @return int
      */
-    public function zadd($key, array $members) {
+    public function zadd($key, array $members)
+    {
         $key = self::buildKey($key);
         $redis = self::getRedis();
         $param = [];
@@ -46,7 +48,8 @@ class RedisSortedSet extends RedisBase {
      * @param string $key
      * @return int 返回Sorted Set中的成员数量，如果该Key不存在，返回0。
      */
-    public function zcard($key) {
+    public function zcard($key)
+    {
         $key = self::buildKey($key);
         $redis = self::getRedis();
         return (int) $redis->zcard($key);
@@ -65,7 +68,8 @@ class RedisSortedSet extends RedisBase {
      * @param string $max 最大分数 默认包括 $max ，不包括："($max"
      * @return int 分数指定范围内成员的数量。
      */
-    public function zcount($key, $min, $max) {
+    public function zcount($key, $min, $max)
+    {
         $key = self::buildKey($key);
         $redis = self::getRedis();
         return (int) $redis->zcount($key, $min, $max);
@@ -80,7 +84,8 @@ class RedisSortedSet extends RedisBase {
      * @param string $member
      * @return string 如果该成员存在，以字符串的形式返回其分数，否则返回nil
      */
-    public function zscore($key, $member) {
+    public function zscore($key, $member)
+    {
         $key = self::buildKey($key);
         $redis = self::getRedis();
         return $redis->zscore($key, $member);
@@ -99,7 +104,8 @@ class RedisSortedSet extends RedisBase {
      * @param string $member
      * @return string 以字符串形式表示的新分数。
      */
-    public function zincrby($key, $increment, $member) {
+    public function zincrby($key, $increment, $member)
+    {
         $key = self::buildKey($key);
         $redis = self::getRedis();
         return $redis->zincrby($key, $increment, $member);
@@ -119,7 +125,8 @@ class RedisSortedSet extends RedisBase {
      * @param bool $WITHSCORES  结果是否包括分数
      * @return array 返回索引在start和stop之间的成员列表。默认返回[member1,member2,member3]，$WITHSCORES = true时 返回 [member1,score1,member2,score2...]
      */
-    public function zrange($key, $start, $stop, $WITHSCORES = false) {
+    public function zrange($key, $start, $stop, $WITHSCORES = false)
+    {
         $key = self::buildKey($key);
         $redis = self::getRedis();
         return $redis->zrange($key, $start, $stop, $WITHSCORES ? 'WITHSCORES' : null);
@@ -136,7 +143,8 @@ class RedisSortedSet extends RedisBase {
      * @param bool $WITHSCORES  结果是否包括分数
      * @return array 返回索引在start和stop之间的成员列表。
      */
-    public function zrevrange($key, $start, $stop, $WITHSCORES = false) {
+    public function zrevrange($key, $start, $stop, $WITHSCORES = false)
+    {
         $key = self::buildKey($key);
         $redis = self::getRedis();
         return $redis->zrevrange($key, $start, $stop, $WITHSCORES ? 'WITHSCORES' : null);
@@ -161,7 +169,8 @@ class RedisSortedSet extends RedisBase {
      * @param int $count        返回count个成员
      * @return string|array     返回分数在指定范围内的成员列表。
      */
-    public function zrangebyscore($key, $min, $max, $WITHSCORES = false, $LIMIT = false, $offset = null, $count = null) {
+    public function zrangebyscore($key, $min, $max, $WITHSCORES = false, $LIMIT = false, $offset = null, $count = null)
+    {
         $key = self::buildKey($key);
         $redis = self::getRedis();
         return $redis->zrangebyscore($key, $min, $max, $WITHSCORES ? 'WITHSCORES' : null, $LIMIT ? "LIMIT" : null, $offset, $count);
@@ -182,7 +191,8 @@ class RedisSortedSet extends RedisBase {
      * @param int $count        返回count个成员
      * @return string|array     返回分数在指定范围内的成员列表。
      */
-    public function zrevrangebyscore($key, $max, $min, $WITHSCORES = false, $LIMIT = false, $offset = null, $count = null) {
+    public function zrevrangebyscore($key, $max, $min, $WITHSCORES = false, $LIMIT = false, $offset = null, $count = null)
+    {
         $key = self::buildKey($key);
         $redis = self::getRedis();
         return $redis->zrevrangebyscore($key, $max, $min, $WITHSCORES ? 'WITHSCORES' : null, $LIMIT ? "LIMIT" : null, $offset, $count);
@@ -197,7 +207,8 @@ class RedisSortedSet extends RedisBase {
      * @param string $member
      * @return int 如果该成员存在，则返回它的位置索引值。否则返回nil。
      */
-    public function zrank($key, $member) {
+    public function zrank($key, $member)
+    {
         $key = self::buildKey($key);
         $redis = self::getRedis();
         return $redis->zrank($key, $member);
@@ -212,7 +223,8 @@ class RedisSortedSet extends RedisBase {
      * @param type $member
      * @return int 如果该成员存在，则返回它的位置索引值。否则返回nil。
      */
-    public function zrevrank($key, $member) {
+    public function zrevrank($key, $member)
+    {
         $key = self::buildKey($key);
         $redis = self::getRedis();
         return $redis->zrevrank($key, $member);
@@ -227,7 +239,8 @@ class RedisSortedSet extends RedisBase {
      * @param string|array $member  
      * @return int 实际被删除的成员数量。
      */
-    public function zrem($key, $member) {
+    public function zrem($key, $member)
+    {
         $key = self::buildKey($key);
         $redis = self::getRedis();
         return $redis->zrem($key, ...(array) $member);
@@ -243,7 +256,8 @@ class RedisSortedSet extends RedisBase {
      * @param int $stop         结束索引，-1表示最后一个成员
      * @return int              被删除的成员数量
      */
-    public function zremrangebyrank($key, $start, $stop) {
+    public function zremrangebyrank($key, $start, $stop)
+    {
         $key = self::buildKey($key);
         $redis = self::getRedis();
         return $redis->zremrangebyrank($key, $start, $stop);
@@ -259,9 +273,37 @@ class RedisSortedSet extends RedisBase {
      * @param string $max       最大分数 默认包括 $max ，不包括："($max"
      * @return int              被删除的成员数量
      */
-    public function zremrangebyscore($key, $min, $max) {
+    public function zremrangebyscore($key, $min, $max)
+    {
         $key = self::buildKey($key);
         $redis = self::getRedis();
         return $redis->zremrangebyscore($key, $min, $max);
     }
+
+    /**
+     * 合并多个集合到一个新的集合里
+     * 
+     * @param string $destination                       计算numkeys指定键给出的有序集合的并集，并将结果存储在中destination
+     * @param array(key => weight) $members             在传递输入键和其他（可选）参数之前，必须提供输入键（）的数量。
+     * @param string $AGGREGATE                         SUM|MIN|MAX
+     * 
+     * @return 在destination的排序集中的元素数。
+     */
+    public function zunionstore($destination, array $members, $AGGREGATE = 'SUM')
+    {
+        $destination = self::buildKey($destination);
+        $redis = self::getRedis();
+
+        $KEYS = array_keys($members);
+        $WEIGHTS = array_values($members);
+        
+        foreach($KEYS as &$key){
+            $key = self::buildKey($key);
+        }
+
+        $options = array_merge($KEYS, ['WEIGHTS'], $WEIGHTS, ['AGGREGATE', $AGGREGATE]);
+
+        return $redis->zunionstore($destination, count($KEYS), array_shift($options), ...(array) $options);
+    }
+
 }

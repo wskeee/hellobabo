@@ -84,6 +84,7 @@ use common\widgets\Menu;
                             ['label' => '打印', 'icon' => 'circle-o', 'url' => ['/order_admin/print/index']],
                             ['label' => '发货', 'icon' => 'circle-o', 'url' => ['/order_admin/delivery/index']],
                             ['label' => '文章管理', 'icon' => 'circle-o', 'url' => ['/platform_admin/post/index']],
+                            ['label' => '活动管理', 'icon' => 'circle-o', 'url' => ['/platform_admin/vote-activity/index']],
                         ],
                     ],
                     [

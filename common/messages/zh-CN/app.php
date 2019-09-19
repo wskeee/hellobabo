@@ -14,6 +14,7 @@ return [
     'Batch' => '批量',
     'Into' => '入',
     'Pass' => '通过',
+    'Un Pass' => '不通过',
     'Is Del' => '是否删除',
     'Automatic Login' => '自动登录',
     
@@ -28,6 +29,7 @@ return [
     'Role' => '角色',
     'Sex' => '性别',
     'Birth' => '出生年月',
+    'Age' => '年龄',
     'Avatar' => '头像',
     'Phone' => "电话",
     'Email' => "邮箱",
@@ -206,6 +208,7 @@ return [
     'Selected' => '选中',
     'Thumb Image' => '缩略图',
     'Thumb Url' => '缩略图',
+    'Img' => '图片',
   
     //提示消息
     "Can't be empty." => '不能为空。',
@@ -360,6 +363,10 @@ return [
     'Poster' => '海报',
     'Share Thumb' => '分享缩略',
     'Commission' => '佣金',
+    'Vote Activity' => '投票活动',
+    'Vote Activities' => '活动列表',
+    'Vote Activity Hand' => '参选',
+    'Vote Activity Hands' => '参选列表',
     
     //后台-商品配置
     'Storage' => '存储',
@@ -392,6 +399,9 @@ return [
     'Page Source' => '源始模板',
     'Page Source Id' => '源始模板ID',
     'Page Is Required' => '必须传图',
+    'Check Status' => '审核状态',
+    'Check Feedback' => '审核反馈',
+    'Hand Num' => '序号',
     
     //后台-运营管理
     'Purchaser' => '购买人',
