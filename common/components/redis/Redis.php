@@ -70,6 +70,7 @@ use yii\base\Component;
  * @method mixed zrem($key, $member) 删除一个或多个元素
  * @method mixed zremrangebyrank($key, $start, $stop) 按照排名范围删除元素
  * @method mixed zremrangebyscore($key, $min, $max) 按照分数范围删除元素
+ * @method mixed zunionstore($destination, array $members, $AGGREGATE) $members = [key => weight] 合并多个合集合到一个新的集合里 <https://redis.io/commands/zunionstore>
  * 
  * RedisList
  * @method mixed rpush($key, $values) 向列表右边添加元素

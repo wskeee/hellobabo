@@ -53,6 +53,9 @@ return [
         'help' => [
             'class' => 'frontend\modules\help\Module',
         ],
+        'activity' => [
+            'class' => 'frontend\modules\activity\Module',
+        ],
     ],
     
     'params' => $params,

@@ -2,9 +2,6 @@
 
 namespace common\components\redis;
 
-use Yii;
-use yii\redis\Connection;
-
 /**
  * @property Redis $r Redis
  */

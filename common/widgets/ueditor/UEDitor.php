@@ -5,7 +5,6 @@ namespace common\widgets\ueditor;
 use yii\helpers\BaseHtml;
 use yii\helpers\Html;
 use yii\helpers\Json;
-use yii\web\View;
 use yii\widgets\InputWidget;
 
 /**
