@@ -40,8 +40,7 @@ class GetHandList extends BaseAction
 
         if ($keyword == "") {
             $start = ($page - 1) * $limit;
-            $rankInfo = VoteService::getHandAllInfo($activity_id, $start, $start + $limit);
-            $rank = $rankInfo['rank'];
+            $rank = VoteService::getHandAllRanklist($activity_id, $start, $start + $limit);
             $ids = array_keys($rank);
         }
 
@@ -62,13 +61,6 @@ class GetHandList extends BaseAction
         $query->andFilterWhere(['ActivityHand.num' => $keyword]);
         $query->andFilterWhere(['ActivityHand.id' => $ids]);
 
-        //计算总数
-        if ($get_total) {
-            $all_info = VoteService::getHandAllInfo($activity_id);
-        }
-
-        //$query->offset(($page - 1) * $limit)->limit($limit);
-
         $hands = ArrayHelper::index($query->all(), 'id');
         $list = [];
         if ($keyword != "") {
@@ -84,7 +76,7 @@ class GetHandList extends BaseAction
         }
 
         return new Response(Response::CODE_COMMON_OK, null, [
-            'total' => $get_total ? $all_info['max_hand'] : 0,
+            'total' => $get_total ? VoteService::getHandAllNum($activity_id) : 0,
             'page' => $page,
             'list' => $list,
         ]);
