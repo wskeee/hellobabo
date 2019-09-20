@@ -53,10 +53,7 @@ class GetHandList extends BaseAction
                     'ActivityHand.target_img',
                 ])
                 ->from(['ActivityHand' => VoteActivityHand::tableName()])
-                ->where(
-                [
-                    'ActivityHand.activity_id' => $activity_id,
-                    'ActivityHand.check_status' => VoteActivityHand::CHECK_STATUC_SUCCESS,]);
+                ->where(['ActivityHand.activity_id' => $activity_id]);
 
         $query->andFilterWhere(['ActivityHand.num' => $keyword]);
         $query->andFilterWhere(['ActivityHand.id' => $ids]);
