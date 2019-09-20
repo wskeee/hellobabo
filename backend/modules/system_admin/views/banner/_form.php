@@ -31,9 +31,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'link')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'type')->radioList(Banner::$contentType) ?>
+    <?php $form->field($model, 'type')->radioList(Banner::$contentType) ?>
     
-    <?= $form->field($model, 'target')->radioList(Banner::$targetType) ?>
+    <?php $form->field($model, 'target')->radioList(Banner::$targetType) ?>
     
     <?= $form->field($model, 'is_publish')->widget(SwitchInput::class, [
         'pluginOptions' => [

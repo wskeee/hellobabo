@@ -2,16 +2,14 @@
 
 namespace common\models\activity;
 
-use apiend\components\voterank\VoteService;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "{{%vote_activity_hand}}".
+ * This is the model class for table "{{%vote_activity_hand_apply}}".
  *
  * @property int $id
- * @property int $num 序号
  * @property int $activity_id 活动ID,关联vote_activity,id
  * @property int $target_user_id 用户ID,关联User
  * @property string $target_name 名称
@@ -24,7 +22,7 @@ use yii\db\ActiveRecord;
  * 
  * @property VoteActivity $activity 活动
  */
-class VoteActivityHand extends ActiveRecord
+class VoteActivityHandApply extends ActiveRecord
 {
 
     const CHECK_STATUS_WAITING = 0;
@@ -42,9 +40,9 @@ class VoteActivityHand extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%vote_activity_hand}}';
+        return '{{%vote_activity_hand_apply}}';
     }
-    
+
     public function behaviors()
     {
         return [TimestampBehavior::class];
@@ -56,7 +54,7 @@ class VoteActivityHand extends ActiveRecord
     public function rules()
     {
         return [
-            [['num', 'activity_id', 'target_user_id', 'target_age', 'check_status', 'created_at', 'updated_at'], 'integer'],
+            [['activity_id', 'target_user_id', 'target_age', 'check_status', 'created_at', 'updated_at'], 'integer'],
             [['target_name'], 'string', 'max' => 50],
             [['target_img', 'check_feedback'], 'string', 'max' => 255],
         ];
@@ -69,7 +67,6 @@ class VoteActivityHand extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'num' => Yii::t('app', 'Hand Num'),
             'activity_id' => Yii::t('app', 'Activity'),
             'target_user_id' => Yii::t('app', 'User'),
             'target_name' => Yii::t('app', 'Name'),
@@ -81,11 +78,12 @@ class VoteActivityHand extends ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
-    
+
     /**
      * @return VoteActivity 
      */
-    public function getActivity(){
+    public function getActivity()
+    {
         return $this->hasOne(VoteActivity::class, ['id' => 'activity_id']);
     }
 

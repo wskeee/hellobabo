@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="vote-activity-view">
     <p>
         <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(I18NUitl::t('app', '{Vote Activity Hand}{Check}'), ['/platform_admin/vote-activity-hand/index', 'activity_id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(I18NUitl::t('app', '{Vote Activity Hand}{Check}'), ['/platform_admin/vote-activity-hand-apply/index', 'activity_id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a(I18NUitl::t('app', '{Activity}{Statistics}'), ['/platform_admin/vote-activity/info', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 

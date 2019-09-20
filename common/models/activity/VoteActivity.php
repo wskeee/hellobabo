@@ -11,6 +11,7 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property string $name 名称
  * @property string $cover_url 封面路径
+ * @property string $share_poster_url 分享海报路径
  * @property string $content 内容
  * @property int $start_time 开始时间
  * @property int $end_time 结束时间
@@ -36,7 +37,7 @@ class VoteActivity extends ActiveRecord
             [['id', 'is_publish'], 'integer'],
             [['content', 'start_time', 'end_time'], 'string'],
             [['name'], 'string', 'max' => 50],
-            [['cover_url'], 'string', 'max' => 255],
+            [['cover_url','share_poster_url'], 'string', 'max' => 255],
             [['id'], 'unique'],
         ];
     }
@@ -50,6 +51,7 @@ class VoteActivity extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
             'cover_url' => Yii::t('app', 'Cover'),
+            'share_poster_url' => Yii::t('app', 'Poster'),
             'content' => Yii::t('app', 'Content'),
             'start_time' => Yii::t('app', 'Start Time'),
             'end_time' => Yii::t('app', 'End Time'),

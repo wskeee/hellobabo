@@ -4,15 +4,15 @@ namespace apiend\modules\v1\actions\activity;
 
 use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
-use common\models\activity\VoteActivityHand;
+use common\models\activity\VoteActivityHandApply;
 use Yii;
 
 /**
- * 保存参赛数据
+ * 保存申请参赛数据
  *
  * @author Administrator
  */
-class SaveHand extends BaseAction
+class SaveApplyHand extends BaseAction
 {
 
     protected $requiredParams = ['activity_id', 'target_name', 'target_age', 'target_img'];
@@ -23,9 +23,9 @@ class SaveHand extends BaseAction
         $hand_id = $this->getSecretParam('id');
 
         if ($hand_id != null) {
-            $model = VoteActivityHand::findOne(['id' => $hand_id]);
+            $model = VoteActivityHandApply::findOne(['id' => $hand_id]);
         } else {
-            $model = new VoteActivityHand([
+            $model = new VoteActivityHandApply([
                 'activity_id' => $activity_id,
                 'target_user_id' => Yii::$app->user->id,
             ]);
@@ -33,10 +33,6 @@ class SaveHand extends BaseAction
 
         if (!$model) {
             return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => '数据']);
-        }
-
-        if ($model->check_status == 2) {
-            return new Response(Response::CODE_COMMON_FORBIDDEN);
         }
 
         $model->setAttributes([
