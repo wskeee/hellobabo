@@ -1,7 +1,7 @@
 <?php
 
-use common\models\activity\searchs\VoteActivityHandSearch;
-use common\models\activity\VoteActivityHand;
+use common\models\activity\searchs\VoteActivityHandApplySearch;
+use common\models\activity\VoteActivityHandApply;
 use common\utils\I18NUitl;
 use common\widgets\btnloader\BtnLoaderAsset;
 use common\widgets\viewer\ViewerAsset;
@@ -16,7 +16,7 @@ BtnLoaderAsset::register($this);
 ViewerAsset::register($this);
 
 /* @var $this View */
-/* @var $searchModel VoteActivityHandSearch */
+/* @var $searchModel VoteActivityHandApplySearch */
 /* @var $dataProvider ActiveDataProvider */
 
 $this->title = I18NUitl::t('app', '{Vote Activity Hand}{Check}');
@@ -49,10 +49,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => ['style' => 'width:40px;'],
             ],
             [
-                'attribute' => 'num',
-                'headerOptions' => ['style' => 'width:60px;'],
-            ],
-            [
                 'attribute' => 'target_name',
                 'headerOptions' => ['style' => 'width:120px;'],
             ],
@@ -72,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'check_status',
                 'headerOptions' => ['style' => 'width:80px;'],
                 'value' => function($model) {
-                    return VoteActivityHand::$checkStatusNameMap[$model->check_status];
+                    return VoteActivityHandApply::$checkStatusNameMap[$model->check_status];
                 }
             ],
             'check_feedback',
@@ -95,7 +91,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
 </div>
 <!-- 解决 -->
-<?= $this->render('_modal_solve', ['url' => '/platform_admin/vote-activity-hand/check']) ?>
+<?= $this->render('_modal_solve', ['url' => '/platform_admin/vote-activity-hand-apply/check']) ?>
 
 <script>
     window.onload = function () {
