@@ -63,7 +63,7 @@ class VoteActivity extends ActiveRecord
             'content' => Yii::t('app', 'Content'),
             'start_time' => Yii::t('app', 'Start Time'),
             'end_time' => Yii::t('app', 'End Time'),
-            'is_publish' => Yii::t('app', 'Is Publish'),
+            'is_publish' => Yii::t('app', 'Publish'),
             'status' => Yii::t('app', 'Status'),
         ];
     }

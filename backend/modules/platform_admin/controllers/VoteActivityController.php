@@ -7,16 +7,16 @@ use common\models\activity\searchs\VoteActivitySearch;
 use common\models\activity\VoteActivity;
 use common\models\activity\VoteActivityHand;
 use common\utils\DateUtil;
+use common\widgets\grid\GridViewChangeSelfController;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 /**
  * VoteActivityController implements the CRUD actions for VoteActivity model.
  */
-class VoteActivityController extends Controller
+class VoteActivityController extends GridViewChangeSelfController
 {
 
     /**

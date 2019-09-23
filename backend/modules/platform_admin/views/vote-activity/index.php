@@ -2,6 +2,7 @@
 
 use common\models\activity\searchs\VoteActivitySearch;
 use common\utils\I18NUitl;
+use common\widgets\grid\GridViewChangeSelfColumn;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -21,18 +22,20 @@ $this->title = Yii::t('app', 'Vote Activities');
         <?= Html::a(I18NUitl::t('app', '{Create} {Vote Activity}'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?= GridView::widget([
+    <?=
+    GridView::widget([
         'dataProvider' => $dataProvider,
         'tableOptions' => ['class' => 'table table-striped table-bordered wsk-table'],
         'layout' => "{items}\n{summary}\n{pager}",
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'name',
             'start_time:datetime',
             'end_time:datetime',
-            'is_publish',
-
+            [
+                'class' => GridViewChangeSelfColumn::class,
+                'attribute' => 'is_publish',
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'buttons' => [
@@ -44,5 +47,6 @@ $this->title = Yii::t('app', 'Vote Activities');
                 'template' => '{view}',
             ],
         ],
-    ]); ?>
+    ]);
+    ?>
 </div>
