@@ -21,7 +21,7 @@ class GetDetail extends BaseAction
         
         $model = VoteActivity::findOne(['id' => $activity_id]);
 
-        return new Response(Response::CODE_COMMON_OK, null, $model);
+        return new Response(Response::CODE_COMMON_OK, null, $model->toDetail());
     }
 
 }

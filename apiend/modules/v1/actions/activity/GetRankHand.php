@@ -28,7 +28,7 @@ class GetRankHand extends BaseAction
         if ($hid != null) {
             $model = VoteActivityHand::findOne(['id' => $hid]);
             $aid = $model->activity_id;
-            $data = ['activity' => $model->activity->toArray()];
+            $data = ['activity' => $model->activity->toDetail()];
         } else {
             // 获取指定hand 排行数据
             $rank = VoteService::getHandAllRanklist($aid, $rank_num, $rank_num + 1);

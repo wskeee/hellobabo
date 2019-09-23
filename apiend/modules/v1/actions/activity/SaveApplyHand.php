@@ -4,6 +4,7 @@ namespace apiend\modules\v1\actions\activity;
 
 use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
+use common\models\activity\VoteActivity;
 use common\models\activity\VoteActivityHandApply;
 use Yii;
 
@@ -33,6 +34,10 @@ class SaveApplyHand extends BaseAction
 
         if (!$model) {
             return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => '数据']);
+        }
+        
+        if ($model->activity->status == VoteActivity::STATUS_END) {
+            return new Response(Response::CODE_COMMON_FORBIDDEN, "活动已结束");
         }
 
         $model->setAttributes([
