@@ -20,6 +20,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'cover_url')->widget(ImagePicker::class) ?>
+    
+    <?= $form->field($model, 'share_poster_url')->widget(ImagePicker::class) ?>
 
     <?= $form->field($model, 'start_time')->widget(DatePicker::class,[
         'pluginOptions' => [

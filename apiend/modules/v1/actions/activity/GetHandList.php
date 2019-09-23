@@ -5,6 +5,7 @@ namespace apiend\modules\v1\actions\activity;
 use apiend\components\voterank\VoteService;
 use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
+use common\models\activity\VoteActivity;
 use common\models\activity\VoteActivityHand;
 use Yii;
 use yii\db\Query;
@@ -78,4 +79,5 @@ class GetHandList extends BaseAction
             'list' => $list,
         ]);
     }
+
 }

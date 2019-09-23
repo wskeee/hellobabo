@@ -23,9 +23,9 @@ class AddHandReady extends BaseAction
 
         $activity = VoteActivity::findOne(['id' => $activity_id]);
         $model = VoteActivityHandApply::findOne(['activity_id' => $activity_id, 'target_user_id' => Yii::$app->user->id]);
-
+        
         return new Response(Response::CODE_COMMON_OK, null, [
-            'activity' => $activity,
+            'activity' => $activity->toDetail(),
             'activity_hand' => $model,
         ]);
     }
