@@ -37,7 +37,7 @@ class SaveApplyHand extends BaseAction
         }
         
         if ($model->activity->status == VoteActivity::STATUS_END) {
-            return new Response(Response::CODE_COMMON_FORBIDDEN, "活动已结束");
+            return new Response(Response::CODE_COMMON_FORBIDDEN, "活动已结束");;
         }
 
         $model->setAttributes([

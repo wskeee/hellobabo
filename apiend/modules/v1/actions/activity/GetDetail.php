@@ -13,13 +13,18 @@ use common\models\activity\VoteActivity;
  */
 class GetDetail extends BaseAction
 {
+
     protected $requiredParams = ['activity_id'];
-    
+
     public function run()
     {
         $activity_id = $this->getSecretParam('activity_id');
-        
+
         $model = VoteActivity::findOne(['id' => $activity_id]);
+
+        if (!$model || $model->is_publish == 0) {
+            new Response(Response::CODE_COMMON_NOT_FOUND, '活动未找到或者未发布！');
+        }
 
         return new Response(Response::CODE_COMMON_OK, null, $model->toDetail());
     }
