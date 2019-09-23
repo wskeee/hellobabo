@@ -67,7 +67,8 @@ class VoteActivityHandApplyController extends Controller
                     $hand = new VoteActivityHand([
                         'activity_id' => $apply_hand->activity_id,
                         'target_user_id' => $apply_hand->target_user_id,
-                        'num' => VoteService::getNum($apply_hand->activity_id)
+                        'num' => VoteService::getNum($apply_hand->activity_id),
+                        'check_status' => VoteActivityHand::CHECK_STATUC_SUCCESS,
                     ]);
                     $is_new = true;
                 } else {

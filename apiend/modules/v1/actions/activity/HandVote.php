@@ -28,10 +28,6 @@ class HandVote extends BaseAction
             return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => '数据']);
         }
 
-        if ($model->check_status != 2) {
-            return new Response(Response::CODE_COMMON_FORBIDDEN);
-        }
-
         // 当前用户今天投票总数，计算是否超出最大投票数
         $response = VoteService::vote($model->activity_id, $hand_id, $uid);
         
