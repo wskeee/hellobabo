@@ -31,18 +31,18 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
             'tableOptions' => ['class' => 'table table-striped table-bordered wsk-table'],
             'layout' => "{items}\n{pager}",
             'columns' => [
-                    [
+                [
                     'attribute' => 'name',
                     'headerOptions' => ['style' => 'width:120px']
                 ],
-                    [
+                [
                     'label' => I18NUitl::t('app', '{Spec}{Item}'),
                     'format' => 'raw',
                     'value' => function($model) {
                         return "<div class='spec-box' data-id='$model->id'></div>";
                     }
                 ],
-                    [
+                [
                     'class' => 'yii\grid\ActionColumn',
                     'buttons' => [
                         'add' => function($url, $specModel) use($model) {
@@ -108,7 +108,8 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
     //规格项Dom
     var spec_item_dom = <?= json_encode($spec_item_dom) ?>;
     var spec_item_price_tr_dom = <?= json_encode($spec_item_price_tr_dom) ?>;
-    var spec_items_map = <?= json_encode(ArrayHelper::index($goodsSpecItems, null, 'spec_id')) ?>;
+    // 空数据会转成数组，所以空数据时设置强制转换为对象
+    var spec_items_map = <?= json_encode(ArrayHelper::index($goodsSpecItems, null, 'spec_id'), count($goodsSpecItems) == 0 ? JSON_FORCE_OBJECT : null) ?>;
 
     //已经存在的规格项
     var spec_items = {};
@@ -220,8 +221,9 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
                     //成功
                     $.notify({message: '操作成功！'}, {type: 'success'});
                     //重新刷新页面
-                    delSpecItem(specItemId);
                     delSpecItemToMap(specItemId);
+                    delSpecItem(specItemId);
+                    reflashItemPrice();
                 } else {
                     //错误
                     $.notify({message: '操作失败！\n' + r.msg}, {type: 'danger'});
@@ -506,6 +508,7 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
         //必须所有规格都有值
         for (var i = 0, len = specs.length; i < len; i++) {
             if ($('.spec-box[data-id=' + specs[i] + '] .selected').length == 0) {
+                $('.spec-price-box .table tbody').empty();
                 return;
             }
         }

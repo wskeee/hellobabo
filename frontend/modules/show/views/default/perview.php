@@ -18,7 +18,7 @@ foreach ($app_data['scenes'] as $scene) {
              style="pointer-events:none; overflow:hidden; position: absolute; left: 0px; top: 0px; display: block;">
         </div>
     </div>
-    <div class="float-view">
+    <div class="float-view" style="display: none">
         <div class="share-btn">
             <img src="<?= $sourcePath ?>/images/share.png">
             <span class="txt share-txt">赚￥</span>

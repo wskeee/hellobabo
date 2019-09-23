@@ -106,6 +106,7 @@ class AttSpecController extends GridViewChangeSelfController
         Yii::$app->response->format = 'json';
         $attrs = \Yii::$app->request->post('attrs', []);
         try {
+            $goodsAttrRefRows = [];
             //删除已存在的属性
             GoodsAttValueRef::updateAll(['is_del' => 1], ['goods_id' => $goods_id]);
             foreach ($attrs as $attr_id => $values) {
@@ -114,8 +115,10 @@ class AttSpecController extends GridViewChangeSelfController
                     $goodsAttrRefRows[] = [$goods_id, $attr_id, $value, 0];
                 }
             }
-            //更新选择类型引用数据
-            MysqlUtil::batchInsertDuplicateUpdate(GoodsAttValueRef::tableName(), ['goods_id', 'attribute_id', 'attribute_value_id', 'is_del'], $goodsAttrRefRows, ['is_del']);
+            if (count($goodsAttrRefRows) > 0) {
+                //更新选择类型引用数据
+                MysqlUtil::batchInsertDuplicateUpdate(GoodsAttValueRef::tableName(), ['goods_id', 'attribute_id', 'attribute_value_id', 'is_del'], $goodsAttrRefRows, ['is_del']);
+            }
         } catch (\Exception $ex) {
             return new ApiResponse(ApiResponse::CODE_COMMON_SAVE_DB_FAIL, $ex->getMessage(), $ex);
         }
@@ -130,33 +133,31 @@ class AttSpecController extends GridViewChangeSelfController
     {
         Yii::$app->response->format = 'json';
         Yii::info(Yii::$app->request->rawBody);
-        $post = json_decode(Yii::$app->request->rawBody,true);
-        $specs = ArrayHelper::getValue($post, 'specs' , []);
+        $post = json_decode(Yii::$app->request->rawBody, true);
+        $specs = ArrayHelper::getValue($post, 'specs', []);
         try {
             GoodsSpecPrice::updateAll(['is_del' => 1], ['goods_id' => $goods_id]);
             foreach ($specs as $spec) {
                 //准备数据
                 $rows[] = [
-                    $goods_id, 
-                    $spec['goods_cost'], 
-                    $spec['goods_price'], 
-                    $spec['scene_num'], 
-                    $spec['spec_key'], 
-                    $spec['spec_key_name'], 
-                    $spec['spec_img_url'], 
-                    $spec['spec_des'], 
+                    $goods_id,
+                    $spec['goods_cost'],
+                    $spec['goods_price'],
+                    $spec['scene_num'],
+                    $spec['spec_key'],
+                    $spec['spec_key_name'],
+                    $spec['spec_img_url'],
+                    $spec['spec_des'],
                     $spec['store_count'],
                     0,
                 ];
             }
             //更新选择类型引用数据
-            MysqlUtil::batchInsertDuplicateUpdate(GoodsSpecPrice::tableName(), 
-                    ['goods_id', 'goods_cost', 'goods_price', 'scene_num', 'spec_key', 'spec_key_name', 'spec_img_url', 'spec_des', 'store_count','is_del'], $rows, 
-                    ['goods_cost', 'goods_price','scene_num', 'spec_key_name', 'spec_img_url', 'spec_des', 'store_count','is_del']);
+            MysqlUtil::batchInsertDuplicateUpdate(GoodsSpecPrice::tableName(), ['goods_id', 'goods_cost', 'goods_price', 'scene_num', 'spec_key', 'spec_key_name', 'spec_img_url', 'spec_des', 'store_count', 'is_del'], $rows, ['goods_cost', 'goods_price', 'scene_num', 'spec_key_name', 'spec_img_url', 'spec_des', 'store_count', 'is_del']);
         } catch (\Exception $ex) {
             return new ApiResponse(ApiResponse::CODE_COMMON_SAVE_DB_FAIL, $ex->getMessage(), $ex);
         }
-        return new ApiResponse(ApiResponse::CODE_COMMON_OK,null,$post);
+        return new ApiResponse(ApiResponse::CODE_COMMON_OK, null, $post);
     }
 
     /**
