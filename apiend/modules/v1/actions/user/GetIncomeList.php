@@ -5,6 +5,7 @@ namespace apiend\modules\v1\actions\user;
 use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
 use common\models\order\OrderRecommend;
+use common\models\system\Config;
 use common\models\User;
 use Yii;
 
@@ -35,11 +36,12 @@ class GetIncomeList extends BaseAction
             $item['buy_user'] = $recommend->creater->nickname;
             $item['income'] = $recommend->amount;
             $item['time'] = date('Y-m-d H:i:s', $recommend->created_at);
-            
-            $list []= $item;
+
+            $list [] = $item;
         }
 
         return new Response(Response::CODE_COMMON_OK, null, [
+            'share_money_help_id' => Config::getValue('share_make_money_help_id'),
             'total_money' => $amount,
             'list' => $list,
         ]);
