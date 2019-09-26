@@ -50,4 +50,9 @@ return [
             'RESET_PASSWORD' => '59f9202d7f0000017d6283032c3f6631',    //重置密码短信模板ID
         ]
     ],
+    
+    /* 快递配置 */
+    'express' => [
+      'AppCode' => '23cea83c5b004bbaadf08ad95d80ff9d'  
+    ],
 ];

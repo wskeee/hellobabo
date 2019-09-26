@@ -2,11 +2,13 @@
 
 namespace backend\modules\order_admin\controllers;
 
+use common\models\api\ApiResponse;
 use common\models\order\Order;
 use common\models\order\OrderAction;
 use common\models\order\searchs\WorkflowDeliverySearch;
 use common\models\order\WorkflowDelivery;
 use common\models\platform\Express;
+use common\utils\ExpressUtil;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -119,36 +121,44 @@ class DeliveryController extends Controller
     public function actionShipping($id)
     {
         $model = $this->findModel($id);
-        
+
         if ($model->load(Yii::$app->request->post()) && $model->status == WorkflowDelivery::STATUS_WAIT_START) {
             $tran = \Yii::$app->db->beginTransaction();
-            $express = Express::findOne(['code' => $model->shipping_code]);;
-            
             $model->start_at = time();
             $model->end_at = time();
             $model->status = WorkflowDelivery::STATUS_ENDED;
             $model->worker_id = \Yii::$app->user->id;
-            $model->shipping_name = $express->name;
             $order = $model->order;
             $order->shipping_at = time();
             $order->order_status = Order::ORDER_STATUS_WAIT_CONFIRM;
             if ($model->save() && $order->save()) {
                 //记录订单日志 
                 OrderAction::saveLog([$model->order_id], '发货', '订单已发货！');
-                
+
                 $tran->commit();
                 return $this->redirect(['view', 'id' => $model->id]);
-            }else{
+            } else {
                 $tran->rollBack();
-                $error = implode(',', $model->getErrorSummary(true)).implode(',', $order->getErrorSummary(true));
-                        
-                \Yii::$app->session->addFlash('danger', '保存失败！'.$error);
+                $error = implode(',', $model->getErrorSummary(true)) . implode(',', $order->getErrorSummary(true));
+
+                \Yii::$app->session->addFlash('danger', '保存失败！' . $error);
             }
         }
 
         return $this->render('shipping', [
                     'model' => $model,
         ]);
+    }
+
+    /**
+     * 查询快递信息
+     * 
+     * @param string $sn 快递单号
+     */
+    public function actionQueryExpress($sn)
+    {
+        \Yii::$app->response->format = 'json';
+        return new ApiResponse(ApiResponse::CODE_COMMON_OK,null, ExpressUtil::query($sn, null, true));
     }
 
     /**
