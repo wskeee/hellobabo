@@ -122,20 +122,24 @@ class VoteActivityController extends GridViewChangeSelfController
     {
         $model = $this->findModel($id);
         // 活动总统计
-        $all_info = VoteService::getHandAllInfo($id);
+        $all_rank = VoteService::getHandAllRanklist($id);
         // 月统计
         $len = DateUtil::getMonthNum($model->start_time, $model->end_time);
         $months = [];
         // 先合并所有id
-        $ids = array_keys($all_info['rank']);
+        $ids = array_keys($all_rank);
         for ($i = 0; $i <= $len; $i++) {
             $month_time = strtotime("$model->start_time +$i month");
             $month_str = date('Ym', $month_time);
-            $month = VoteService::getHandMonthInfo($model->id, $month_str);
+            $month = [
+                'rank' => VoteService::getHandMonthRanklist($model->id, $month_str)
+            ];
             $weeks = DateUtil::getWeeksOfMonth($month_str);
             $weekInfos = [];
             foreach ($weeks as $week_num => $week_date) {
-                $weekInfo = VoteService::getHandWeekInfo($model->id, $month_str, $week_num);
+                $weekInfo = [
+                    'rank' => VoteService::getHandWeekRanklist($model->id, $month_str, $week_num)
+                ];
                 $weekInfo['num'] = $week_num;
                 $weekInfo['date'] = $week_date;
                 $weekInfos [] = $weekInfo;
@@ -150,16 +154,20 @@ class VoteActivityController extends GridViewChangeSelfController
         }
 
         $hands = ArrayHelper::index(VoteActivityHand::find()->where(['id' => array_unique($ids)])->asArray()->all(), 'id');
-        
+
         // 转换总排行榜
-        $all_info['rank'] = $this->getRankData($all_info['rank'], $hands);
-        foreach($months as &$month){
+        $all_rank = $this->getRankData($all_rank, $hands);
+        $all_info = [
+            'max_hand' => VoteService::getHandAllNum($model->id),
+            'rank' => $all_rank
+        ];
+        foreach ($months as &$month) {
             $month['rank'] = $this->getRankData($month['rank'], $hands);
-            foreach($month['weeks'] as &$week){
+            foreach ($month['weeks'] as &$week) {
                 $week['rank'] = $this->getRankData($week['rank'], $hands);
             }
         }
-        
+
         return $this->render('info', [
                     'model' => $model,
                     'all_info' => $all_info,
