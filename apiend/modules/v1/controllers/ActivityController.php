@@ -8,6 +8,7 @@ use apiend\modules\v1\actions\activity\GetDetail;
 use apiend\modules\v1\actions\activity\GetHandList;
 use apiend\modules\v1\actions\activity\GetNew;
 use apiend\modules\v1\actions\activity\GetRankHand;
+use apiend\modules\v1\actions\activity\GetWeekHandRankList;
 use apiend\modules\v1\actions\activity\HandVote;
 use apiend\modules\v1\actions\activity\SaveApplyHand;
 
@@ -32,6 +33,7 @@ class ActivityController extends ApiController
             'add-hand-ready' => ['post'],
             'save-apply-hand' => ['post'],
             'get-hand-list' => ['get'],
+            'get-week-hand-rank-list' => ['get'],
             'hand-vote' => ['post'],
             'get-rank-hand' => ['get'],
         ];
@@ -49,6 +51,7 @@ class ActivityController extends ApiController
             'add-hand-ready' => ['class' => AddHandReady::class],
             'save-apply-hand' => ['class' => SaveApplyHand::class],
             'get-hand-list' => ['class' => GetHandList::class],
+            'get-week-hand-rank-list' => ['class' => GetWeekHandRankList::class],
             'hand-vote' => ['class' => HandVote::class],
             'get-rank-hand' => ['class' => GetRankHand::class],
         ];
