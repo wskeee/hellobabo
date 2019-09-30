@@ -39,8 +39,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => Html::img($model->share_poster_url, ['style' => 'width:120px;'])
             ],
-            'start_time:datetime',
-            'end_time:datetime',
+            'start_time',
+            'end_time',
             'is_publish',
             [
                 'attribute' => 'content',

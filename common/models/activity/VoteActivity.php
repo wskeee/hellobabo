@@ -84,8 +84,8 @@ class VoteActivity extends ActiveRecord
 
     public function afterFind()
     {
-        $this->start_time = date('Y-m-d', $this->start_time == 0 ? time() : $this->start_time);
-        $this->end_time = date('Y-m-d', $this->end_time == 0 ? time() : $this->end_time);
+        $this->start_time = date('Y-m-d H:i:s', $this->start_time == 0 ? time() : $this->start_time);
+        $this->end_time = date('Y-m-d H:i:s', $this->end_time == 0 ? time() : $this->end_time);
 
         $now = time();
         if ($now < strtotime($this->start_time)) {

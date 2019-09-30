@@ -30,8 +30,8 @@ $this->title = Yii::t('app', 'Vote Activities');
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'name',
-            'start_time:datetime',
-            'end_time:datetime',
+            'start_time',
+            'end_time',
             [
                 'class' => GridViewChangeSelfColumn::class,
                 'attribute' => 'is_publish',

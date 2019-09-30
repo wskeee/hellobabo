@@ -23,17 +23,9 @@ use yii\widgets\ActiveForm;
     
     <?= $form->field($model, 'share_poster_url')->widget(ImagePicker::class) ?>
 
-    <?= $form->field($model, 'start_time')->widget(DatePicker::class,[
-        'pluginOptions' => [
-            'format' => 'yyyy-mm-dd'
-        ]
-    ]) ?>
+    <?= $form->field($model, 'start_time')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'end_time')->widget(DatePicker::class,[
-        'pluginOptions' => [
-            'format' => 'yyyy-mm-dd'
-        ]
-    ]) ?>
+    <?= $form->field($model, 'end_time')->textInput(['maxlength' => true]) ?>
     
     <?= $form->field($model, 'content')->widget(UEDitor::class, []) ?>
 
