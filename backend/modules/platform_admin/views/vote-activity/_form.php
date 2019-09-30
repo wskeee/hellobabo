@@ -27,7 +27,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'end_time')->textInput(['maxlength' => true]) ?>
     
-    <?= $form->field($model, 'content')->widget(UEDitor::class, ['style' => 'display:block']) ?>
+    <?= $form->field($model, 'content')->widget(UEDitor::class) ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
