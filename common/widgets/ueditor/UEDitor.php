@@ -66,7 +66,7 @@ class UEDitor extends InputWidget {
      * input样式
      **/
     public $options = [
-        'style' => ['width' => '100%','display' => 'block']
+        'style' => ['width' => '100%','display' => 'inline-block' ,'padding' => '0px' ,'border' => 'unset']
     ];
 
     public function __construct($config = array()) {
