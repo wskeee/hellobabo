@@ -24,6 +24,7 @@ use yii\db\Query;
  * @property string $goods_cost 成本
  * @property string $goods_price 价格
  * @property string $goods_des 描述/简介
+ * @property int $type 类型 0默认 1赠送 2团购
  * @property string $cover_url 封面路径
  * @property string $video_url 视频地址
  * @property string $show_urls 展示图片地址多个使用','分隔
@@ -32,6 +33,7 @@ use yii\db\Query;
  * @property int $status 普通状态 1待发布 2已发布 3已下架
  * @property string $tags 标签，多个使用逗号分隔
  * @property string $commission 拥金
+ * @property string $params 附加参数
  * @property int $store_count 库存
  * @property int $comment_count 评论数
  * @property int $click_count 查看/击数
@@ -68,12 +70,27 @@ class Goods extends ActiveRecord
     /* 已下架 */
     const STATUS_SOLD_OUT = 3;
 
+    /* 类型  */
+    /* 默认 */
+    const TYPE_DEFAULT = 1;
+    /* 赠送、礼物 */
+    const TYPE_PRESENT = 2;
+    /* 团购 */
+    const TYPE_GROUPON = 3;
+
     /* 状态 */
 
     public static $statusKeyMap = [
         self::STATUS_UNPUBLISHED => '未发布',
         self::STATUS_PUBLISHED => '已发布',
         self::STATUS_SOLD_OUT => '已下架',
+    ];
+
+    /* 类型 */
+    public static $typeKeyMap = [
+        self::TYPE_DEFAULT => '默认',
+        self::TYPE_PRESENT => '赠送',
+        self::TYPE_GROUPON => '团购',
     ];
 
     /**
@@ -98,13 +115,14 @@ class Goods extends ActiveRecord
     {
         return [
             [['category_id', 'owner_id', 'goods_name'], 'required'],
-            [['category_id', 'model_id', 'owner_id', 'status', 'store_count', 'comment_count', 'click_count', 'share_count', 'like_count', 'sale_count', 'init_required', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['category_id', 'model_id', 'owner_id', 'type', 'status', 'store_count', 'comment_count', 'click_count', 'share_count', 'like_count', 'sale_count', 'init_required', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['goods_cost', 'goods_price', 'commission'], 'number'],
             [['goods_sn'], 'string', 'max' => 20],
             [['goods_name'], 'string', 'max' => 100],
             [['goods_title'], 'string', 'max' => 50],
             [['show_urls'], 'arrTostr'],
             [['goods_des', 'cover_url', 'video_url', 'poster_url', 'share_thumb_url', 'tags'], 'string', 'max' => 255],
+            [['params'], 'string'],
             [['tags'], 'tagVerify',],
         ];
     }
@@ -153,6 +171,7 @@ class Goods extends ActiveRecord
             'category_id' => Yii::t('app', 'Category'),
             'model_id' => Yii::t('app', 'Model'),
             'owner_id' => Yii::t('app', 'Owner'),
+            'type' => Yii::t('app', 'Type'),
             'commission' => Yii::t('app', 'Commission'),
             'goods_name' => Yii::t('app', 'Name'),
             'goods_title' => Yii::t('app', 'Title'),
@@ -166,6 +185,7 @@ class Goods extends ActiveRecord
             'share_thumb_url' => Yii::t('app', 'Share Thumb'),
             'status' => Yii::t('app', 'Status'),
             'tags' => Yii::t('app', 'Tag'),
+            'params' => Yii::t('app', 'Params'),
             'store_count' => I18NUitl::t('app', '{Store}{Count}'),
             'comment_count' => I18NUitl::t('app', '{Comment}{Count}'),
             'click_count' => I18NUitl::t('app', '{Click}{Count}'),

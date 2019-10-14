@@ -2,8 +2,10 @@
 
 namespace console\controllers;
 
+use common\models\order\GrouponRecord;
 use common\models\order\Order;
 use common\models\order\OrderAction;
+use common\models\order\OrderGoods;
 use yii\console\Controller;
 use yii\console\ExitCode;
 use yii\db\Query;
@@ -40,6 +42,10 @@ class OrderController extends Controller
                 'order_status' => Order::ORDER_STATUS_INVALID,
                 'updated_at' => time(),
                     ], ['id' => ArrayHelper::getColumn($result, 'id')]);
+            //作废商品
+            OrderGoods::updateAll(['status' => OrderGoods::STATUS_INVALID], ['order_id' => ArrayHelper::getColumn($result, 'id')]);
+            //作废团购记录
+            GrouponRecord::updateAll(['status' => GrouponRecord::STATUS_INVALID], ['order_id' => ArrayHelper::getColumn($result, 'id')]);
 
             OrderAction::saveLog(ArrayHelper::getColumn($result, 'id'), '过期作废', '订单过期，系统自动作废');
         }

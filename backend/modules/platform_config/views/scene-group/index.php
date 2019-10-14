@@ -1,5 +1,6 @@
 <?php
 
+use common\models\goods\SceneGroup;
 use common\models\goods\searchs\SceneGroupSearch;
 use common\utils\I18NUitl;
 use common\widgets\grid\GridViewChangeSelfColumn;
@@ -17,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="scene-group-index">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?= Html::a(I18NUitl::t('app', '{Create}{Scene}{Group}'), ['create'], ['class' => 'btn btn-success']) ?>
@@ -26,10 +27,18 @@ $this->params['breadcrumbs'][] = $this->title;
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        'tableOptions' => ['class' => 'table table-striped table-bordered wsk-table'],
+        'layout' => "{items}\n{summary}\n{pager}",
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'name',
+            [
+                'attribute' => 'cover_url',
+                'format' => 'raw',
+                'value' => function($model) {
+                    return Html::img($model->cover_url, ['style' => 'width:100px']);
+                }
+            ],
             'des',
             [
                 'attribute' => 'is_del',

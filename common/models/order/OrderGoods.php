@@ -13,6 +13,8 @@ use yii\db\ActiveRecord;
  *
  * @property int $id
  * @property int $order_id 订单ID，关联order表id字段
+ * @property int $type 类型 0默认 1赠送 2团购
+ * @property int $groupon_id 团购ID，关联groupon,id
  * @property string $order_sn 订单编号
  * @property int $goods_id  商品（媒体）ID，关联media表id字段
  * @property string $goods_name 订单名称
@@ -20,6 +22,7 @@ use yii\db\ActiveRecord;
  * @property string $goods_price 商品价格
  * @property string $goods_cost 商品成本
  * @property int $goods_num 购买数
+ * @property string $goods_params 附加参数
  * @property string $user_cover_url 用户封面路径
  * @property int $spec_id 规格id
  * @property string $spec_key 商品规格key
@@ -38,6 +41,7 @@ use yii\db\ActiveRecord;
  * 
  * @property Order $order 订单
  * @property Goods $goods 商品
+ * @property Groupon $groupon 
  * @property OrderGoodsMaterial[] $orderGoodsMaterials 订单素材
  * @property OrderGoodsScene[] $orderGoodsScenes 订单场景
  * @property OrderGoodsScenePage[] $orderGoodsScenePages 订单场景页
@@ -91,7 +95,7 @@ class OrderGoods extends ActiveRecord
     {
         return '{{%order_goods}}';
     }
-    
+
     public function behaviors()
     {
         return [TimestampBehavior::class];
@@ -104,11 +108,12 @@ class OrderGoods extends ActiveRecord
     {
         return [
             [['order_id', 'goods_id', 'created_by'], 'required'],
-            [['order_id', 'goods_id', 'goods_num', 'spec_id', 'scene_num', 'status', 'init_at', 'upload_finish_at', 'design_at', 'print_at', 'is_del', 'created_by', 'created_at', 'updated_at'], 'integer'],
+            [['order_id', 'goods_id', 'groupon_id', 'goods_num', 'spec_id', 'type', 'scene_num', 'status', 'init_at', 'upload_finish_at', 'design_at', 'print_at', 'is_del', 'created_by', 'created_at', 'updated_at'], 'integer'],
             [['goods_price', 'goods_cost', 'amount'], 'number'],
             [['order_sn'], 'string', 'max' => 20],
             [['goods_name', 'spec_key', 'spec_key_name'], 'string', 'max' => 100],
             [['goods_img', 'user_cover_url'], 'string', 'max' => 255],
+            [['goods_params'], 'string'],
         ];
     }
 
@@ -120,7 +125,9 @@ class OrderGoods extends ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'order_id' => Yii::t('app', 'Order'),
+            'groupon_id' => Yii::t('app', 'Groupon'),
             'order_sn' => Yii::t('app', 'Sn'),
+            'type' => Yii::t('app', 'Type'),
             'goods_id' => Yii::t('app', 'Goods'),
             'goods_name' => Yii::t('app', 'Name'),
             'goods_img' => Yii::t('app', 'Cover'),
@@ -132,6 +139,7 @@ class OrderGoods extends ActiveRecord
             'spec_key' => Yii::t('app', 'Spec Key'),
             'spec_key_name' => Yii::t('app', 'Spec'),
             'scene_num' => Yii::t('app', 'Scene Num'),
+            'goods_params' => Yii::t('app', 'Params'),
             'amount' => Yii::t('app', 'Amount'),
             'status' => Yii::t('app', 'Status'),
             'init_at' => Yii::t('app', 'Init At'),
@@ -144,7 +152,7 @@ class OrderGoods extends ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
-    
+
     /**
      * 订单
      * @return QueryRecord
@@ -153,7 +161,7 @@ class OrderGoods extends ActiveRecord
     {
         return $this->hasOne(Order::class, ['id' => 'order_id']);
     }
-    
+
     /**
      * 商品
      * @return QueryRecord
@@ -161,6 +169,15 @@ class OrderGoods extends ActiveRecord
     public function getGoods()
     {
         return $this->hasOne(Goods::class, ['id' => 'goods_id']);
+    }
+
+    /**
+     * 团购
+     * @return QueryRecord
+     */
+    public function getGroupon()
+    {
+        return $this->hasOne(Groupon::class, ['id' => 'groupon_id']);
     }
 
     /**
@@ -180,7 +197,7 @@ class OrderGoods extends ActiveRecord
     {
         return $this->hasMany(OrderGoodsScene::class, ['order_goods_id' => 'id'])->where(['is_del' => 0]);
     }
-    
+
     /**
      * 订单场景页 
      * @return QueryRecord
@@ -189,7 +206,7 @@ class OrderGoods extends ActiveRecord
     {
         return $this->hasMany(OrderGoodsScenePage::class, ['order_goods_id' => 'id'])->where(['is_del' => 0])->with('scene');
     }
-    
+
     /**
      * 制作日志
      * @return QueryRecord
@@ -198,4 +215,5 @@ class OrderGoods extends ActiveRecord
     {
         return $this->hasMany(OrderGoodsAction::class, ['order_goods_id' => 'id'])->orderBy(['created_at' => SORT_DESC]);
     }
+
 }

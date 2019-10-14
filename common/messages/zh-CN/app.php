@@ -367,6 +367,7 @@ return [
     'Vote Activities' => '活动列表',
     'Vote Activity Hand' => '参选',
     'Vote Activity Hands' => '参选列表',
+    'Groupon' => '团购',
     
     //后台-商品配置
     'Storage' => '存储',

@@ -181,6 +181,7 @@ class Order extends ActiveRecord
                 OrderAction::saveLog([$order->id], '支付成功', "支付方式：{$order->pay_code}");
                 // 设置购买的商品为初始状态
                 OrderGoods::updateAll(['status' => OrderGoods::STATUS_INIT], ['order_id' => $order->id]);
+                GrouponRecord::updateAll(['status' => GrouponRecord::STATUS_SUCCESS], ['order_id' => $order->id]);
             } else {
                 // 用户支付失败
                 $order->order_status = Order::ORDER_STATUS_PAY_FAIL;

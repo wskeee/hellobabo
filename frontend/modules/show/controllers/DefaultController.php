@@ -28,7 +28,7 @@ class DefaultController extends Controller
     /**
      * 展示平台商品
      */
-    public function actionPg($gid = 2)
+    public function actionPg($gid = 2, $readyonly = 0)
     {
         $query = (new Query())
                 ->select([
@@ -72,6 +72,9 @@ class DefaultController extends Controller
             ];
         }
         $app_data['scenes'] = $scenes;
+        if ($readyonly) {
+            $app_data['showShare'] = $app_data['showBuy'] = false;
+        }
 
         return $this->render('perview', ['app_data' => $app_data]);
     }
@@ -79,7 +82,7 @@ class DefaultController extends Controller
     /**
      * 展示用户商品
      */
-    public function actionUg($ogid)
+    public function actionUg($ogid, $readyonly = 0)
     {
         $pages = OrderGoodsScenePage::find()
                 ->where(['order_goods_id' => $ogid, 'is_del' => 0])
@@ -103,7 +106,9 @@ class DefaultController extends Controller
             ];
         }
         $app_data['scenes'] = $scenes;
-
+        if ($readyonly) {
+            $app_data['showShare'] = $app_data['showBuy'] = false;
+        }
         return $this->render('perview', ['app_data' => $app_data]);
     }
 

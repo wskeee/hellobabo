@@ -43,8 +43,8 @@ use yii\widgets\ActiveForm;
             Select2::widget([
                 'model' => $model,
                 'attribute' => 'group_id',
-                'data' => SceneGroup::getGroup(),
-                'options' => ['placeholder' => Yii::t('app', 'Type')],
+                'data' => SceneGroup::getGroup($goodsModel->id),
+                'options' => ['placeholder' => Yii::t('app', 'Group')],
                 'pluginOptions' => ['allowClear' => true],
                 'pluginEvents' => ['change' => 'function(){ submitForm()}']
             ])
