@@ -5,7 +5,6 @@ use common\models\AdminUser;
 use common\models\goods\Goods;
 use common\models\goods\GoodsCategory;
 use common\models\goods\GoodsDetail;
-use common\widgets\ueditor\UEDitor;
 use common\widgets\webuploader\ImagePicker;
 use common\widgets\webuploader\VideoPicker;
 use kartik\widgets\Select2;
@@ -42,11 +41,20 @@ $goodsDetails = $model->isNewRecord ? new GoodsDetail() : $model->goodsDetails;
     ])
     ?>
 
+    <!-- 类型 -->
+    <?= $form->field($model, 'type')->widget(Select2::class, [
+        'data' => Goods::$typeKeyMap,
+        'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
+    ]) ?>
+    
     <!-- 商品名称 -->
     <?= $form->field($model, 'goods_name')->textInput(['maxlength' => true]) ?>
 
     <!-- 商品标题 -->
     <?= $form->field($model, 'goods_title')->textInput(['maxlength' => true]) ?>     
+    
+    <!-- 商品参数 -->
+    <?= $form->field($model, 'params')->textarea(['maxlength' => true]) ?>     
 
     <div class="form-group picker-form-group">
         <label class="control-label form-label">图片/视频</label>

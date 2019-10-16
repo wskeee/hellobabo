@@ -30,7 +30,7 @@ class Poster extends BaseAction
         /* @var $wechat Wechat  */
         /*
           $wechat = \Yii::$app->wechat;
-          $response = $wechat->miniProgram->app_code->getUnlimit('1_5_16', ['page' => 'pages/goods/goods']);
+          $response = $wechat->miniProgram->app_code->getUnlimit('1_1_5_16', ['page' => 'pages/goods/goods']);
           if ($response instanceof StreamResponse) {
           $filename = $response->saveAs('/web/app_code/', 'appcode.png');
           } */

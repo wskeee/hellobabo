@@ -33,9 +33,9 @@ class SceneGroupController extends GridViewChangeSelfController
      * Lists all SceneGroup models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($relate_id = null)
     {
-        $searchModel = new SceneGroupSearch();
+        $searchModel = new SceneGroupSearch(['relate_id' => $relate_id]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -67,7 +67,7 @@ class SceneGroupController extends GridViewChangeSelfController
         $model = new SceneGroup();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['index','relate_id' => $model->relate_id]);
         }
 
         return $this->render('create', [

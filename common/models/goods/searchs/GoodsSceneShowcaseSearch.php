@@ -4,12 +4,12 @@ namespace common\models\goods\searchs;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\goods\SceneGroup;
+use common\models\goods\GoodsSceneShowcase;
 
 /**
- * SceneGroupSearch represents the model behind the search form of `common\models\goods\SceneGroup`.
+ * GoodsSceneShowcaseSearch represents the model behind the search form of `common\models\goods\GoodsSceneShowcase`.
  */
-class SceneGroupSearch extends SceneGroup
+class GoodsSceneShowcaseSearch extends GoodsSceneShowcase
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class SceneGroupSearch extends SceneGroup
     public function rules()
     {
         return [
-            [['id','relate_id', 'is_del'], 'integer'],
-            [['name', 'des'], 'safe'],
+            [['id', 'goods_id'], 'integer'],
+            [['name', 'cover_url', 'des'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class SceneGroupSearch extends SceneGroup
      */
     public function search($params)
     {
-        $query = SceneGroup::find();
+        $query = GoodsSceneShowcase::find();
 
         // add conditions that should always apply here
 
@@ -58,12 +58,12 @@ class SceneGroupSearch extends SceneGroup
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'relate_id' => $this->relate_id,
             'id' => $this->id,
-            'is_del' => $this->is_del,
+            'goods_id' => $this->goods_id,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'cover_url', $this->cover_url])
             ->andFilterWhere(['like', 'des', $this->des]);
 
         return $dataProvider;

@@ -3,6 +3,7 @@
 namespace common\models\order\searchs;
 
 use common\models\order\Order;
+use common\models\order\OrderGoods;
 use common\models\order\WorkflowDesign;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -12,6 +13,7 @@ use yii\data\ActiveDataProvider;
  */
 class WorkflowDesignSearch extends WorkflowDesign
 {
+
     public $order_sn; //订单sn
     public $consignee; //联系人
     public $date_range; //时间段内任务 格式：2019-04-10 - 2019-04-15
@@ -69,8 +71,9 @@ class WorkflowDesignSearch extends WorkflowDesign
             // $query->where('0=1');
             return $dataProvider;
         }
-        
+
         $query->leftJoin(['Order' => Order::tableName()], 'Order.id = order_id');
+        $query->leftJoin(['OrderGoods' => OrderGoods::tableName()], 'OrderGoods.id = order_goods_id');
 
         // grid filtering conditions
         $query->andFilterWhere([
@@ -85,6 +88,8 @@ class WorkflowDesignSearch extends WorkflowDesign
 
         $query->andFilterWhere(['like', 'Order.order_sn', $this->order_sn]);
         $query->andFilterWhere(['like', 'Order.consignee', $this->consignee]);
+        $query->with(['worker', 'order', 'orderGoods', 'orderGoods.groupon']);
+        $query->orderBy(['OrderGoods.groupon_id' => SORT_ASC,'created_at' => SORT_ASC]);
 
         return $dataProvider;
     }

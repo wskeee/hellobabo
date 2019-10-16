@@ -2,7 +2,9 @@
 
 namespace common\models\order;
 
+use common\models\goods\GoodsScene;
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%order_goods_scene}}".
@@ -19,8 +21,10 @@ use Yii;
  * @property int $is_required 是否必选 0否 1是
  * @property int $is_del 是否删除
  * @property string $des 备注
+ * 
+ * @property GoodsScene $scene 场景
  */
-class OrderGoodsScene extends \yii\db\ActiveRecord
+class OrderGoodsScene extends ActiveRecord
 {
 
     /**
@@ -62,6 +66,13 @@ class OrderGoodsScene extends \yii\db\ActiveRecord
             'is_del' => Yii::t('app', 'Is Del'),
             'des' => Yii::t('app', 'Des'),
         ];
+    }
+    
+    /**
+     * @return QueryRecord
+     */
+    public function getScene(){
+        return $this->hasOne(GoodsScene::class, ['id' => 'scene_id']);
     }
 
 }

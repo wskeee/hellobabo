@@ -1,11 +1,11 @@
 <?php
 
 use backend\modules\order_admin\assets\OrderModuleAsset;
+use common\models\goods\Goods;
 use common\models\order\WorkflowDesign;
 use common\modules\rbac\components\ResourceHelper;
 use common\utils\I18NUitl;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\web\View;
 use yii\web\YiiAsset;
 
@@ -18,6 +18,8 @@ YiiAsset::register($this);
 $this->title = I18NUitl::t('app', '{Design}{Detail}：') . $model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Workflow Designs'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$isGroupon = $model->orderGoods->type == Goods::TYPE_GROUPON;
 ?>
 <script>
     var callbacks = [];
@@ -31,12 +33,14 @@ $this->params['breadcrumbs'][] = $this->title;
     }
 </script>
 <div class="workflow-design-view">
-
+    <?php if ($isGroupon): ?>
+        <div class="alert alert-warning" role="alert">【注意】该任务为团购单，团购内所有订单的设计必须由一个人完成，接受【开始】表示你接受该团所有订单的设计！！！</div>
+    <?php endif; ?>
     <p>
         <?php
         if ($model->status == WorkflowDesign::STATUS_WAIT_START) {
             //开始
-            echo ResourceHelper::a(I18NUitl::t('app', '{Start}{Design}'), ['start', 'id' => $model->id], [
+            echo ResourceHelper::a(I18NUitl::t('app', '{Start}{Design}'), [$isGroupon ? 'batch-start' : 'start', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
                 'data' => [
                     'confirm' => Yii::t('app', '你确定要做该操作吗？'),
@@ -59,7 +63,8 @@ $this->params['breadcrumbs'][] = $this->title;
         ]);
         ?>
     </p>
-
+    <!-- 团购信息 -->
+    <?= $model->orderGoods->type == Goods::TYPE_GROUPON ? $this->render('_view_grouponinfo', ['model' => $model]) : '' ?>
     <!-- 基本信息 -->
     <?= $this->render('_view_baseinfo', ['model' => $model]) ?>
     <!-- 封面信息 -->

@@ -24,7 +24,7 @@ use yii\widgets\ActiveForm;
 
     <?=
     $form->field($model, 'group_id')->widget(Select2::class, [
-        'data' => SceneGroup::getGroup(),
+        'data' => SceneGroup::getGroup($model->goods_id),
         'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
     ])
     ?>

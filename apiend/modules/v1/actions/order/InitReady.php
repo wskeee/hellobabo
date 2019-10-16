@@ -11,8 +11,8 @@ use common\models\order\OrderGoods;
 use common\models\order\OrderGoodsMaterial;
 use common\models\order\OrderGoodsScene;
 use common\models\User;
+use Exception;
 use Yii;
-use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -73,7 +73,7 @@ class InitReady extends BaseAction
             $this->initDefaultMaterial($order_goods_model);
             $this->initDefaultScene($order_goods_model);
             $tran->commit();
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $tran->rollBack();
             throw $ex;
         }

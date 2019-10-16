@@ -4,6 +4,7 @@ namespace backend\modules\order_admin\controllers;
 
 use common\components\aliyuncs\Aliyun;
 use common\models\api\ApiResponse;
+use common\models\order\Groupon;
 use common\models\order\OrderGoods;
 use common\models\order\OrderGoodsAction;
 use common\models\order\OrderGoodsScenePage;
@@ -12,7 +13,9 @@ use common\models\order\WorkflowDesign;
 use common\utils\I18NUitl;
 use OSS\OssClient;
 use Yii;
+use yii\db\Query;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use ZipArchive;
@@ -47,9 +50,21 @@ class DesignController extends Controller
         $searchModel = new WorkflowDesignSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        //查询团购完成度
+        $grouponIds = array_filter(ArrayHelper::getColumn($dataProvider->getModels(), 'orderGoods.groupon_id'));
+        $result = (new Query())
+                ->select(['groupon_id', 'count(id) as value'])
+                ->from(['OrderGoods' => OrderGoods::tableName()])
+                ->where(['groupon_id' => $grouponIds])
+                ->andWhere(['>=', 'status', OrderGoods::STATUS_WAIT_DESIGN])
+                ->andWhere(['<>', 'status', OrderGoods::STATUS_INVALID])
+                ->groupBy(['groupon_id'])
+                ->all();
+        $grouponReadyCount = ArrayHelper::map($result, 'groupon_id', 'value');
         return $this->render('index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
+                    'grouponReadyCount' => $grouponReadyCount,
         ]);
     }
 
@@ -139,6 +154,40 @@ class DesignController extends Controller
                 OrderGoodsAction::saveLog([$model->order_goods_id], '开始设计', '绘本设计已开始！');
             }
         }
+
+        return $this->redirect(['view', 'id' => $id]);
+    }
+
+    /**
+     * 开始团购的任务，同一人接受团购所有任务
+     * @param string $id  WorkflowDesign.id
+     */
+    public function actionBatchStart($id)
+    {
+        $model = WorkflowDesign::findOne(['id' => $id]);
+        $groupon_id = $model->orderGoods->groupon_id;
+        $groupon = Groupon::findOne(['id' => $groupon_id]);
+        $goods_params = json_decode($groupon->goods_params);
+        $orderGoods = OrderGoods::find()->where(['groupon_id' => $groupon_id, 'status' => OrderGoods::STATUS_WAIT_DESIGN])->all();
+
+        if ($goods_params->role_num != count($orderGoods)) {
+            Yii::$app->session->setFlash('danger', '团购未准备！');
+            return $this->redirect(['view', 'id' => $id]);
+        }
+
+        // 所有商品
+        $orderGoodsIds = ArrayHelper::getColumn($orderGoods, 'id');
+
+        // 更新任务为当前设计师
+        WorkflowDesign::updateAll([
+            'worker_id' => \Yii::$app->user->id,
+            'start_at' => time(),
+            'status' => WorkflowDesign::STATUS_RUNGING,
+                ], ['order_goods_id' => $orderGoodsIds]);
+        // 更新商品状态
+        OrderGoods::updateAll(['status' => OrderGoods::STATUS_DESIGNING], ['id' => $orderGoodsIds]);
+        // 保存日志 
+        OrderGoodsAction::saveLog($orderGoodsIds, '开始设计', '绘本设计已开始！');
 
         return $this->redirect(['view', 'id' => $id]);
     }
