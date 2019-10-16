@@ -27,11 +27,10 @@ class GetMyOrderGoods extends BaseAction
                 ->orderBy(['created_at' => SORT_DESC])
                 ->all();
         /* 团购 */
-        $order_goods_ids = ArrayHelper::getColumn($orderGoods, 'id');
-        $groupons = ArrayHelper::index(Groupon::find()->where(['order_goods_id' => $order_goods_ids])->andWhere(['<>', 'status', Groupon::STATUS_INVALID])->all(), 'id');
+        $groupon_ids = ArrayHelper::getColumn($orderGoods, 'groupon_id');
+        $groupons = ArrayHelper::index(Groupon::find()->where(['id' => $groupon_ids])->andWhere(['<>', 'status', Groupon::STATUS_INVALID])->all(), 'id');
 
         /* 团购成员 */
-        $groupon_ids = ArrayHelper::getColumn($groupons, 'id');
         $groupon_records_result = GrouponRecord::getGrouponRecordDetail($groupon_ids);
         $groupon_records = ArrayHelper::index($groupon_records_result, null, 'groupon_id');
         $list = [];
