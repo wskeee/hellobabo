@@ -65,12 +65,11 @@ $assignColors = [
             'order.user_note',
             [
                 'label' => '合作信息',
-                'value' => function($model)use ($grouponReadyCount) {
+                'value' => function($model)use ($grouponReadyCount,$grouponNeedCount) {
                     /* @var $model WorkflowDesign */
                     if ($model->orderGoods->type == Goods::TYPE_GROUPON) {
                         $groupon = $model->orderGoods->groupon;
-                        $goodsParams = json_decode($groupon->goods_params);
-                        $status = $grouponReadyCount[$groupon->id]  == $goodsParams->role_num ? '准备就绪' : '未准备';
+                        $status = ($groupon->status == Groupon::STATUS_FINISHED && $grouponReadyCount[$groupon->id]  == $grouponNeedCount[$groupon->id]) ? '全部准备就绪' : '未准备';
                         return "团({$groupon->id}) 【{$status}】";
                     } else {
                         return '无';
