@@ -5,6 +5,7 @@ namespace apiend\modules\v1\actions\order;
 use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
 use common\models\order\Groupon;
+use common\models\order\GrouponRecord;
 use common\models\order\OrderGoods;
 use Exception;
 use Yii;
@@ -57,6 +58,14 @@ class CreateGroupon extends BaseAction
             if ($groupon->validate() && $groupon->save()) {
                 $order_goods->groupon_id = $groupon->id;
                 $order_goods->save();
+                $record = new GrouponRecord([
+                    'groupon_id' => $groupon->id,
+                    'user_id' => Yii::$app->user->id,
+                    'order_id' => $order_goods->order_id,
+                    'order_goods_id' => $order_goods_id,
+                    'status' => GrouponRecord::STATUS_SUCCESS,
+                ]);
+                $record->save();
                 $tran->commit();
                 return new Response(Response::CODE_COMMON_OK, null, $groupon);
             } else {

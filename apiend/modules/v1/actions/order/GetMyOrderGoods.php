@@ -34,7 +34,7 @@ class GetMyOrderGoods extends BaseAction
         $groupon_ids = ArrayHelper::getColumn($groupons, 'id');
         $groupon_records_result = GrouponRecord::getGrouponRecordDetail($groupon_ids);
         $groupon_records = ArrayHelper::index($groupon_records_result, null, 'groupon_id');
-
+        $list = [];
         /* @var $goods OrderGoods */
         foreach ($orderGoods as $goods) {
             $item = $goods->toArray();
