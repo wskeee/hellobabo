@@ -2,6 +2,7 @@
 
 namespace console\controllers;
 
+use common\models\order\Groupon;
 use common\models\order\GrouponRecord;
 use common\models\order\Order;
 use common\models\order\OrderAction;
@@ -44,6 +45,8 @@ class OrderController extends Controller
                     ], ['id' => ArrayHelper::getColumn($result, 'id')]);
             //作废商品
             OrderGoods::updateAll(['status' => OrderGoods::STATUS_INVALID], ['order_id' => ArrayHelper::getColumn($result, 'id')]);
+            //作废和订单创建的团购
+            Groupon::updateAll(['status' => Groupon::STATUS_INVALID], ['order_id' => ArrayHelper::getColumn($result, 'id')]);
             //作废团购记录
             GrouponRecord::updateAll(['status' => GrouponRecord::STATUS_INVALID], ['order_id' => ArrayHelper::getColumn($result, 'id')]);
 
