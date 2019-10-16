@@ -26,9 +26,13 @@ class EndGrouponInvite extends BaseAction
         if ($groupon == null) {
             return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => Yii::t('app', 'Groupon')]);
         }
-
-        if ($groupon->status == Groupon::STATUS_FINISHED && $groupon->created_by != $user->id) {
+        
+        if ($groupon->created_by != $user->id) {
             return new Response(Response::CODE_COMMON_FORBIDDEN);
+        }
+        
+        if($groupon->status == Groupon::STATUS_FINISHED){
+            return new Response(Response::CODE_COMMON_OK, null, $groupon);
         }
 
         $groupon->status = Groupon::STATUS_FINISHED;

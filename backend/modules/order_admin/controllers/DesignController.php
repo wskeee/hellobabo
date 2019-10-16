@@ -5,6 +5,7 @@ namespace backend\modules\order_admin\controllers;
 use common\components\aliyuncs\Aliyun;
 use common\models\api\ApiResponse;
 use common\models\order\Groupon;
+use common\models\order\GrouponRecord;
 use common\models\order\OrderGoods;
 use common\models\order\OrderGoodsAction;
 use common\models\order\OrderGoodsScenePage;
@@ -61,10 +62,19 @@ class DesignController extends Controller
                 ->groupBy(['groupon_id'])
                 ->all();
         $grouponReadyCount = ArrayHelper::map($result, 'groupon_id', 'value');
+        $grouponNeedCountResult = GrouponRecord::find()
+                ->select(['groupon_id', 'count(id) as value'])
+                ->where(['groupon_id' => $grouponIds])
+                ->andWhere(['<>', 'status', GrouponRecord::STATUS_INVALID])
+                ->groupBy(['groupon_id'])
+                ->all();
+        $grouponNeedCount = ArrayHelper::map($grouponNeedCountResult, 'groupon_id', 'value');
+
         return $this->render('index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
                     'grouponReadyCount' => $grouponReadyCount,
+                    'grouponNeedCount' => $grouponNeedCount,
         ]);
     }
 
@@ -167,10 +177,10 @@ class DesignController extends Controller
         $model = WorkflowDesign::findOne(['id' => $id]);
         $groupon_id = $model->orderGoods->groupon_id;
         $groupon = Groupon::findOne(['id' => $groupon_id]);
-        $goods_params = json_decode($groupon->goods_params);
         $orderGoods = OrderGoods::find()->where(['groupon_id' => $groupon_id, 'status' => OrderGoods::STATUS_WAIT_DESIGN])->all();
+        $recordCount = GrouponRecord::find()->where(['groupon_id' => $groupon_id])->andWhere(['<>', 'status', GrouponRecord::STATUS_INVALID])->count();
 
-        if ($goods_params->role_num != count($orderGoods)) {
+        if ($groupon->status == Groupon::STATUS_FINISHED && $recordCount != count($orderGoods)) {
             Yii::$app->session->setFlash('danger', '团购未准备！');
             return $this->redirect(['view', 'id' => $id]);
         }
