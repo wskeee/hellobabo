@@ -103,6 +103,10 @@ class CreateOrder extends BaseAction
 
                 if ($order_goods->save()) {
                     OrderGoodsAction::saveLog([$order_goods->id], '订单创建', '');
+                    //首个用户订单创建团购
+                    if($goods->type == Goods::TYPE_GROUPON && $groupon_id == null){
+                        $this->createGroupon($order_goods);
+                    }
                     //添加团购关联
                     if ($groupon_id != null) {
                         $groupon_record = new GrouponRecord([
@@ -132,6 +136,46 @@ class CreateOrder extends BaseAction
         } catch (Exception $ex) {
             $tran->rollBack();
             return new Response(Response::CODE_ORDER_CREATE_FAILED, '下单失败', $ex->getMessage());
+        }
+    }
+
+    /**
+     * 创建团购
+     * 
+     * @param type $order
+     * @param type $orderGoods
+     */
+    private function createGroupon($order_goods)
+    {
+        $groupon = new Groupon([
+            'name' => $this->getSecretParam('name', $order_goods->goods_name) . '团购',
+            'des' => $this->getSecretParam('des', '团购活动'),
+            'cover_url' => $this->getSecretParam('cover_url', $order_goods->goods_img),
+            'order_id' => $order_goods->order_id,
+            'order_goods_id' => $order_goods->id,
+            'goods_id' => $order_goods->goods_id,
+            'goods_name' => $order_goods->goods_name,
+            'goods_img' => $order_goods->goods_img,
+            'goods_params' => $order_goods->goods_params,
+            'spec_id' => $order_goods->spec_id,
+            'spec_key' => $order_goods->spec_key,
+            'spec_key_name' => $order_goods->spec_key_name,
+            'amount' => $this->getSecretParam('amount', $order_goods->amount),
+            'created_by' => Yii::$app->user->id,
+        ]);
+        if ($groupon->validate() && $groupon->save()) {
+            $order_goods->groupon_id = $groupon->id;
+            $order_goods->save();
+            $record = new GrouponRecord([
+                'groupon_id' => $groupon->id,
+                'user_id' => Yii::$app->user->id,
+                'order_id' => $order_goods->order_id,
+                'order_goods_id' => $order_goods->id,
+                'status' => GrouponRecord::STATUS_SUCCESS,
+            ]);
+            $record->save();
+        } else {
+            throw new Exception(implode(',', $groupon->getErrorSummary(true)));
         }
     }
 
