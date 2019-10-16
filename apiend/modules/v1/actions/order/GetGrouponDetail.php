@@ -23,7 +23,7 @@ class GetGrouponDetail extends BaseAction
         $groupon_id = $this->getSecretParam('groupon_id');
         $groupon = Groupon::find()->where(['id' => $groupon_id])->andWhere(['<>', 'status', Groupon::STATUS_INVALID])->one();
         if ($groupon == null) {
-            return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['params' => Yii::t('app', 'Groupon')]);
+            return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => Yii::t('app', 'Groupon')]);
         }
         $groupon->goods_params = json_decode($groupon->goods_params);
         return new Response(Response::CODE_COMMON_OK, null, $groupon);
