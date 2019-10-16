@@ -9,6 +9,7 @@ use apiend\modules\v1\actions\order\ClearSceneUserImage;
 use apiend\modules\v1\actions\order\ConfirmOrder;
 use apiend\modules\v1\actions\order\CreateGroupon;
 use apiend\modules\v1\actions\order\CreateOrder;
+use apiend\modules\v1\actions\order\EndGrouponInvite;
 use apiend\modules\v1\actions\order\GetGrouponDetail;
 use apiend\modules\v1\actions\order\GetMyOrderGoods;
 use apiend\modules\v1\actions\order\GetOrderDetail;
@@ -65,6 +66,7 @@ class OrderController extends ApiController
             'create-groupon' => ['post'],
             'get-groupon-detail' => ['get'],
             'join-groupon-ready' => ['get'],
+            'end-groupon-invite' => ['post'],
         ];
         return $behaviors;
     }
@@ -100,6 +102,7 @@ class OrderController extends ApiController
             'create-groupon' => ['class' => CreateGroupon::class],
             'get-groupon-detail' => ['class' => GetGrouponDetail::class],
             'join-groupon-ready' => ['class' => JoinGrouponReady::class],
+            'end-groupon-invite' => ['class' => EndGrouponInvite::class],
         ];
     }
 

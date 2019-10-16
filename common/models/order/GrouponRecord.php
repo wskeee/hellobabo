@@ -88,7 +88,7 @@ class GrouponRecord extends ActiveRecord
                         ->all();
         foreach ($groupon_records_result as &$record) {
             $record['status_text'] = $record['status'] == GrouponRecord::STATUS_JOINING ? "加入中" : (
-                    $record['goods_status'] == OrderGoods::STATUS_INIT ? "初始绘本" : $record['goods_status'] < OrderGoods::STATUS_WAIT_DESIGN ? "上传相片" : "已经准备");
+                    $record['goods_status'] == OrderGoods::STATUS_INIT ? "初始绘本" : ($record['goods_status'] < OrderGoods::STATUS_WAIT_DESIGN ? "上传相片" : "已经准备"));
         }
         return $groupon_records_result;
     }
