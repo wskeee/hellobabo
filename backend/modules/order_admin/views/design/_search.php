@@ -67,7 +67,7 @@ use yii\widgets\ActiveForm;
     
     <!-- 状态 -->
     <div class="dep-dropdown-box">
-        <div class="dep-dropdown" style="width:80px">
+        <div class="dep-dropdown" style="width:150px">
             <?=
             Select2::widget([
                 'model' => $model,

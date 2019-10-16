@@ -1,6 +1,8 @@
- <?php
+<?php
 
 use backend\modules\order_admin\assets\OrderModuleAsset;
+use common\models\goods\Goods;
+use common\models\order\Groupon;
 use common\models\order\searchs\WorkflowDesignSearch;
 use common\models\order\WorkflowDesign;
 use common\modules\rbac\components\ResourceHelper;
@@ -61,6 +63,20 @@ $assignColors = [
                 }
             ],
             'order.user_note',
+            [
+                'label' => '合作信息',
+                'value' => function($model)use ($grouponReadyCount) {
+                    /* @var $model WorkflowDesign */
+                    if ($model->orderGoods->type == Goods::TYPE_GROUPON) {
+                        $groupon = $model->orderGoods->groupon;
+                        $goodsParams = json_decode($groupon->goods_params);
+                        $status = $grouponReadyCount[$groupon->id]  == $goodsParams->role_num ? '准备就绪' : '未准备';
+                        return "团({$groupon->id}) 【{$status}】";
+                    } else {
+                        return '无';
+                    }
+                }
+            ],
             [
                 'attribute' => 'status',
                 'headerOptions' => ['style' => 'width:80px;'],

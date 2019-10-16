@@ -110,9 +110,10 @@ class MaterialController extends GridViewChangeSelfController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index' , 'goods_id' => $model->goods_id]);
     }
 
     /**
