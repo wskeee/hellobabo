@@ -180,7 +180,7 @@ class DesignController extends Controller
         $orderGoods = OrderGoods::find()->where(['groupon_id' => $groupon_id, 'status' => OrderGoods::STATUS_WAIT_DESIGN])->all();
         $recordCount = GrouponRecord::find()->where(['groupon_id' => $groupon_id])->andWhere(['<>', 'status', GrouponRecord::STATUS_INVALID])->count();
 
-        if ($groupon->status == Groupon::STATUS_FINISHED && $recordCount != count($orderGoods)) {
+        if ($groupon->status != Groupon::STATUS_FINISHED || $recordCount != count($orderGoods)) {
             Yii::$app->session->setFlash('danger', '团购未准备！');
             return $this->redirect(['view', 'id' => $id]);
         }
