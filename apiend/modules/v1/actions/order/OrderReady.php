@@ -27,7 +27,7 @@ class OrderReady extends BaseAction
             return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => Yii::t('app', 'Goods')]);
         }
 
-        $address = UserAddress::findOne(['user_id' => Yii::$app->user->id, 'is_default' => 1]);
+        $address = UserAddress::findOne(['user_id' => Yii::$app->user->id, 'is_default' => 1 , 'is_del' => 0]);
         $specs = $goods->goodsModel->goodsSpecs;
         $gsps = $goods->getGoodsSpecPrices();
         $gsp_key = $gsps[0]['spec_key'];
