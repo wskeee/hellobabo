@@ -4,6 +4,7 @@ namespace apiend\modules\v1\actions\order;
 
 use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
+use common\models\goods\Goods;
 use common\models\order\Groupon;
 use common\models\order\GrouponRecord;
 use Yii;
@@ -22,6 +23,7 @@ class JoinGrouponReady extends BaseAction
     {
         $groupon_id = $this->getSecretParam('groupon_id');
         $groupon = Groupon::findOne(['id' => $groupon_id]);
+        $goods = Goods::findOne(['id' => $groupon->goods_id]);
 
         if ($groupon == null) {
             return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => Yii::t('app', 'Groupon')]);
@@ -30,6 +32,7 @@ class JoinGrouponReady extends BaseAction
         return new Response(Response::CODE_COMMON_OK, null, [
             'groupon' => $groupon,
             'groupon_records' => GrouponRecord::getGrouponRecordDetail($groupon_id),
+            'goods' => $goods,
         ]);
     }
 
