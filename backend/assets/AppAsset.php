@@ -17,7 +17,7 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
         'js/wskeee.stringutils.js',  //渲染
-        'js/wskeee.dateUtils.js'  //日期格式
+        'js/wskeee.dateUtils.js',  //日期格式
     ];
     public $depends = [
         'yii\web\YiiAsset',

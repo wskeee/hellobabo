@@ -3,6 +3,7 @@
 namespace common\models\order;
 
 use common\components\redis\RedisService;
+use common\models\goods\Goods;
 use common\models\platform\WalletLog;
 use common\models\platform\Withdrawals;
 use common\models\system\Config;
@@ -13,6 +14,8 @@ use yii\base\UserException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Exception;
+use yii\db\Expression;
+use yii\db\Query;
 
 /**
  * This is the model class for table "{{%order}}".
@@ -42,10 +45,10 @@ use yii\db\Exception;
  * @property int $created_by 创建人id（购买人ID），关联user表id字段
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
- * 
+ *
  * @property User $creater 创建人
  * @property User $referrer 推荐人
- * @property OrderGoods[] $orderGoods 订单绘本 
+ * @property OrderGoods[] $orderGoods 订单绘本
  * @property OrderAction[] $actionLogs 日志记录
  */
 class Order extends ActiveRecord
@@ -145,7 +148,7 @@ class Order extends ActiveRecord
     {
         //201904251229250000125
         list($msec, $sec) = explode(' ', microtime());
-        $msectime = (float) sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
+        $msectime = (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
         $key_sn = date('Ymd') . substr($msectime, -6);
         $key = "Order:RandomSN:$key_sn";
         $num = 1;
@@ -204,7 +207,7 @@ class Order extends ActiveRecord
 
     /**
      * 订单确认
-     * 
+     *
      */
     public function finish()
     {
@@ -294,9 +297,9 @@ class Order extends ActiveRecord
                     'pay_realname' => $referrer->nickname,
                     'check_at' => time(),
                     'check_feedback' => '系统自动审核通过！10分钟内到账！',
-                    'status' =>Withdrawals::STATUS_CHECK_SUCCESS,
+                    'status' => Withdrawals::STATUS_CHECK_SUCCESS,
                 ]);
-                
+
                 $this->ar_save($model);
             }
 
@@ -310,7 +313,7 @@ class Order extends ActiveRecord
     /**
      * 模型保存
      * @param ActiveRecord $ar
-     * 
+     *
      * @throws Exception
      */
     private function ar_save($ar)
@@ -322,7 +325,7 @@ class Order extends ActiveRecord
 
     /**
      * 检查是否已经支付
-     * @return boolean 
+     * @return boolean
      */
     public function getIsPlyed()
     {
@@ -336,7 +339,7 @@ class Order extends ActiveRecord
 
     /**
      * 检查订单是否有效
-     * @return boolean 
+     * @return boolean
      */
     public function getIsValid()
     {
@@ -344,7 +347,7 @@ class Order extends ActiveRecord
     }
 
     /**
-     * 
+     *
      * @return QueryRecord
      */
     public function getCreater()
@@ -377,6 +380,72 @@ class Order extends ActiveRecord
     public function getOrderGoods()
     {
         return $this->hasMany(OrderGoods::class, ['order_id' => 'id']);
+    }
+
+    /**
+     * 返回销售统计
+     *
+     * @param int $start_time 开始时间
+     * @param int $end_time 结束时间
+     */
+    public static function getSaleStat($start_time, $end_time)
+    {
+        $query = (new Query())->from(self::tableName())
+            ->select(['count(1) sale_count', 'IFNULL(sum(order_amount),0) turnover'])
+            ->where(['between', 'created_at', $start_time, $end_time])
+            ->andWhere(['order_status' => self::ORDER_STATUS_WAIT_DELIVER]);
+        $data = $query->one();
+        $data['turnover'] = round((int)$data['turnover'] * 100) / 100;
+        return $data;
+    }
+
+    /**
+     * 返回所有绘本销售统计
+     *
+     * @param int $day_num
+     */
+    public static function getSaleStatByGoods($day_num = 7)
+    {
+        $data = (new Query())
+            ->select([
+                'OrderGoods.goods_id',
+                'OrderGoods.goods_name',
+                'IFNULL(sum(Order.order_amount),0) turnover',
+                'COUNT(1) count',
+                new Expression('FROM_UNIXTIME(Order.created_at,\'%Y-%m-%d\') as date'),
+            ])
+            ->from(['Order' => self::tableName()])
+            ->leftJoin(['OrderGoods' => OrderGoods::tableName()],'OrderGoods.order_id = Order.id')
+            ->leftJoin(['Goods' => Goods::tableName()],'Goods.id = OrderGoods.goods_id')
+            ->andWhere(['between', 'Order.created_at', strtotime("today -$day_num day 00:00:00"), time()])
+            ->andWhere(['Order.order_status' => self::ORDER_STATUS_WAIT_DELIVER])
+            ->groupBy(['OrderGoods.goods_id','date'])
+            ->all();
+
+        return $data;
+    }
+
+    /**
+     * 获取前一段时间的销售记录
+     * @param int $agencyId
+     * @param int $day_num 前几天，默认30天
+     */
+    public static function getDailySaleLog($day_num = 30)
+    {
+        //查出指定范围销售记录
+        $daily_sale_logs = self::find()
+            ->select([
+                'IFNULL(sum(order_amount),0) turnover',
+                'COUNT(1) count',
+                new Expression('FROM_UNIXTIME(created_at,\'%Y-%m-%d\') as date'),
+            ])
+            ->andWhere(['between', 'created_at', strtotime("today -$day_num day 00:00:00"), time()])
+            ->andWhere(['order_status' => self::ORDER_STATUS_WAIT_DELIVER])
+            ->groupBy(['date'])
+            ->asArray()
+            ->all();
+
+        return $daily_sale_logs;
     }
 
 }

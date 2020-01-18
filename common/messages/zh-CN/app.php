@@ -58,10 +58,11 @@ return [
     'Start Time' => '开始时间',
     'End Time' => '结束时间',
     'Duration' => '时长',
+    'Today' => '今天',
     'Last Week' => '上一周',
     'This Week' => '这一周',
     'Last Month' => '上一月',
-    'This Month' => '这一月',
+    'This Month' => '本月',
     'First Half Year' => '上半年',
     'Next Half Year' => '下半年',
     'Full Year' => '一整年',
@@ -466,14 +467,15 @@ return [
     'Exec Time' => '执行时间',
     
     //后台-统计
-    'Total Statistics' => '总统计',
-    'Ranking Statistics' => '排行统计',
-    'Single Statistics' => '单独统计',
-    'Operator' => '运营人',
-    'Proportion' => '占比',
-    'Expenditure' => '支出',
-    'Click' => '点击',
-    
+    'Sale Count' => '订单数',
+    'Turnover' => '营业额',
+    'Promotion Expenses' => '推荐费',
+    'Promotion Expenses Count' => '推荐数',
+    'Client Count' => '用户数',
+    'Flow' => '流程',
+    'Increased' => '新增',
+    'Completed' => '完成',
+
     //后台-帮助中心
     'App' => '应用',
     'Post' => '文章',

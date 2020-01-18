@@ -7,6 +7,7 @@ use common\utils\I18NUitl;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 
 /**
  * This is the model class for table "{{%workflow_print}}".
@@ -119,4 +120,29 @@ class WorkflowPrint extends ActiveRecord
         return $this->hasOne(OrderGoods::class, ['id' => 'order_goods_id']);
     }
 
+    /**
+     * 返回数据统计
+     *
+     * @param int $start_time 开始时间
+     * @param int $end_time 结束时间
+     */
+    public static function getStat($start_time, $end_time)
+    {
+        // 查询对象
+        $query = (new Query())->from(self::tableName());
+
+        // 完成查询对象
+        $query_complete = clone $query;
+        $query_complete->where(['between', 'end_at', $start_time, $end_time]);
+        $complete_count = $query_complete->count();
+
+        // 今天创建数
+        $create_count = $query->where(['between', 'created_at', $start_time, $end_time])->count();
+
+        return [
+            'create_count' => $create_count,
+            'complete_count' => $complete_count,
+        ];
+
+    }
 }
