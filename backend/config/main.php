@@ -6,7 +6,7 @@ $params = array_merge(
 
 return [
     'id' => 'app-backend',
-    'name' => '素材管理平台',
+    'name' => '绘本管理平台',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
@@ -80,9 +80,9 @@ return [
             'class' => 'backend\modules\order_admin\Module',
         ],
         //统计
-//        'statistics' => [
-//            'class' => 'backend\modules\statistics\Module',
-//        ],
+        'statistics' => [
+            'class' => 'backend\modules\statistics\Module',
+        ],
         'platform_admin' => [
             'class' => 'backend\modules\platform_admin\Module',
         ],

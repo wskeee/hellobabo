@@ -3,9 +3,11 @@
 namespace common\models\order;
 
 use common\models\User;
+use phpDocumentor\Reflection\Types\Self_;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 
 /**
  * This is the model class for table "{{%order_recommend}}".
@@ -86,5 +88,23 @@ class OrderRecommend extends ActiveRecord
      */
     public function getCreater(){
         return $this->hasOne(User::class, ['id' => 'created_by']);
+    }
+
+    /**
+     * 获取推荐数据
+     *
+     * @param array $where 条件
+     */
+    public static function getPromotionExpensesStat($where = null)
+    {
+        $query = new Query();
+        $query->from(self::tableName());
+        $query->select(['count(1) count','IFNULL(sum(amount),0) amount']);
+        if($where){
+            $query->where($where);
+        }
+        $data = $query->all();
+
+        return $data[0];
     }
 }
