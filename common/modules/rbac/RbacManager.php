@@ -22,7 +22,7 @@ use yii\rbac\Role;
 /**
  * Description of RbacManager
  *
- * @author Administrator
+ * @author Administratorpublic function revoke
  */
 class RbacManager extends DbManager{
     
@@ -162,6 +162,7 @@ class RbacManager extends DbManager{
      * @return bool 分配单个返回Assignment ;批量分配返回结果true 成功，false失败
      */
     public function revoke($role,$userId){
+        $userId = is_array($userId) ? $userId : [$userId];
         if(empty($userId) || count($userId) == 0)
             return false;
         
