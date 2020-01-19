@@ -7,6 +7,7 @@ use common\models\order\Order;
 use Yii;
 use yii\base\Action;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 
 /**
  * 获取平台设备使用率
@@ -25,15 +26,23 @@ class GetPlatformGoodsUsage extends Action
 
         $result = Order::getSaleStatByGoods($day_num);
         $key_names = array_unique(array_column($result, 'date'));
+        $result = ArrayHelper::index($result, null, 'goods_id');
+        $zero_value = [];
 
         $datas = [];
         foreach ($result as $data) {
-            !isset($datas [$data['goods_id']]) && $datas [$data['goods_id']] = [];
-            $datas [$data['goods_id']] ['goods_id'] = $data['goods_id'];
-            $datas [$data['goods_id']] ['goods_name'] = $data['goods_name'];
-            $datas [$data['goods_id']] ['value'] [] = [$data['date'], $data['count']];
+            $date_to_count = ArrayHelper::map($data,'date','count');
+            $value = [];
+            foreach ($key_names as $date) {
+                $value[] = [$date, isset($date_to_count[$date]) ? $date_to_count[$date] : 0];
+            }
+            $datas[] = [
+                'goods_id' => $data[0]['goods_id'],
+                'goods_name' => $data[0]['goods_name'],
+                'value' => $value
+            ];
         }
-        return new ApiResponse(ApiResponse::CODE_COMMON_OK, null, ['keys' => $key_names, 'data' => array_values($datas)]);
+        return new ApiResponse(ApiResponse::CODE_COMMON_OK, null, ['keys' => $key_names, 'data' => $datas]);
     }
 
 }

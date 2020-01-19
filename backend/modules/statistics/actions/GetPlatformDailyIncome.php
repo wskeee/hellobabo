@@ -25,7 +25,7 @@ class GetPlatformDailyIncome extends Action
         $daily_sale_logs = Order::getDailySaleLog($day_num);
 
         //生成销售记录，没有补0
-        $daily_sale_logs = ArrayHelper::map($daily_sale_logs, 'date', 'real_income');
+        $daily_sale_logs = ArrayHelper::map($daily_sale_logs, 'date', 'turnover');
         $daily_incomes = [];
         for ($i = $day_num; $i > 0; $i--) {
             $date = date('Y-m-d', strtotime("today -$i day"));
