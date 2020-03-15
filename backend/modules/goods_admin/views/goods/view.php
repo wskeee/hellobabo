@@ -24,6 +24,7 @@ GoodsModuleAsset::register($this);
         <?= ResourceHelper::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= ResourceHelper::a(I18NUitl::t('app', '{Material}{Admin}'), ['/goods_admin/material/index', 'goods_id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= ResourceHelper::a(I18NUitl::t('app', '{Scene}{Admin}'), ['/goods_admin/scene/index', 'goods_id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= ResourceHelper::a(I18NUitl::t('app', '{Scene}{Preview}'), ['/goods_admin/scene-preview/index', 'goods_id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= ResourceHelper::a(I18NUitl::t('app', '{Attribute}{Spec}'), ['/goods_admin/att-spec/index', 'goods_id' => $model->id], ['class' => 'btn btn-primary']) ?>
     </p>
 

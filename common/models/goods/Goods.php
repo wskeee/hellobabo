@@ -10,6 +10,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%goods}}".
@@ -129,7 +130,7 @@ class Goods extends ActiveRecord
 
     /**
      * 数组转字符
-     * 
+     *
      * @param string|array $att
      * @return boolean
      */
@@ -294,19 +295,19 @@ class Goods extends ActiveRecord
     public function getGoodsSpecItems()
     {
         $query = (new Query())
-                ->select([
-                    'GoodsSpec.id as spec_id',
-                    'GoodsSpecItem.goods_id',
-                    'GoodsSpecItem.id',
-                    'GoodsSpecItem.value',
-                ])
-                ->from(['GoodsSpecItem' => GoodsSpecItem::tableName()])
-                ->leftJoin(['GoodsSpec' => GoodsSpec::tableName()], 'GoodsSpec.id = GoodsSpecItem.spec_id')
-                ->where([
-            'GoodsSpecItem.goods_id' => $this->id,
-            'GoodsSpec.model_id' => $this->model_id,
-            'GoodsSpecItem.is_del' => 0,
-            'GoodsSpec.is_del' => 0]);
+            ->select([
+                'GoodsSpec.id as spec_id',
+                'GoodsSpecItem.goods_id',
+                'GoodsSpecItem.id',
+                'GoodsSpecItem.value',
+            ])
+            ->from(['GoodsSpecItem' => GoodsSpecItem::tableName()])
+            ->leftJoin(['GoodsSpec' => GoodsSpec::tableName()], 'GoodsSpec.id = GoodsSpecItem.spec_id')
+            ->where([
+                'GoodsSpecItem.goods_id' => $this->id,
+                'GoodsSpec.model_id' => $this->model_id,
+                'GoodsSpecItem.is_del' => 0,
+                'GoodsSpec.is_del' => 0]);
         return $query->all();
     }
 
@@ -317,11 +318,23 @@ class Goods extends ActiveRecord
     public function getGoodsSpecPrices()
     {
         $query = (new Query())
-                ->from(['GoodsSpecPrice' => GoodsSpecPrice::tableName()])
-                ->where([
-            'GoodsSpecPrice.goods_id' => $this->id,
-            'GoodsSpecPrice.is_del' => 0]);
+            ->from(['GoodsSpecPrice' => GoodsSpecPrice::tableName()])
+            ->where([
+                'GoodsSpecPrice.goods_id' => $this->id,
+                'GoodsSpecPrice.is_del' => 0]);
         return $query->all();
+    }
+
+    /**
+     * 获取可用商品列表
+     *
+     * @param bool $map 是否返回 key => value 键值对
+     * @return array
+     */
+    public static function getUseableList($map = true)
+    {
+        $result = self::find()->where(['is_del' => 0])->all();
+        return $map ? ArrayHelper::map($result, 'id', 'name') : $result;
     }
 
 }

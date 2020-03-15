@@ -3,8 +3,9 @@
 namespace common\models\goods;
 
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\redis\ActiveQuery;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%goods_scene}}".
@@ -23,7 +24,7 @@ use yii\redis\ActiveQuery;
  * @property int $is_selected 默认选中 0否 1是
  * @property int $is_del 是否删除
  * @property string $des 备注
- * 
+ *
  * @property Goods goods 商品
  * @property SceneGroup group 分组
  */
@@ -85,7 +86,7 @@ class GoodsScene extends ActiveRecord
     }
 
     /**
-     * 
+     *
      * @return ActiveQuery
      */
     public function getGoods()
@@ -94,12 +95,24 @@ class GoodsScene extends ActiveRecord
     }
 
     /**
-     * 
+     *
      * @return ActiveQuery
      */
     public function getGroup()
     {
         return $this->hasOne(SceneGroup::class, ['id' => 'group_id']);
+    }
+
+    /**
+     * 获取商品场景
+     *
+     * @param int $goods_id 商品ID
+     * @param bool $map 是否以键值对返回
+     */
+    public static function getGoodsScene($goods_id, $map = true)
+    {
+        $result = self::find()->where(['goods_id' => $goods_id, 'is_del' => 0])->all();
+        return $map ? ArrayHelper::map($result, 'id', 'name') : $result;
     }
 
 }
