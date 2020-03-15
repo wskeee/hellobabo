@@ -91,8 +91,22 @@ $this->params['breadcrumbs'][] = $this->title;
             //'is_del',
             'des',
             [
+                'label' => '已关联的素材项',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    $item_htmls = '';
+                    foreach ($model->getMaterialItems() as $item) {
+                        $item_htmls .= Html::img($item['effect_url'], ['class' => 'item' ,'style' => 'height:80px;']);
+                    }
+                    return Html::tag('div', $item_htmls, ['class' => 'page-box']);
+                }
+            ],
+            [
                 'class' => 'yii\grid\ActionColumn',
                 'buttons' => [
+                    'material' => function ($url, $model) {
+                        return Html::a(I18NUitl::t('app', '{Material}{Admin}'), ['/goods_admin/page-material-item/index', 'scene_page_id' => $model->id], ['class' => 'btn btn-primary', 'style' => 'margin-bottom: 5px;']);
+                    },
                     'setting' => function ($url, $model) {
                         return Html::a(I18NUitl::t('app', '{Shooting Action}'), ['/goods_admin/shooting-action/index', 'page_id' => $model->id], ['class' => 'btn btn-primary', 'style' => 'margin-bottom: 5px;']);
                     },
@@ -118,7 +132,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                 ],
                 'headerOptions' => ['style' => 'width:120px'],
-                'template' => '<div style="display:flex;flex-direction: column;">{setting} {updata} {preview} {delete}</div>',
+                'template' => '<div style="display:flex;flex-direction: column;">{material} {setting} {updata} {preview} {delete}</div>',
             ],
         ],
     ]);

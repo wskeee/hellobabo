@@ -369,7 +369,11 @@ return [
     'Vote Activity Hand' => '参选',
     'Vote Activity Hands' => '参选列表',
     'Groupon' => '团购',
-    
+    'Goods Material Value Items' => '素材项列表',
+    'Goods Material Value Item' => '素材项',
+    'Source ID' => '源始ID',
+    'Page Material Items' => '场景素材列表',
+
     //后台-商品配置
     'Storage' => '存储',
     'Dir' => '目录',
@@ -404,7 +408,7 @@ return [
     'Check Status' => '审核状态',
     'Check Feedback' => '审核反馈',
     'Hand Num' => '序号',
-    
+
     //后台-运营管理
     'Purchaser' => '购买人',
     'Payable' => '应付',

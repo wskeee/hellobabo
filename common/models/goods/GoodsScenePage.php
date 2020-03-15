@@ -4,7 +4,9 @@ namespace common\models\goods;
 
 use common\components\aliyuncs\Aliyun;
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 
 /**
  * This is the model class for table "{{%goods_scene_page}}".
@@ -21,11 +23,12 @@ use yii\db\ActiveRecord;
  * @property int $is_required 是否必需上传相片 0否 1是
  * @property int $is_del 是否删除
  * @property string $des 备注
- * 
+ *
  * @property-read GoodsScene $scene 场景
  * @property-read ShootingAngle $angle 角度
  * @property-read ShootingFace $face 表情
  * @property-read Array<ShootingAction> $actions 动作
+ * @property array $materialItems 已关联的素材项
  */
 class GoodsScenePage extends ActiveRecord
 {
@@ -99,34 +102,45 @@ class GoodsScenePage extends ActiveRecord
     }
 
     /**
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getScene()
     {
         return $this->hasOne(GoodsScene::class, ['id' => 'scene_id']);
     }
-    
+
     /**
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getAngle()
     {
         return $this->hasOne(ShootingAngle::class, ['id' => 'angle_id']);
     }
-    
+
     /**
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getFace()
     {
         return $this->hasOne(ShootingFace::class, ['id' => 'face_id']);
     }
-    
+
     /**
-     * @return QueryRecord
+     * @return ActiveQuery
      */
-    public function getActions(){
+    public function getActions()
+    {
         return $this->hasMany(ShootingAction::class, ['page_id' => 'id'])->where(['is_del' => 0]);
     }
+
+    /**
+     * 返回已关联的素材项
+     * @return array
+     */
+    public function getMaterialItems()
+    {
+        return GoodsScenePageMaterialItem::getPageMaterialItems($this->id);
+    }
+
 
 }

@@ -1,44 +1,23 @@
 <?php
 
-use common\models\goods\GoodsScenePage;
-use common\models\goods\ShootingAngle;
-use common\models\goods\ShootingFace;
 use common\widgets\webuploader\FilePicker;
 use common\widgets\webuploader\ImagePicker;
-use kartik\widgets\Select2;
 use yii\helpers\Html;
-use yii\web\View;
 use yii\widgets\ActiveForm;
 
-/* @var $this View */
-/* @var $model GoodsScenePage */
-/* @var $form ActiveForm */
+/* @var $this yii\web\View */
+/* @var $model common\models\goods\GoodsMaterialValueItem */
+/* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="goods-scene-page-form">
+<div class="goods-material-value-item-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= Html::activeHiddenInput($model, 'scene_id') ?>
+    <?= Html::activeHiddenInput($model, 'material_value_id') ?>
 
     <!-- 名称 -->
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => Yii::t('app', 'Optional')]) ?>
-
-    <!-- 拍摄角度 -->
-    <?=
-    $form->field($model, 'angle_id')->widget(Select2::class, [
-        'data' => ShootingAngle::getValues(),
-        'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
-    ])
-    ?>
-
-    <!-- 拍摄表情 -->
-    <?=
-    $form->field($model, 'face_id')->widget(Select2::class, [
-        'data' => ShootingFace::getValues(),
-        'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
-    ])
-    ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => Yii::t('app', '填写场景名称')]) ?>
 
     <!-- 效果图 -->
     <?= $form->field($model, 'effect_url')->widget(ImagePicker::class) ?>
@@ -65,16 +44,6 @@ use yii\widgets\ActiveForm;
     ])
     ?>
 
-    <!-- 位置 -->
-    <?=
-    $form->field($model, 'pos')->widget(Select2::class, [
-        'data' => GoodsScenePage::$posNameMap,
-        'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
-    ])
-    ?>
-
-    <?= $form->field($model, 'is_required')->checkbox() ?>
-
     <?= $form->field($model, 'des')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
@@ -87,26 +56,26 @@ use yii\widgets\ActiveForm;
 <script>
     /**
      * 清除源文件
-     * 
+     *
      * @param {type} evt
      * @param {type} file
      * @returns {undefined}
      */
     function fileDequeued(evt,file){
-        $source_id = $('#goodsscenepage-source_id');
+        $source_id = $('#goodsmaterialvalueitem-source_id');
         $source_id.val("");
     }
-    
+
     /**
      * 源文件上传完成
-     * 
+     *
      * @param {type} evt
      * @param {type} dbFile
      * @param {type} file
      * @returns {undefined}
      */
     function uploadComplete(evt,dbFile,file){
-        $source_id = $('#goodsscenepage-source_id');
+        $source_id = $('#goodsmaterialvalueitem-source_id');
         $source_id.val(dbFile.metadata.adobe_id);
     }
 </script>
