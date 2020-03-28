@@ -84,12 +84,15 @@ class GoodsMaterialValue extends ActiveRecord
     public static function getGoodsMaterialValue($goods_id, $map = false)
     {
         $result = (new Query())
-            ->select(['Material.id material_id', 'MaterialValue.id material_value_id', 'MaterialValue.name material_value_name'])
+            ->select([
+                'Material.id material_id',
+                'MaterialValue.*',
+            ])
             ->from(['Material' => GoodsMaterial::tableName()])
             ->leftJoin(['MaterialValue' => GoodsMaterialValue::tableName()], 'Material.id = MaterialValue.material_id')
             ->where(['Material.goods_id' => $goods_id, 'Material.is_del' => 0])
             ->all();
-        return $map ? ArrayHelper::map($result, 'material_value_id', 'material_value_name') : $result;
+        return $map ? ArrayHelper::map($result, 'id', 'name') : $result;
     }
 
 }

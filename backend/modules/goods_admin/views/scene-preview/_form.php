@@ -27,7 +27,7 @@ use yii\widgets\ActiveForm;
 
             <div class="modal-body" id="wskModalBody">
                 <?= Html::activeHiddenInput($model, 'goods_id') ?>
-
+                <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
                 <p>
                     <lable>素材</lable>
                     <?=

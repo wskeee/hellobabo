@@ -14,6 +14,7 @@ use apiend\modules\v1\actions\order\GetGrouponDetail;
 use apiend\modules\v1\actions\order\GetMyOrderGoods;
 use apiend\modules\v1\actions\order\GetOrderDetail;
 use apiend\modules\v1\actions\order\GetOrderList;
+use apiend\modules\v1\actions\order\GetTempOrder;
 use apiend\modules\v1\actions\order\Init;
 use apiend\modules\v1\actions\order\InitReady;
 use apiend\modules\v1\actions\order\JoinGrouponReady;
@@ -25,6 +26,9 @@ use apiend\modules\v1\actions\order\PresentSaveOrderGoodsScene;
 use apiend\modules\v1\actions\order\SaveOrderGoodsMaterial;
 use apiend\modules\v1\actions\order\SaveOrderGoodsScene;
 use apiend\modules\v1\actions\order\SaveSceneUserImage;
+use apiend\modules\v1\actions\order\SaveTempOrder;
+use apiend\modules\v1\actions\order\TempOrderReady;
+use apiend\modules\v1\actions\order\TempOrderSceneReady;
 use apiend\modules\v1\actions\order\UploadImageCompleted;
 use apiend\modules\v1\actions\order\UploadImageReady;
 
@@ -60,6 +64,10 @@ class OrderController extends ApiController
             'get-detail' => ['get'],
             'cancel' => ['post'],
             'confirm' => ['post'],
+            'temp-order-ready' => ['get'],
+            'get-temp-order' => ['get'],
+            'save-temp-order' => ['post'],
+            'temp-order-scene-ready' => ['get'],
             // 订单商品
             'get-my-order-goods' => ['get'],
             // 团购
@@ -96,6 +104,14 @@ class OrderController extends ApiController
             'get-detail' => ['class' => GetOrderDetail::class],
             'cancel' => ['class' => CancelOrder::class],
             'confirm' => ['class' => ConfirmOrder::class],
+            // 获取初始临时订单
+            'temp-order-ready' => ['class' => TempOrderReady::class],
+            // 获取临时订单
+            'get-temp-order' => ['class' => GetTempOrder::class],
+            // 获取临时订单场景配置
+            'temp-order-scene-ready' => ['class' => TempOrderSceneReady::class],
+            // 保存临时订单
+            'save-temp-order' => ['class' => SaveTempOrder::class],
             // 订单商品
             'get-my-order-goods' => ['class' => GetMyOrderGoods::class],
             // 团购

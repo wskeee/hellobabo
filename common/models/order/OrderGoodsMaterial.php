@@ -2,9 +2,12 @@
 
 namespace common\models\order;
 
+use common\models\goods\GoodsMaterial;
+use common\models\goods\GoodsMaterialValue;
 use common\utils\I18NUitl;
 use Yii;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 
 /**
  * This is the model class for table "{{%order_goods_material}}".
@@ -59,6 +62,49 @@ class OrderGoodsMaterial extends ActiveRecord
             'value_des' => Yii::t('app', 'Des'),
             'is_del' => Yii::t('app', 'Is Del'),
         ];
+    }
+
+    /**
+     * 初始默认素材
+     *
+     * @param OrderGoods $order_goods 订单商品
+     * @param array $material_value_ids 素材值ID
+     *
+     * @return int
+     */
+    public static function initDefaultMaterial($order_goods, $material_value_ids)
+    {
+        $material_values = GoodsMaterialValue::find()->where([
+            'id' => $material_value_ids,
+            'is_del' => 0
+        ])->all();
+
+        // 批量插入素材与订单关联
+        $rows = [];
+        /* @var $material_value GoodsMaterialValue */
+        foreach ($material_values as $material_value) {
+            $rows [] = [
+                $order_goods->id,
+                $material_value->material_id,
+                $material_value->id,
+                $material_value->name,
+                $material_value->effect_url,
+                $material_value->source_url,
+                $material_value->des,
+            ];
+        }
+
+        $result = Yii::$app->db->createCommand()->batchInsert(OrderGoodsMaterial::tableName(), [
+            'order_goods_id',
+            'material_id',
+            'value_id',
+            'value_name',
+            'value_effect_url',
+            'value_source_url',
+            'value_des',
+        ], $rows)->execute();
+
+        return $result;
     }
 
 }

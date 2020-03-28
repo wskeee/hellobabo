@@ -4,14 +4,17 @@ namespace common\models\order;
 
 use common\components\redis\RedisService;
 use common\models\goods\Goods;
+use common\models\goods\GoodsSpecPrice;
 use common\models\platform\WalletLog;
 use common\models\platform\Withdrawals;
 use common\models\system\Config;
 use common\models\User;
+use common\models\UserAddress;
 use common\utils\I18NUitl;
 use Yii;
 use yii\base\UserException;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\db\Exception;
 use yii\db\Expression;
@@ -182,8 +185,8 @@ class Order extends ActiveRecord
                 $order->order_status = Order::ORDER_STATUS_WAIT_DELIVER;
                 $order->save(); // 保存订单
                 OrderAction::saveLog([$order->id], '支付成功', "支付方式：{$order->pay_code}");
-                // 设置购买的商品为初始状态
-                OrderGoods::updateAll(['status' => OrderGoods::STATUS_INIT], ['order_id' => $order->id]);
+                // 设置购买的商品为待上图状态
+                OrderGoods::updateAll(['status' => OrderGoods::STATUS_UPLOAD_PIC, 'init_at' => time()], ['order_id' => $order->id]);
                 GrouponRecord::updateAll(['status' => GrouponRecord::STATUS_SUCCESS], ['order_id' => $order->id]);
             } else {
                 // 用户支付失败
@@ -348,7 +351,7 @@ class Order extends ActiveRecord
 
     /**
      *
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getCreater()
     {
@@ -357,7 +360,7 @@ class Order extends ActiveRecord
 
     /**
      * 推荐人
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getReferrer()
     {
@@ -366,7 +369,7 @@ class Order extends ActiveRecord
 
     /**
      * 制作日志
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getActionLogs()
     {
@@ -375,12 +378,88 @@ class Order extends ActiveRecord
 
     /**
      * 绘本
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getOrderGoods()
     {
         return $this->hasMany(OrderGoods::class, ['order_id' => 'id']);
     }
+
+    /**
+     * 创建订单
+     *
+     * @param Goods $goods 商品
+     * @param GoodsSpecPrice $spec_price 规格
+     * @param int $goods_num 商品数量
+     * @param int $address_id 地址
+     * @param array $params 可选参数
+     *
+     * @return array [Order,OrderGoods]
+     *
+     * @throws \yii\base\Exception
+     */
+    public static function createOrder($goods, $spec_price, $goods_num, $address_id, $params = [])
+    {
+        $user_id = Yii::$app->user->id;
+        $groupon_id = $params['groupon_id'];
+        $recommend_by = $params['recommend_by'];
+        $user_note = $params['user_note'];
+        $address = UserAddress::findOne(['id' => $address_id]);
+
+        $order = new Order([
+            'order_sn' => self::getRandomSN(),
+            'order_amount' => $spec_price->goods_price * $goods_num, //订单总额使用套餐价格
+            //推荐
+            'is_recommend' => $recommend_by != null ? 1 : 0, //是否为推荐订单
+            'recommend_by' => $recommend_by, //推挤人ID
+            //收货地址
+            'address_id' => $address->id, //地址ID
+            'user_note' => $user_note, //留言
+            'consignee' => $address->consignee, //收货人
+            'zipcode' => $address->zipcode,
+            'phone' => $address->phone,
+            'province' => $address->province,
+            'city' => $address->city,
+            'district' => $address->district,
+            'town' => $address->town,
+            'address' => $address->address,
+            'created_by' => $user_id,
+        ]);
+
+        if ($order->save()) {
+            /* 创建商品 */
+            $order_goods = new OrderGoods([
+                'order_id' => $order->id,
+                'order_sn' => $order->order_sn,
+                'created_by' => $user_id,
+                'groupon_id' => $groupon_id,
+                'type' => $goods->type,
+                //商品
+                'goods_id' => $goods->id,
+                'goods_name' => $goods->goods_name, //商品名
+                'goods_img' => $goods->cover_url, //图片
+                'goods_price' => $spec_price->goods_price, //商品价格
+                'goods_num' => $goods_num, //购买数量
+                'goods_params' => $goods->params, //商品参数
+                'scene_num' => $spec_price->scene_num, //购买场景数量
+                'spec_id' => $spec_price->id, //价格ID
+                'spec_key' => $spec_price->spec_key, //价格项ID
+                'spec_key_name' => $spec_price->spec_key_name, //价格项名
+                'amount' => $spec_price->goods_price * $goods_num, //总价
+            ]);
+            if (!$order_goods->save()) {
+                throw new \yii\base\Exception(implode(',', $order_goods->getErrorSummary(true)));
+            }
+            // 创建记录日志
+            OrderAction::saveLog([$order->id], '创建订单', '');
+            OrderGoodsAction::saveLog([$order_goods->id], '订单创建', '');
+            OrderGoodsAction::saveLog([$order_goods->id], '初始绘本', '用户初始化绘本');
+        } else {
+            throw new \yii\base\Exception(implode(',', $order->getErrorSummary(true)));
+        }
+        return [$order, $order_goods];
+    }
+
 
     /**
      * 返回销售统计
@@ -415,11 +494,11 @@ class Order extends ActiveRecord
                 new Expression('FROM_UNIXTIME(Order.created_at,\'%Y-%m-%d\') as date'),
             ])
             ->from(['Order' => self::tableName()])
-            ->leftJoin(['OrderGoods' => OrderGoods::tableName()],'OrderGoods.order_id = Order.id')
-            ->leftJoin(['Goods' => Goods::tableName()],'Goods.id = OrderGoods.goods_id')
+            ->leftJoin(['OrderGoods' => OrderGoods::tableName()], 'OrderGoods.order_id = Order.id')
+            ->leftJoin(['Goods' => Goods::tableName()], 'Goods.id = OrderGoods.goods_id')
             ->andWhere(['between', 'Order.created_at', strtotime("today -$day_num day 00:00:00"), time()])
             ->andWhere(['Order.order_status' => self::ORDER_STATUS_WAIT_DELIVER])
-            ->groupBy(['OrderGoods.goods_id','date'])
+            ->groupBy(['OrderGoods.goods_id', 'date'])
             ->all();
 
         return $data;

@@ -9,7 +9,7 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = I18NUitl::t('app', '{Scene}{Preview}{List}');
-$this->params['breadcrumbs'][] = ['label' => I18NUitl::t('app', "{$searchModel->goods->goods_name}"), 'url' => ['/goods_admin/goods/view', 'goods_id' => $searchModel->goods_id]];
+$this->params['breadcrumbs'][] = ['label' => I18NUitl::t('app', "{$searchModel->goods->goods_name}"), 'url' => ['/goods_admin/goods/view', 'id' => $searchModel->goods_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="goods-scene-preview-index">
@@ -37,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->scene->name;
                 }
             ],
+            'name',
             [
                 'attribute' => 'effect_url',
                 'format' => 'raw',

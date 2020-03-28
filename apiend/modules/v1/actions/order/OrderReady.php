@@ -21,13 +21,21 @@ class OrderReady extends BaseAction
 
     public function run()
     {
+        $user_id = Yii::$app->user->id;
         $goods_id = $this->getSecretParam('goods_id');
         $goods = Goods::findOne(['id' => $goods_id]);
         if ($goods == null) {
             return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => Yii::t('app', 'Goods')]);
         }
 
-        $address = UserAddress::findOne(['user_id' => Yii::$app->user->id, 'is_default' => 1 , 'is_del' => 0]);
+        // 临时订单
+        $temp_order = GetTempOrder::getTempOrder($user_id, $goods_id);
+        if(empty($temp_order)){
+            return new Response(Response::CODE_COMMON_NOT_FOUND, null, ['param' => '临时订单']);
+        }
+        // 默认地址
+        $address = UserAddress::getDefautAddress($user_id);
+        // 规格
         $specs = $goods->goodsModel->goodsSpecs;
         $gsps = $goods->getGoodsSpecPrices();
         $gsp_key = $gsps[0]['spec_key'];
@@ -59,6 +67,7 @@ class OrderReady extends BaseAction
         $goods_arr['mobile_content'] = explode(',', $goods->goodsDetails->mobile_content);
 
         return new Response(Response::CODE_COMMON_OK, null, [
+            'temp_order' => $temp_order,
             'goods' => $goods_arr,
             'specs' => $specs, //规格
             'gsps' => ArrayHelper::index($gsps, 'spec_key'), //规格价格

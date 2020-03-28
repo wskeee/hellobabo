@@ -64,6 +64,8 @@ class Response extends ApiResponse{
     const CODE_ORDER_PAY_REPEATED = '10302';
     /* 订单取消失败 */
     const CODE_ORDER_CANCEL_FAILED = '10303';
+    /* 保存预订单失败 */
+    const CODE_ORDER_SAVE_TRY_FAILED = '10304';
     
     //--------------------------------------------------------------------------------------------------------------
     //
@@ -113,7 +115,8 @@ class Response extends ApiResponse{
             self::CODE_ORDER_CREATE_FAILED => '下单失败！',
             self::CODE_ORDER_PAY_REPEATED => '重复支付！',
             self::CODE_ORDER_CANCEL_FAILED => '订单取消失败！',
-            
+            self::CODE_ORDER_SAVE_TRY_FAILED => '保存订单失败！',
+
             /* VOTE */
             self::CODE_VOTE_OVER_DAY_MAX => '每天最多只能投 {param} 票',
             

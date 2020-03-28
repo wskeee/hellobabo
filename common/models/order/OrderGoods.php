@@ -6,6 +6,7 @@ use common\models\goods\Goods;
 use common\utils\I18NUitl;
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -155,7 +156,7 @@ class OrderGoods extends ActiveRecord
 
     /**
      * 订单
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getOrder()
     {
@@ -164,7 +165,7 @@ class OrderGoods extends ActiveRecord
 
     /**
      * 商品
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getGoods()
     {
@@ -173,7 +174,7 @@ class OrderGoods extends ActiveRecord
 
     /**
      * 团购
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getGroupon()
     {
@@ -182,7 +183,7 @@ class OrderGoods extends ActiveRecord
 
     /**
      * 订单素材
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getOrderGoodsMaterials()
     {
@@ -191,7 +192,7 @@ class OrderGoods extends ActiveRecord
 
     /**
      * 订单场景 
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getOrderGoodsScenes()
     {
@@ -200,7 +201,7 @@ class OrderGoods extends ActiveRecord
 
     /**
      * 订单场景页 
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getOrderGoodsScenePages()
     {
@@ -209,7 +210,7 @@ class OrderGoods extends ActiveRecord
 
     /**
      * 制作日志
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getActionLogs()
     {

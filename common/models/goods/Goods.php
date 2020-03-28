@@ -56,10 +56,10 @@ use yii\helpers\ArrayHelper;
  * @property GoodsAction[] $goodsActions
  * @property GoodsApprove[] $goodsApproves
  * @property GoodsAttValueRef[] $goodsAttValueRefs
- * @property GoodsDetail[] $goodsDetails
+ * @property GoodsDetail $goodsDetails
  * @property GoodsTagRef[] $goodsTagRefs
  * @property Issue[] $issues
- * @property Array[] $goodsSpecItems    所有商品规格
+ * @property array[] $goodsSpecItems    所有商品规格
  */
 class Goods extends ActiveRecord
 {
@@ -206,7 +206,7 @@ class Goods extends ActiveRecord
      */
     public function getGoodsCategory()
     {
-        return $this->hasOne(GoodsCategory::className(), ['id' => 'category_id']);
+        return $this->hasOne(GoodsCategory::class, ['id' => 'category_id']);
     }
 
     /**
@@ -214,7 +214,7 @@ class Goods extends ActiveRecord
      */
     public function getGoodsModel()
     {
-        return $this->hasOne(GoodsModel::className(), ['id' => 'model_id']);
+        return $this->hasOne(GoodsModel::class, ['id' => 'model_id']);
     }
 
     /**
@@ -222,7 +222,7 @@ class Goods extends ActiveRecord
      */
     public function getGoodsActions()
     {
-        return $this->hasMany(GoodsAction::className(), ['goods_id' => 'id']);
+        return $this->hasMany(GoodsAction::class, ['goods_id' => 'id']);
     }
 
     /**
@@ -230,7 +230,7 @@ class Goods extends ActiveRecord
      */
     public function getGoodsApproves()
     {
-        return $this->hasMany(GoodsApprove::className(), ['goods_id' => 'id']);
+        return $this->hasMany(GoodsApprove::class, ['goods_id' => 'id']);
     }
 
     /**
@@ -238,7 +238,7 @@ class Goods extends ActiveRecord
      */
     public function getGoodsAttValueRefs()
     {
-        return $this->hasMany(GoodsAttValueRef::className(), ['goods_id' => 'id'])->where(['is_del' => 0]);
+        return $this->hasMany(GoodsAttValueRef::class, ['goods_id' => 'id'])->where(['is_del' => 0]);
     }
 
     /**
@@ -246,7 +246,7 @@ class Goods extends ActiveRecord
      */
     public function getGoodsDetails()
     {
-        return $this->hasOne(GoodsDetail::className(), ['goods_id' => 'id']);
+        return $this->hasOne(GoodsDetail::class, ['goods_id' => 'id']);
     }
 
     /**
@@ -254,7 +254,7 @@ class Goods extends ActiveRecord
      */
     public function getGoodsTagRefs()
     {
-        return $this->hasMany(GoodsTagRef::className(), ['goods_id' => 'id']);
+        return $this->hasMany(GoodsTagRef::class, ['goods_id' => 'id']);
     }
 
     /**
@@ -262,7 +262,7 @@ class Goods extends ActiveRecord
      */
     public function getIssues()
     {
-        return $this->hasMany(Issue::className(), ['goods_id' => 'id']);
+        return $this->hasMany(Issue::class, ['goods_id' => 'id']);
     }
 
     /**
@@ -270,7 +270,7 @@ class Goods extends ActiveRecord
      */
     public function getOwner()
     {
-        return $this->hasOne(AdminUser::className(), ['id' => 'owner_id']);
+        return $this->hasOne(AdminUser::class, ['id' => 'owner_id']);
     }
 
     /**
@@ -278,7 +278,7 @@ class Goods extends ActiveRecord
      */
     public function getCreater()
     {
-        return $this->hasOne(AdminUser::className(), ['id' => 'created_by']);
+        return $this->hasOne(AdminUser::class, ['id' => 'created_by']);
     }
 
     /**
@@ -286,11 +286,11 @@ class Goods extends ActiveRecord
      */
     public function getUpdater()
     {
-        return $this->hasOne(AdminUser::className(), ['id' => 'updated_by']);
+        return $this->hasOne(AdminUser::class, ['id' => 'updated_by']);
     }
 
     /**
-     * @return Array
+     * @return array
      */
     public function getGoodsSpecItems()
     {
@@ -313,7 +313,7 @@ class Goods extends ActiveRecord
 
     /**
      * 获取商品价格项
-     * @return Array Description
+     * @return array Description
      */
     public function getGoodsSpecPrices()
     {

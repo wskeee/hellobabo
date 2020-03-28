@@ -5,6 +5,7 @@ namespace common\models\order;
 use common\models\goods\GoodsScenePage;
 use Yii;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 
 /**
  * This is the model class for table "hbabo_order_goods_scene_page".
@@ -97,6 +98,55 @@ class OrderGoodsScenePage extends ActiveRecord
     public function getScene()
     {
         return $this->hasOne(OrderGoodsScene::class, ['id' => 'order_goods_scene_id']);
+    }
+
+    /**
+     * 初始分页数据
+     *
+     * @param OrderGoods $model 订单商品
+     * @return int
+     */
+    public static function initPage($model)
+    {
+        $query = (new Query())
+            ->select([
+                'OrderGoodsScene.id order_goods_scene_id', 'OrderGoodsScene.sort_order scene_sort_order',
+                'ScenePage.*'
+            ])
+            ->from(['OrderGoodsScene' => OrderGoodsScene::tableName()])
+            ->leftJoin(['ScenePage' => GoodsScenePage::tableName()], 'ScenePage.scene_id = OrderGoodsScene.scene_id')
+            ->where([
+                'OrderGoodsScene.order_goods_id' => $model->id,
+                'OrderGoodsScene.is_del' => 0,
+                'ScenePage.is_del' => 0,
+            ])->orderBy(['scene_sort_order' => SORT_ASC, 'pos' => SORT_ASC]);
+
+        $pages = $query->all();
+        $rows = [];
+        $sort_order = 0;
+        foreach ($pages as $page) {
+            $rows[] = [
+                $model->id,
+                $page['order_goods_scene_id'],
+                $page['id'],
+                $page['source_id'],
+                $page['name'],
+                $page['effect_url'],
+                $page['source_url'],
+                $page['pos'],
+                $page['is_required'],
+                $page['des'],
+                $sort_order++,
+            ];
+        }
+        // 清除旧数据
+        //OrderGoodsScenePage::updateAll(['is_del' => 1], ['order_goods_id' => $model->id]);
+
+        $result = Yii::$app->db->createCommand()->batchInsert(OrderGoodsScenePage::tableName(), [
+            'order_goods_id', 'order_goods_scene_id', 'page_id', 'source_id', 'name', 'effect_url', 'source_url', 'pos', 'is_required', 'des', 'sort_order'
+        ], $rows)->execute();
+
+        return $result;
     }
 
 }

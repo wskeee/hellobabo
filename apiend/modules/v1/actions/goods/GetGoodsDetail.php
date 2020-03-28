@@ -24,8 +24,10 @@ class GetGoodsDetail extends BaseAction
         if ($goods == null) {
             return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => Yii::t('app', 'Goods')]);
         }
+        $goods_arr = $goods->toArray();
+        $goods_arr['mobile_content'] = explode(',', $goods->goodsDetails->mobile_content);
 
-        return new Response(Response::CODE_COMMON_OK, null, $goods);
+        return new Response(Response::CODE_COMMON_OK, null, $goods_arr);
     }
 
 }

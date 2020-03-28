@@ -3,6 +3,7 @@
 namespace common\models\order;
 
 use Yii;
+use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -96,6 +97,100 @@ class Groupon extends ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    /**
+     * 查询相关团购
+     *
+     * @param int $groupon_id
+     * @return Groupon
+     * @throws Exception
+     */
+    public static function findGroupon($groupon_id)
+    {
+        if ($groupon_id != null) {
+            $groupon = Groupon::findOne(['id' => $groupon_id, 'status' => Groupon::STATUS_RUNING]);
+            if ($groupon == null) {
+                throw new Exception('团购不存在！');
+            } else if ($groupon->status == Groupon::STATUS_FINISHED) {
+                throw new Exception('来晚啦，该团购已满！');
+            }
+            return $groupon;
+        }
+        return null;
+    }
+
+    /**
+     * 创建团购
+     *
+     * @param string $name 团购名称
+     * @param string $des 团购描述
+     * @param string $cover_url 团购封面
+     * @param int $amount 团购总金额
+     * @param OrderGoods $orderGoods 团购商品
+     *
+     * @throws Exception
+     */
+    public static function createGroupon($name, $des, $cover_url, $amount, $order_goods)
+    {
+        $groupon = new Groupon([
+            'name' => $name,
+            'des' => $des,
+            'cover_url' => $cover_url,
+            'order_id' => $order_goods->order_id,
+            'order_goods_id' => $order_goods->id,
+            'goods_id' => $order_goods->goods_id,
+            'goods_name' => $order_goods->goods_name,
+            'goods_img' => $order_goods->goods_img,
+            'goods_params' => $order_goods->goods_params,
+            'spec_id' => $order_goods->spec_id,
+            'spec_key' => $order_goods->spec_key,
+            'spec_key_name' => $order_goods->spec_key_name,
+            'amount' => $amount,
+            'created_by' => Yii::$app->user->id,
+        ]);
+        if ($groupon->validate() && $groupon->save()) {
+            $order_goods->groupon_id = $groupon->id;
+            $order_goods->save();
+            $record = new GrouponRecord([
+                'groupon_id' => $groupon->id,
+                'user_id' => Yii::$app->user->id,
+                'order_id' => $order_goods->order_id,
+                'order_goods_id' => $order_goods->id,
+                'status' => GrouponRecord::STATUS_SUCCESS,
+            ]);
+            $record->save();
+        } else {
+            throw new Exception(implode(',', $groupon->getErrorSummary(true)));
+        }
+    }
+
+    /**
+     * 加入团购
+     *
+     * @param Groupon $groupon 团购
+     * @param int $user_id 用户ID
+     * @param int $goods_id 商品ID
+     * @param int $order_goods_id 订单商品ID
+     */
+    public static function joinGroupon($groupon, $user_id, $order_id, $order_goods_id)
+    {
+        $groupon_id = $groupon->id;
+        $groupon_record = new GrouponRecord([
+            'user_id' => $user_id,
+            'groupon_id' => $groupon_id,
+            'order_id' => $order_id,
+            'order_goods_id' => $order_goods_id,
+        ]);
+        $groupon_record->save();
+
+        // 检查是否满员
+        $role_num = json_decode($groupon->goods_params)->role_num;
+        $count = GrouponRecord::find()->where(['groupon_id' => $groupon_id])->andWhere(['<>', 'status', GrouponRecord::STATUS_INVALID])->count();
+        if ($count >= $role_num) {
+            $groupon->status = Groupon::STATUS_FINISHED;
+            $groupon->save();
+        }
     }
 
 }

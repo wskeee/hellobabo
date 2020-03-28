@@ -19,7 +19,7 @@ use yii\db\ActiveRecord;
  * @property int $is_required 是否必选 0否 1是
  * @property int $is_del 是否删除
  * @property string $des 备注
- * 
+ *
  * @property Goods $goods 商品
  */
 class GoodsMaterial extends ActiveRecord
@@ -27,19 +27,19 @@ class GoodsMaterial extends ActiveRecord
 
     /** 单选-输入类型 */
     const TYPE_SINGLE_SELECT = 1;
-    
+
     /** 多选-输入类型 */
     const TYPE_MULTPLE_SELECT = 2;
-    
+
     /** 单行-输入类型 */
     const TYPE_SINGLE_INPUT = 3;
-    
+
     /** 多行-输入类型 */
     const TYPE_MULTPLE_INPUT = 4;
-    
+
     /**
      * 输入类型
-     * @var array 
+     * @var array
      */
     public static $inputTypeMap = [
         self::TYPE_SINGLE_SELECT => '单选框',
@@ -86,12 +86,22 @@ class GoodsMaterial extends ActiveRecord
     }
 
     /**
-     * 
+     *
      * @return ActiveQuery
      */
     public function getGoods()
     {
         return $this->hasOne(Goods::class, ['id' => 'goods_id']);
+    }
+
+    /**
+     * 获取素材
+     *
+     * @param int $goods_id
+     */
+    public static function getMaterialByGoodsId($goods_id)
+    {
+        return self::find()->where(['goods_id' => $goods_id, 'is_del' => 0])->all();
     }
 
 }
