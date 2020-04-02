@@ -50,11 +50,22 @@ $goodsDetails = $model->isNewRecord ? new GoodsDetail() : $model->goodsDetails;
     <!-- 商品名称 -->
     <?= $form->field($model, 'goods_name')->textInput(['maxlength' => true]) ?>
 
+    <!-- 商品英文名 -->
+    <?= $form->field($model, 'goods_english_name')->textInput(['maxlength' => true]) ?>
+
     <!-- 商品标题 -->
     <?= $form->field($model, 'goods_title')->textInput(['maxlength' => true]) ?>     
     
     <!-- 商品参数 -->
-    <?= $form->field($model, 'params')->textarea(['maxlength' => true]) ?>     
+    <?= $form->field($model, 'params')->textarea(['maxlength' => true]) ?>
+
+    <!-- 标题图片 -->
+    <div class="form-group picker-form-group">
+        <label class="control-label form-label">标题图片</label>
+        <div class="item">
+            <?= ImagePicker::widget(['model' => $model, 'attribute' => 'goods_title_url']) ?>
+        </div>
+    </div>
 
     <div class="form-group picker-form-group">
         <label class="control-label form-label">图片/视频</label>

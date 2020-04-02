@@ -21,7 +21,9 @@ use yii\helpers\ArrayHelper;
  * @property int $owner_id 当前所有者id，关联admin_user表id字段
  * @property string $goods_sn 商品编码
  * @property string $goods_name 商品名称
+ * @property string $goods_english_name 商品英文名称
  * @property string $goods_title 商品标题
+ * @property string $goods_title_url 商品标题路径
  * @property string $goods_cost 成本
  * @property string $goods_price 价格
  * @property string $goods_des 描述/简介
@@ -122,7 +124,7 @@ class Goods extends ActiveRecord
             [['goods_name'], 'string', 'max' => 100],
             [['goods_title'], 'string', 'max' => 50],
             [['show_urls'], 'arrTostr'],
-            [['goods_des', 'cover_url', 'video_url', 'poster_url', 'share_thumb_url', 'tags'], 'string', 'max' => 255],
+            [['goods_des', 'cover_url', 'video_url', 'poster_url', 'share_thumb_url', 'tags','goods_english_name','goods_title_url'], 'string', 'max' => 255],
             [['params'], 'string'],
             [['tags'], 'tagVerify',],
         ];
@@ -175,7 +177,9 @@ class Goods extends ActiveRecord
             'type' => Yii::t('app', 'Type'),
             'commission' => Yii::t('app', 'Commission'),
             'goods_name' => Yii::t('app', 'Name'),
-            'goods_title' => Yii::t('app', 'Title'),
+            'goods_english_name' => Yii::t('app', 'Goods English Name'),
+            'goods_title' => I18NUitl::t('app', 'Title'),
+            'goods_title_url' => I18NUitl::t('app', '{Title}{Url}'),
             'goods_cost' => Yii::t('app', 'Cost'),
             'goods_price' => Yii::t('app', 'Price'),
             'goods_des' => Yii::t('app', 'Des'),

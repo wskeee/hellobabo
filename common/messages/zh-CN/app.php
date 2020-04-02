@@ -77,7 +77,8 @@ return [
     'Second Season' => '第二季',
     'Third Season' => '第三季',
     'Fourth Season' => '第四季',
-    
+    'Click' => '点击',
+
     //公共-导航
     'Home' => '首页',
     'Homepage' => '主页',
@@ -417,6 +418,7 @@ return [
     'Visit Count' => '访问次数',
     'Refresh Cache' => '刷新缓存',
     'Goods Operate' => '商品运营',
+    'Goods English Name' => '商品英文名',
     'Tegistration Time' => '注册时间',
     'Is Recommend' => '是否为推荐',
     'Recommend By' => '推荐人',

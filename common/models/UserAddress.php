@@ -96,4 +96,13 @@ class UserAddress extends ActiveRecord
         return $address;
     }
 
+    /**
+     * 获取默认地址
+     *
+     * @param int $user_id
+     */
+    public static function getDefautAddress($user_id){
+        return self::findOne(['user_id' => $user_id, 'is_default' => 1 , 'is_del' => 0]);
+    }
+
 }
