@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                       'value' => function($model) {
                       return Html::img($model->demo_url, ['style' => 'height:64px']);
                       }
-                      ], */
+                      ],
                     [
                         'attribute' => 'source_url',
                         'format' => 'raw',
@@ -61,8 +61,16 @@ $this->params['breadcrumbs'][] = $this->title;
                         'value' => function($model) {
                             return Html::img($model->source_url, ['style' => 'height:64px']);
                         }
-                    ],
+                    ],*/
                     'des:text',
+                    [
+                        'attribute' => 'is_demo',
+                        'class' => GridViewChangeSelfColumn::class,
+                        'headerOptions' => ['style' => 'width:80px'],
+                        'plugOptions' => [
+                            'url' => '/goods_admin/scene/change-value'
+                        ],
+                    ],
                     [
                         'attribute' => 'is_selected',
                         'class' => GridViewChangeSelfColumn::class,
@@ -80,6 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
                       'url' => '/goods_admin/scene/change-value'
                       ],
                       ], */
+
                     [
                         'attribute' => 'immutable',
                         'class' => GridViewChangeSelfColumn::class,

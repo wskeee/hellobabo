@@ -3,6 +3,7 @@
 use common\models\goods\Goods;
 use common\models\goods\SceneGroup;
 use common\models\goods\searchs\GoodsSceneSearch;
+use common\utils\I18NUitl;
 use kartik\widgets\Select2;
 use yii\helpers\Html;
 use yii\web\View;
@@ -45,6 +46,22 @@ use yii\widgets\ActiveForm;
                 'attribute' => 'group_id',
                 'data' => SceneGroup::getGroup($goodsModel->id),
                 'options' => ['placeholder' => Yii::t('app', 'Group')],
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' => ['change' => 'function(){ submitForm()}']
+            ])
+            ?>
+        </div>
+    </div>
+
+    <!-- 是否为样例 -->
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown" >
+            <?=
+            Select2::widget([
+                'model' => $model,
+                'attribute' => 'is_demo',
+                'data' => ['否', '是'],
+                'options' => ['placeholder' => I18NUitl::t('app', '{Is} {Demo}')],
                 'pluginOptions' => ['allowClear' => true],
                 'pluginEvents' => ['change' => 'function(){ submitForm()}']
             ])

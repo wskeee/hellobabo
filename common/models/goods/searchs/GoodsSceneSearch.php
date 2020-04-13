@@ -18,7 +18,7 @@ class GoodsSceneSearch extends GoodsScene
     public function rules()
     {
         return [
-            [['id', 'goods_id', 'group_id', 'sort_order', 'immutable', 'is_required', 'is_selected', 'is_del'], 'integer'],
+            [['id', 'goods_id', 'group_id', 'sort_order','is_demo', 'immutable', 'is_required', 'is_selected', 'is_del'], 'integer'],
             [['name', 'effect_url', 'demo_url', 'source_url', 'des'], 'safe'],
         ];
     }
@@ -66,6 +66,7 @@ class GoodsSceneSearch extends GoodsScene
             'goods_id' => $this->goods_id,
             'group_id' => $this->group_id,
             'sort_order' => $this->sort_order,
+            'is_demo' => $this->is_demo,
             'immutable' => $this->immutable,
             'is_required' => $this->is_required,
             'is_selected' => $this->is_selected,

@@ -45,6 +45,7 @@ class DefaultController extends Controller
                 ->where([
                     'Scene.goods_id' => $gid,
                     'Scene.is_selected' => 1,
+                    'Scene.is_demo' => 1,
                     'Scene.is_del' => 0,
                     'Page.is_del' => 0,
                 ])

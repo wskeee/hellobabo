@@ -43,6 +43,9 @@ use yii\widgets\ActiveForm;
 
     <!-- 默认选择、必须上图、不可更改 -->
     <div style="display: inline-block;margin-right: 20px;">
+        <?= $form->field($model, 'is_demo')->checkbox() ?>
+    </div>
+    <div style="display: inline-block;margin-right: 20px;">
         <?= $form->field($model, 'is_selected')->checkbox() ?>
     </div>
     <div style="display: inline-block;margin-right: 20px;">
