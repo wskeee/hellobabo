@@ -99,6 +99,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     'updata' => function ($url, $model) {
                         return Html::a(Yii::t('yii', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-default', 'style' => 'margin-bottom: 5px;']);
                     },
+                    'pose' => function ($url, $model) {
+                        return Html::a(Yii::t('yii', 'Pose'), ['/goods_admin/page-pose/update', 'id' => $model->id], ['class' => 'btn btn-default', 'style' => 'margin-bottom: 5px;','data-toggle' => 'wsk-modal']);
+                    },
                     'preview' => function ($url, $model) {
                         return Html::a(Yii::t('app', 'Preview'), null, [
                                     'class' => 'btn btn-default',
@@ -118,9 +121,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                 ],
                 'headerOptions' => ['style' => 'width:120px'],
-                'template' => '<div style="display:flex;flex-direction: column;">{setting} {updata} {preview} {delete}</div>',
+                'template' => '<div style="display:flex;flex-direction: column;">{setting} {updata} {pose} {preview} {delete}</div>',
             ],
         ],
     ]);
     ?>
 </div>
+<!-- 加入弹出模态框 -->
+<?= $this->render('../layouts/modal') ?>

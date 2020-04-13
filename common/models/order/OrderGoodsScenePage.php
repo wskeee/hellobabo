@@ -4,6 +4,7 @@ namespace common\models\order;
 
 use common\models\goods\GoodsScenePage;
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\db\Query;
 
@@ -21,6 +22,7 @@ use yii\db\Query;
  * @property string $source_url 源始路径
  * @property string $user_img_url 用户上传的图片路径
  * @property string $finish_url 成品地址
+ * @property string $user_data 用户数据
  * @property string $pos 位置：left,right,center
  * @property int $sort_order 排序
  * @property int $is_required 是否必需上传相片 0否 1是
@@ -52,6 +54,7 @@ class OrderGoodsScenePage extends ActiveRecord
             [['name'], 'string', 'max' => 50],
             [['effect_url', 'source_url', 'user_img_url', 'finish_url', 'des'], 'string', 'max' => 255],
             [['pos'], 'string', 'max' => 10],
+            [['user_data'], 'string'],
         ];
     }
 
@@ -83,7 +86,7 @@ class OrderGoodsScenePage extends ActiveRecord
     /**
      * 源页
      * 
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getSourcePage()
     {
@@ -93,7 +96,7 @@ class OrderGoodsScenePage extends ActiveRecord
     /**
      * 场景
      * 
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getScene()
     {

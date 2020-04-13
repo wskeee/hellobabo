@@ -5,6 +5,7 @@ namespace apiend\modules\v1\controllers;
 use apiend\controllers\ApiController;
 use apiend\modules\v1\actions\system\GetRegion;
 use apiend\modules\v1\actions\system\Poster;
+use apiend\modules\v1\actions\system\TestUpload;
 use apiend\modules\v1\actions\system\Upload;
 
 /**

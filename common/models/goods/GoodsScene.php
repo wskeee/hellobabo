@@ -2,6 +2,7 @@
 
 namespace common\models\goods;
 
+use common\utils\I18NUitl;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -19,6 +20,7 @@ use yii\helpers\ArrayHelper;
  * @property string $source_url 源图路径
  * @property int $sort_order 排序
  * @property string $pos 位置 start,center,end
+ * @property int $is_demo 是否为样例 0否 1是
  * @property int $immutable 不可选 0否 1是
  * @property int $is_required 是否必选 0否 1是
  * @property int $is_selected 默认选中 0否 1是
@@ -55,7 +57,7 @@ class GoodsScene extends ActiveRecord
     {
         return [
             [['goods_id', 'group_id', 'name'], 'required'],
-            [['goods_id', 'group_id', 'sort_order', 'immutable', 'is_required', 'is_selected', 'is_del'], 'integer'],
+            [['goods_id', 'group_id', 'sort_order', 'is_demo', 'immutable', 'is_required', 'is_selected', 'is_del'], 'integer'],
             [['name'], 'string', 'max' => 20],
             [['pos'], 'string', 'max' => 10],
             [['effect_url', 'demo_url', 'source_url', 'des'], 'string', 'max' => 255],
@@ -77,6 +79,7 @@ class GoodsScene extends ActiveRecord
             'source_url' => Yii::t('app', 'Source Url'),
             'sort_order' => Yii::t('app', 'Sort Order'),
             'pos' => Yii::t('app', 'Pos'),
+            'is_demo' => I18NUitl::t('app', '{Is} {Demo}'),
             'immutable' => Yii::t('app', 'Immutable'),
             'is_required' => Yii::t('app', 'Required Img'),
             'is_selected' => Yii::t('app', 'Is Selected'),

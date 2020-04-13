@@ -14,10 +14,11 @@ class GetInfo extends BaseAction
     {
         /* @var $user User */
         $user = Yii::$app->user->identity;
-
-        return new Response(Response::CODE_COMMON_OK, null, $user->toArray([
-                    'id','username', 'nickname', 'phone', 'sex', 'avatar'
-        ]));
+        $data = $user->toArray([
+            'id', 'username', 'nickname', 'phone', 'sex', 'avatar'
+        ]);
+        $data['gameData'] = $user->gameData;
+        return new Response(Response::CODE_COMMON_OK, null, $data);
     }
 
 }

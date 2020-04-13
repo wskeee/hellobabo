@@ -95,7 +95,6 @@ use yii\widgets\ActiveForm;
     function fileDequeued(evt,file){
         $source_id = $('#goodsscenepage-source_id');
         $source_id.val("");
-        console.log($source_id.val());
     }
     
     /**

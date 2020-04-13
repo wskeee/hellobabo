@@ -6,6 +6,7 @@ use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
 use common\models\User;
 use common\models\UserAuths;
+use common\models\UserGameData;
 use common\models\UserProfile;
 use Exception;
 use Yii;
@@ -45,7 +46,8 @@ class Login extends BaseAction
                 $user->generateAccessToken();
                 if ($user->save()) {
                     $profile = new UserProfile(['user_id' => $user->id]);
-                    if ($profile->save()) {
+                    $gameData = new UserGameData(['user_id' => $user->id]);
+                    if ($profile->save() && $gameData->save()) {
                         $userAuth = new UserAuths([
                             'user_id' => $user->id,
                             'identity_type' => UserAuths::TYPE_WEXIN,

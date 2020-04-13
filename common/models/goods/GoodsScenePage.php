@@ -4,6 +4,7 @@ namespace common\models\goods;
 
 use common\components\aliyuncs\Aliyun;
 use Yii;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -26,6 +27,7 @@ use yii\db\ActiveRecord;
  * @property-read ShootingAngle $angle 角度
  * @property-read ShootingFace $face 表情
  * @property-read Array<ShootingAction> $actions 动作
+ * @property-read GoodsPagePose $pose 人体数据
  */
 class GoodsScenePage extends ActiveRecord
 {
@@ -99,7 +101,7 @@ class GoodsScenePage extends ActiveRecord
     }
 
     /**
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getScene()
     {
@@ -107,7 +109,7 @@ class GoodsScenePage extends ActiveRecord
     }
     
     /**
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getAngle()
     {
@@ -115,7 +117,7 @@ class GoodsScenePage extends ActiveRecord
     }
     
     /**
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getFace()
     {
@@ -123,10 +125,17 @@ class GoodsScenePage extends ActiveRecord
     }
     
     /**
-     * @return QueryRecord
+     * @return ActiveQuery
      */
     public function getActions(){
         return $this->hasMany(ShootingAction::class, ['page_id' => 'id'])->where(['is_del' => 0]);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getPose(){
+        return $this->hasOne(GoodsPagePose::class, ['page_id' => 'id']);
     }
 
 }

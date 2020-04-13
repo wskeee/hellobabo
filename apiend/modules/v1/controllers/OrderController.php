@@ -5,6 +5,7 @@ namespace apiend\modules\v1\controllers;
 use apiend\controllers\ApiController;
 use apiend\modules\v1\actions\order\CancelOrder;
 use apiend\modules\v1\actions\order\CheckPay;
+use apiend\modules\v1\actions\order\CheckPose;
 use apiend\modules\v1\actions\order\ClearSceneUserImage;
 use apiend\modules\v1\actions\order\ConfirmOrder;
 use apiend\modules\v1\actions\order\CreateGroupon;
