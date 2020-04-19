@@ -25,7 +25,7 @@ AppAsset::register($this);
 <div class="wrap-empty">
     <div>
         <!-- 不加这个顶部会有空白 -->
-        <div style="height: 1px"></div>
+        <!--<div style="height: 1px"></div>-->
         <?= $content ?>
     </div>
 </div>

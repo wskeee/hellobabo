@@ -25,9 +25,7 @@
     height: 100%;
 }
 .help-default-post .post-content{
-    padding: 15px;
-
-    background: #fff;
+    background: #f2f2f2;
 }
 
 .help-default-post .post-content .p-title{
