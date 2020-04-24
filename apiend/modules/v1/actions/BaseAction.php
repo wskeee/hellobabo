@@ -2,11 +2,13 @@
 
 namespace apiend\modules\v1\actions;
 
+use apiend\components\voterank\VoteService;
 use apiend\models\Response;
 use common\core\ApiException;
 use Exception;
 use Yii;
 use yii\base\Action;
+use function GuzzleHttp\default_user_agent;
 use function GuzzleHttp\json_decode;
 
 /**

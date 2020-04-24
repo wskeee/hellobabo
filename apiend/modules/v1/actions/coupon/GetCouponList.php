@@ -10,8 +10,6 @@ use common\models\order\UserCoupon;
 
 class GetCouponList extends BaseAction
 {
-    protected $requiredParams = ['goods_id'];
-
     /**
      * 卷类型
      * 1、返回新手卷
@@ -30,10 +28,11 @@ class GetCouponList extends BaseAction
         $user = \Yii::$app->user->identity;
         $time = time();
         $goods_id = $this->getSecretParam('goods_id');
-        $goods = Goods::findOne($goods_id);
-
-        if (!$goods) {
-            return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['params' => \Yii::t('app', 'Goods')]);
+        if($goods_id){
+            $goods = Goods::findOne($goods_id);
+            if (!$goods) {
+                return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => \Yii::t('app', 'Goods')]);
+            }
         }
 
         $user_coupon_ids = UserCoupon::find()->select('coupon_id')->where(['user_id' => $user->id])->column();
@@ -44,19 +43,29 @@ class GetCouponList extends BaseAction
             // 到了指定发布时间和结束时间内
             ->andWhere(['>=', 'start_time', $time])
             ->andWhere(['<=', 'end_time', $time])
-            ->andWhere(['>', 'quota', 'take_count']);
+            ->andWhere(['>', 'quota', 'take_countjk']);
 
-        if ($goods) {
+        if ($goods_id) {
             $query->andWhere(['or',
                 // 新手和平台卷无需其它条件
-                ['used', 'IN', [Coupon::USED_NEWER, Coupon::USED_PLATFORM]],
+                ['used' => [Coupon::USED_NEWER, Coupon::USED_PLATFORM]],
                 // 商品类型卷，类型匹配
                 ['used' => Coupon::USED_TYPE, 'with_id' => $goods->type],
                 // 商品卷
                 ['used' => Coupon::USED_GOODS, 'with_id' => $goods->$goods_id],
             ]);
         } else {
-            $query->andWhere(['used', 'IN', [Coupon::USED_NEWER, Coupon::USED_PLATFORM]]);
+            $query->andWhere(['used' => [Coupon::USED_NEWER, Coupon::USED_PLATFORM]]);
         }
+
+        // 过滤已领取的卷
+        $query->andFilterWhere(['NOT IN', 'id', $user_coupon_ids]);
+
+        var_dump($query->createCommand()->rawSql);exit;
+
+        // 结果
+        $list = $query->asArray()->all();
+
+        return new Response(Response::CODE_COMMON_OK, null, $list);
     }
 }

@@ -3,6 +3,7 @@
 namespace apiend\modules\v1\controllers;
 
 use apiend\controllers\ApiController;
+use apiend\modules\v1\actions\coupon\GetCouponList;
 use apiend\modules\v1\actions\order\CancelOrder;
 use apiend\modules\v1\actions\order\CheckPay;
 use apiend\modules\v1\actions\order\CheckPose;
@@ -76,6 +77,8 @@ class OrderController extends ApiController
             'get-groupon-detail' => ['get'],
             'join-groupon-ready' => ['get'],
             'end-groupon-invite' => ['post'],
+            // 优惠卷
+            'get-coupon-list' => ['get'],
         ];
         return $behaviors;
     }
@@ -120,6 +123,8 @@ class OrderController extends ApiController
             'get-groupon-detail' => ['class' => GetGrouponDetail::class],
             'join-groupon-ready' => ['class' => JoinGrouponReady::class],
             'end-groupon-invite' => ['class' => EndGrouponInvite::class],
+            // 优惠卷
+            'get-coupon-list' => ['class' => GetCouponList::class],
         ];
     }
 
