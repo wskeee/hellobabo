@@ -34,6 +34,48 @@ use Yii;
  */
 class Coupon extends \yii\db\ActiveRecord
 {
+    const TYPE_FULL = 1;
+    const TYPE_FULL_OVERLAY = 2;
+    const TYPE_NO_THRESHOLD = 3;
+    public static $typeNames = [
+        self::TYPE_FULL => '满减卷',
+        self::TYPE_FULL_OVERLAY => '叠加满减券',
+        self::TYPE_NO_THRESHOLD => '无门槛券',
+    ];
+
+    const USED_NEWER = 1;
+    const USED_PLATFORM = 2;
+    const USED_TYPE = 3;
+    const USED_GOODS = 4;
+    const USED_CODE = 10;
+    public static $usedNames = [
+        self::USED_NEWER => '新人平台券',
+        self::USED_PLATFORM => '平台优惠券',
+        self::USED_TYPE => '类目优惠券',
+        self::USED_GOODS => '商品优惠券',
+        self::USED_CODE => '优惠码卷',
+    ];
+
+    const STATUS_UNPUBLISHED = 0;
+    const STATUS_PUBLISHED = 1;
+    const STATUS_SOLDOUT = 2;
+    const STATUS_END = 3;
+    public static $statusNames = [
+        self::STATUS_UNPUBLISHED => '未发布',
+        self::STATUS_PUBLISHED => '生效',
+        self::STATUS_SOLDOUT => '失效',
+        self::STATUS_END => '已结束',
+    ];
+
+    const VALID_TYPE_ABSOLUTE = 1;
+    const VALID_TYPE_RELATIVE = 2;
+    public static $validTypeNames = [
+        self::VALID_TYPE_ABSOLUTE => '绝对',
+        self::VALID_TYPE_RELATIVE => '相对',
+    ];
+
+
+
     /**
      * {@inheritdoc}
      */
