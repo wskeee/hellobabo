@@ -1,5 +1,6 @@
 <?php
 
+use common\utils\I18NUitl;
 use yii\helpers\Html;
 use yii\grid\GridView;
 
@@ -12,16 +13,16 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="coupon-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Coupon'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(I18NUitl::t('app', '{Create}{Coupon}'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        'tableOptions' => ['class' => 'table table-striped table-bordered wsk-table'],
+        //'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 

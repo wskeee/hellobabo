@@ -44,8 +44,8 @@ class GoodsController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -58,7 +58,7 @@ class GoodsController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-                    'model' => $this->findModel($id),
+            'model' => $this->findModel($id),
         ]);
     }
 
@@ -99,7 +99,7 @@ class GoodsController extends Controller
         }
 
         return $this->render('create', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
@@ -135,7 +135,7 @@ class GoodsController extends Controller
             }
         }
         return $this->render('update', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
@@ -195,6 +195,24 @@ class GoodsController extends Controller
         }
 
         return new ApiResponse(ApiResponse::CODE_COMMON_OK);
+    }
+
+    /**
+     * 获取所有可用商品列表
+     */
+    public function actionGetGoodsList()
+    {
+        Yii::$app->response->format = 'json';
+        return Goods::getUseableList();
+    }
+
+    /**
+     * 获取所有可用商品类型列表
+     */
+    public function actionGetGoodsTypeList()
+    {
+        Yii::$app->response->format = 'json';
+        return Goods::$typeKeyMap;
     }
 
     /**

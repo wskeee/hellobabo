@@ -1,11 +1,12 @@
 <?php
 
+use common\utils\I18NUitl;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\order\Coupon */
 
-$this->title = Yii::t('app', 'Update Coupon: {name}', [
+$this->title = I18NUitl::t('app', '{Update} {Coupon}: {name}', [
     'name' => $model->title,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Coupons'), 'url' => ['index']];
@@ -13,8 +14,6 @@ $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'i
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="coupon-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
         'model' => $model,

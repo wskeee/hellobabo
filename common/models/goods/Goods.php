@@ -337,8 +337,8 @@ class Goods extends ActiveRecord
      */
     public static function getUseableList($map = true)
     {
-        $result = self::find()->where(['is_del' => 0])->all();
-        return $map ? ArrayHelper::map($result, 'id', 'name') : $result;
+        $result = self::find()->where(['status' => self::STATUS_PUBLISHED])->all();
+        return $map ? ArrayHelper::map($result, 'id', 'goods_name') : $result;
     }
 
 }

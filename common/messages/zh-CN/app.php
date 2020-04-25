@@ -370,7 +370,22 @@ return [
     'Vote Activity Hand' => '参选',
     'Vote Activity Hands' => '参选列表',
     'Groupon' => '团购',
-    
+    'Coupon' => '优惠卷',
+    'Coupons' => '优惠卷列表',
+    'Used' => '可用于',
+    'With ID' => '类目/商品',
+    'With Amount' => '满多少金额可用',
+    'Used Amount' => '用券金额',
+    'Quota' => '发券数量',
+    'Take Count' => '已领取',
+    'Used Count' => '已使用',
+    'Start Grant Time' => '开始发放时间',
+    'End Grant Time' => '结束发放时间',
+    'Valid Type' => '时效类型',
+    'Valid Start Time' => '使用开始时间',
+    'Valid End Time' => '使用结束时间',
+    'Valid Days' => '自领取之日起有效天数',
+
     //后台-商品配置
     'Storage' => '存储',
     'Dir' => '目录',
