@@ -56,6 +56,7 @@ class PosterUtils
                 if (isset($val['stream']) && $val['stream']) {   //如果传的是字符串图像流
                     $info = getimagesizefromstring($val['url']);
                     $function = 'imagecreatefromstring';
+                    var_dump($info);exit;
                 }
                 $res = $function($val['url']);
                 $resWidth = $info[0];

@@ -56,6 +56,9 @@ return [
         'activity' => [
             'class' => 'frontend\modules\activity\Module',
         ],
+        'jump' => [
+            'class' => 'app\modules\jump\Module',
+        ],
     ],
     
     'params' => $params,

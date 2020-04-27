@@ -7,17 +7,13 @@ use apiend\modules\v1\actions\BaseAction;
 use common\models\goods\Goods;
 use common\models\goods\GoodsSpecPrice;
 use common\models\order\Groupon;
-use common\models\order\GrouponRecord;
 use common\models\order\Order;
-use common\models\order\OrderAction;
 use common\models\order\OrderGoods;
-use common\models\order\OrderGoodsAction;
+use common\models\order\OrderGoodsComment;
 use common\models\order\OrderGoodsMaterial;
 use common\models\order\OrderGoodsScene;
 use common\models\order\OrderGoodsScenePage;
-use common\models\UserAddress;
 use Yii;
-use yii\base\Exception;
 
 /**
  * 下单
@@ -89,13 +85,17 @@ class CreateOrder extends BaseAction
 
             // 初始订单默认数据
             $this->initDefault($order_goods);
+
+            // 初始订单留言
+            $this->initComment($order_goods);
+
             // 提交数据
             $tran->commit();
             // 清除临时订单
             GetTempOrder::clearTempOrder($user_id, $goods_id);
 
             return new Response(Response::CODE_COMMON_OK, null, $order);
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             $tran->rollBack();
             return new Response(Response::CODE_ORDER_CREATE_FAILED, '下单失败', $ex->getMessage());
         }
@@ -137,5 +137,34 @@ class CreateOrder extends BaseAction
         OrderGoodsScene::initDefaultScene($order_goods, $scenes_ids);
         // 初始场景页
         OrderGoodsScenePage::initPage($order_goods);
+    }
+
+    /**
+     * 添加初始留意
+     * @param OrderGoods $order_goods
+     * @throws
+     */
+    private function initComment($order_goods)
+    {
+        $user_id = $order_goods->created_by;
+        $count = OrderGoods::find()->where(['created_by' => $user_id])->count();
+        $count ++;
+        $params = [
+            'order_goods_id' => $order_goods->id,
+            'content' => "宝贝的第{$count}套个性化绘本",
+            'created_by' => $user_id,
+        ];
+        $model = new OrderGoodsComment($params);
+        $model->loadDefaultValues();
+        if(!$model->save()){
+            throw new \Exception(implode(',',$model->getErrorSummary(true)));
+        }
+
+        $params['content'] = '今天开始跟宝贝制作绘本啦';
+        $model = new OrderGoodsComment($params);
+        $model->loadDefaultValues();
+        if(!$model->save()){
+            throw new \Exception(implode(',',$model->getErrorSummary(true)));
+        }
     }
 }

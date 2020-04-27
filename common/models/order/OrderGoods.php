@@ -3,6 +3,7 @@
 namespace common\models\order;
 
 use common\models\goods\Goods;
+use common\models\User;
 use common\utils\I18NUitl;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -43,11 +44,13 @@ use yii\db\ActiveRecord;
  * @property Order $order 订单
  * @property Goods $goods 商品
  * @property Groupon $groupon 
+ * @property User $creater 创建人
  * @property OrderGoodsMaterial[] $orderGoodsMaterials 订单素材
  * @property OrderGoodsScene[] $orderGoodsScenes 订单场景
  * @property OrderGoodsScenePage[] $orderGoodsScenePages 订单场景页
  * @property OrderGoodsAction[] $actionLogs 日志记录
- * 
+ * @property OrderGoodsComment[] $comments 留言
+ *
  */
 class OrderGoods extends ActiveRecord
 {
@@ -215,6 +218,31 @@ class OrderGoods extends ActiveRecord
     public function getActionLogs()
     {
         return $this->hasMany(OrderGoodsAction::class, ['order_goods_id' => 'id'])->orderBy(['created_at' => SORT_DESC]);
+    }
+
+    /**
+     * 制作日志
+     * @return ActiveQuery
+     */
+    public function getComments()
+    {
+        return $this->hasMany(OrderGoodsComment::class, ['order_goods_id' => 'id'])->orderBy(['created_at' => SORT_DESC]);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCreater()
+    {
+        return $this->hasOne(User::class, ['id' => 'created_by']);
+    }
+
+    public function toArray(array $fields = [], array $expand = [], $recursive = true)
+    {
+        $arr = parent::toArray($fields, $expand, $recursive);
+        $arr['create_time'] = date('Y.m.d H:i:s', $this->created_at);
+        $arr['creater_name'] = $this->creater->nickname;
+        return $arr;
     }
 
 }

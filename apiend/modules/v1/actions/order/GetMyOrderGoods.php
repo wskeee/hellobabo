@@ -25,6 +25,7 @@ class GetMyOrderGoods extends BaseAction
                 ->andWhere(['<>', 'status', OrderGoods::STATUS_UNREADY])
                 ->andWhere(['<>', 'status', OrderGoods::STATUS_INVALID])
                 ->orderBy(['created_at' => SORT_DESC])
+                ->with(['creater','comments','comments.creater'])
                 ->all();
         /* 团购 */
         $groupon_ids = ArrayHelper::getColumn($orderGoods, 'groupon_id');
@@ -40,6 +41,7 @@ class GetMyOrderGoods extends BaseAction
             $item['created_time'] = date('Y-m-d H:i:s', $goods->created_at);
             $item['commission'] = $goods->goods->commission;
             $item['goods_params'] = json_decode($item['goods_params']);
+            $item['comments'] = empty($goods->comments) ? [] : $goods->comments;
 
             // 处理团购数据
             if ($goods->type == Goods::TYPE_GROUPON) {
