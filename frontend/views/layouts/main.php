@@ -27,7 +27,7 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-    <?= $this->render('navbar') ?>
+    <?php /*$this->render('navbar') */?>
 
     <div>
         <?= Breadcrumbs::widget([
@@ -47,8 +47,7 @@ AppAsset::register($this);
 <footer class="footer">
     <div class="copy-right-box">
         <div class="container copy-right-content">
-            <p class="pull-left">eenet旗下品牌，Copyright © <?= date('Y') ?> <?= Html::encode(Yii::$app->name) ?> 版权所有 <a href="http://www.miitbeian.gov.cn">粤ICP备14084579号-7</a></p>
-            <p class="pull-right"><img src="/imgs/site/logo_hui.png"/></p>
+            <p>Copyright © <?= date('Y') ?> <?= Html::encode('时代互娱（广州）科技有限公司') ?> 版权所有 <a href="http://www.beian.miit.gov.cn">粤ICP备20012458号</a></p>
         </div>
     </div>
 </footer>

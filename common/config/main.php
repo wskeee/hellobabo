@@ -2,7 +2,7 @@
 return [
     'timeZone' => 'PRC',
     'language' => 'zh-CN',
-    'name' => '素材交易平台',
+    'name' => '你好芭宝',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',

@@ -28,8 +28,7 @@ body {
     min-height: 100%;
     height: auto;
     margin: 0 auto -60px;
-    padding: 58px 0 60px;
-    background-color: #F2F2F2;
+    background-color: #fff;
 }
 
 .wrap div > .container {
@@ -246,6 +245,7 @@ a.desc:after {
     color: #646464;
     font-size: 12px;
     line-height: 60px;
+    text-align: center;
 }
 
 /***************************************************************

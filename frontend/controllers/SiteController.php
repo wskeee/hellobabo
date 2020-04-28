@@ -84,17 +84,7 @@ class SiteController extends Controller {
      * @return mixed
      */
     public function actionIndex() {
-        /* 宣传 */
-        $banners = Banner::find()
-                ->where(['is_publish' => Banner::YES_PUBLISH])
-                ->orderBy('sort_order')
-                ->all();
-        
         return $this->render('index', [
-            'banners' => $banners,
-            'totals' => $this->getTotalMediaNumber(),
-            'month' => $this->getTotalMediaNumber(true),
-            'amount' => $this->getTotalOrderAmount()
         ]);
     }
 
