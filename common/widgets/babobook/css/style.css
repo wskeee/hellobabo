@@ -1,5 +1,41 @@
+html, body { height: 100%; }
 body {
     margin: 0px;
+}
+
+#animation_container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.book-box{
+    position: relative;
+}
+
+
+#book_canvas{
+    /*position: absolute; */
+    display: block;
+    background-color:rgba(255, 255, 255, 1.00);
+    border-radius: 40px;
+    overflow: hidden;
+}
+
+.book-box .page-num-box {
+    position: absolute;
+    bottom: 20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.book-box .page-num-box .page-num{
+    background: #ffffffaa;
+    border-radius: 20px;
+    padding: 5px 30px;
+    font-size: 30px;
 }
 
 .preloader-box {
@@ -35,10 +71,6 @@ body {
 
 .float-view .page-num-box {
     flex: 1;
-}
-
-.float-view .page-num{
-    font-size: 30px !important;
 }
 
 .float-view img{

@@ -11,20 +11,21 @@ foreach ($app_data['scenes'] as $scene) {
 }
 ?>
 <div class="show-default-pg">
-    <div id="animation_container" style="background-color:rgba(255, 255, 255, 1.00); ">
-        <canvas id="book_canvas"
-                style="position: absolute; display: block; background-color:rgba(255, 255, 255, 1.00);"></canvas>
-        <div id="dom_overlay_container"
-             style="pointer-events:none; overflow:hidden; position: absolute; left: 0px; top: 0px; display: block;">
+    <div id="animation_container" class="animation_container" style="background-color:rgba(255, 255, 255, 1.00); ">
+        <div class="book-box">
+            <canvas id="book_canvas"></canvas>
+            <div id="dom_overlay_container"
+                 style="pointer-events:none; overflow:hidden; position: absolute; left: 0px; top: 0px; display: block;">
+            </div>
+            <div class="page-num-box">
+                <span class="txt page-num">1 / 1</span>
+            </div>
         </div>
     </div>
     <div class="float-view" style="display: none">
         <div class="share-btn">
             <img src="<?= $sourcePath ?>/images/share.png">
             <span class="txt share-txt">赚￥</span>
-        </div>
-        <div class="page-num-box">
-            <span class="txt page-num">1 / 1</span>
         </div>
         <div class="buy-btn">
             <span class="txt buy-txt">定制</span>

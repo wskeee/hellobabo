@@ -29,7 +29,8 @@ class CheckPay extends BaseAction
 
         if ($order) {
             if ($order->order_status == Order::ORDER_STATUS_WAIT_PAY) {
-                // 模拟支付功能
+                /*
+                 // 模拟支付功能
 
                 $message = [
                     'return_code' => 'SUCCESS',
@@ -39,7 +40,7 @@ class CheckPay extends BaseAction
                 ];
 
                 $order->pay(true, $message);
-                return new Response(Response::CODE_COMMON_OK, null, $order);
+                return new Response(Response::CODE_COMMON_OK, null, $order);*/
 
 
                 /* @var $payment Application */
