@@ -69,10 +69,6 @@ body {
     align-items: center;
 }
 
-.float-view .page-num-box {
-    flex: 1;
-}
-
 .float-view img{
     width:130px;
 }
@@ -83,4 +79,20 @@ body {
     text-shadow: 1px 1px 0 #000;
     font-size: 40px;
     margin: 0 5px;
+}
+
+.head-top, .head-bottom{
+    position: absolute;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.head-top {
+    top: 0;
+}
+
+.head-bottom {
+    bottom: 0;
 }

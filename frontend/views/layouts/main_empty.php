@@ -23,11 +23,7 @@ AppAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 <div class="wrap-empty">
-    <div>
-        <!-- 不加这个顶部会有空白 -->
-        <!--<div style="height: 1px"></div>-->
-        <?= $content ?>
-    </div>
+    <?= $content ?>
 </div>
 
 <?php $this->endBody() ?>
