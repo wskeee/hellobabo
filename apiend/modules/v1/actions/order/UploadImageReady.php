@@ -5,6 +5,7 @@ namespace apiend\modules\v1\actions\order;
 use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
 use common\models\AdminUser;
+use common\models\goods\GoodsPagePose;
 use common\models\goods\GoodsScenePage;
 use common\models\goods\ShootingAction;
 use common\models\goods\ShootingAngle;
@@ -38,11 +39,13 @@ class UploadImageReady extends BaseAction
                     'Face.url face_url',
                     'Angle.name angle_name',
                     'Angle.url angle_url',
+                    'Pose.filepath pose_url',
                 ])
                 ->from(['OrderGoodsScenePage' => OrderGoodsScenePage::tableName()])
                 ->leftJoin(['SourcePage' => GoodsScenePage::tableName()], 'OrderGoodsScenePage.page_id = SourcePage.id')
                 ->leftJoin(['Face' => ShootingFace::tableName()], 'SourcePage.face_id = Face.id')
                 ->leftJoin(['Angle' => ShootingAngle::tableName()], 'SourcePage.angle_id = Angle.id')
+                ->leftJoin(['Pose' => GoodsPagePose::tableName()], 'SourcePage.id = Pose.page_id')
                 ->where([
                     'OrderGoodsScenePage.order_goods_id' => $order_goods_id,
                     'OrderGoodsScenePage.is_required' => 1,
