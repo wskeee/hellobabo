@@ -89,7 +89,7 @@ class GoodsMaterialValue extends ActiveRecord
                 'MaterialValue.*',
             ])
             ->from(['Material' => GoodsMaterial::tableName()])
-            ->leftJoin(['MaterialValue' => GoodsMaterialValue::tableName()], 'Material.id = MaterialValue.material_id')
+            ->leftJoin(['MaterialValue' => GoodsMaterialValue::tableName()], 'Material.id = MaterialValue.material_id AND MaterialValue.is_del = 0')
             ->where(['Material.goods_id' => $goods_id, 'Material.is_del' => 0])
             ->all();
         return $map ? ArrayHelper::map($result, 'id', 'name') : $result;
