@@ -3,6 +3,7 @@
 namespace common\models\order;
 
 use common\models\goods\GoodsScene;
+use common\models\goods\GoodsSceneMaterial;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -83,13 +84,20 @@ class OrderGoodsScene extends ActiveRecord
      *
      * @param OrderGoods $order_goods 订单商品
      * @param array $scene_ids 场景ID
+     * @param int $material_value_id 素材ID
      */
-    public static function initDefaultScene($order_goods, $scene_ids)
+    public static function initDefaultScene($order_goods, $scene_ids, $material_value_id)
     {
-        $scenes = GoodsScene::find()->where([
-            'goods_id' => $order_goods->goods_id,
-            'is_del' => 0
-        ])->andWhere(['or', ['id' => $scene_ids], ['is_selected' => 1]])
+        $scenes = GoodsScene::find()->alias('scene')
+            ->select(['scene.*', 'IFNULL(material_rel.effect_url,scene.effect_url) AS effect_url'])
+            ->leftJoin(['material_rel' => GoodsSceneMaterial::tableName()],
+                "material_rel.scene_id = scene.id AND material_rel.material_value_id = $material_value_id AND material_rel.is_del = 0")
+            ->where([
+                'scene.goods_id' => $order_goods->goods_id,
+                'scene.is_del' => 0])
+            ->andWhere(['or', ['scene.id' => $scene_ids], ['scene.is_selected' => 1 , 'material_rel.scene_id = scene.id']])
+            ->orderBy('scene.sort_order asc')
+            ->asArray()
             ->all();
 
         if (empty($scenes)) {
@@ -105,14 +113,14 @@ class OrderGoodsScene extends ActiveRecord
         foreach ($scenes as $scene) {
             $rows [] = [
                 $order_goods->id,
-                $scene->id,
-                $scene->name,
-                $scene->effect_url,
-                $scene->demo_url,
-                $scene->source_url,
-                $scene->is_required,
-                $scene->des,
-                $scene->immutable,
+                $scene['id'],
+                $scene['name'],
+                $scene['effect_url'],
+                $scene['demo_url'],
+                $scene['source_url'],
+                $scene['is_required'],
+                $scene['des'],
+                $scene['immutable'],
                 $sort_order++,
             ];
         }

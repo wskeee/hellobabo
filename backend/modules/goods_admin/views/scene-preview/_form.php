@@ -29,6 +29,21 @@ use yii\widgets\ActiveForm;
                 <?= Html::activeHiddenInput($model, 'goods_id') ?>
                 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
                 <p>
+                    <lable>场景</lable>
+                    <?=
+                    Select2::widget([
+                        'model' => $model,
+                        'attribute' => 'scene_id',
+                        'data' => GoodsScene::getGoodsScene($model->goods_id),
+                        'options' => [
+                                'placeholder' => I18NUitl::t('app', '{Goods}{Scene}'),
+                                'onChange' => 'onSceneChanged(this)',
+                        ],
+                        'pluginOptions' => ['allowClear' => true],
+                    ])
+                    ?>
+                </p>
+                <p>
                     <lable>素材</lable>
                     <?=
                     Select2::widget([
@@ -36,19 +51,6 @@ use yii\widgets\ActiveForm;
                         'attribute' => 'material_value_id',
                         'data' => GoodsMaterialValue::getGoodsMaterialValue($model->goods_id, true),
                         'options' => ['placeholder' => Yii::t('app', 'Material')],
-                        'pluginOptions' => ['allowClear' => true],
-                    ])
-                    ?>
-                </p>
-
-                <p>
-                    <lable>场景</lable>
-                    <?=
-                    Select2::widget([
-                        'model' => $model,
-                        'attribute' => 'scene_id',
-                        'data' => GoodsScene::getGoodsScene($model->goods_id),
-                        'options' => ['placeholder' => I18NUitl::t('app', '{Goods}{Scene}')],
                         'pluginOptions' => ['allowClear' => true],
                     ])
                     ?>
@@ -68,3 +70,12 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+<script>
+    /**
+     * 场景改变时
+     * @param dom
+     */
+    function onSceneChanged(dom) {
+        console.log(dom);
+    }
+</script>

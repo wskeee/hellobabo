@@ -67,7 +67,7 @@ class ScenePreviewController extends Controller
         $model = new GoodsScenePreview(['goods_id' => $goods_id]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index', 'goods_id' => $model->goods_id]);
+            return $this->redirect(['index', 'goods_id' => $model->goods_id, 'material_value_id' => $model->material_value_id]);
         }
 
         return $this->renderAjax('create', [
@@ -87,7 +87,7 @@ class ScenePreviewController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index', 'goods_id' => $model->goods_id]);
+            return $this->redirect(['index', 'goods_id' => $model->goods_id, 'material_value_id' => $model->material_value_id]);
         }
 
         return $this->renderAjax('update', [

@@ -2,6 +2,7 @@
 
 namespace common\models\goods\searchs;
 
+use common\models\goods\GoodsScene;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\goods\GoodsScenePreview;
@@ -40,7 +41,7 @@ class GoodsScenePreviewSearch extends GoodsScenePreview
      */
     public function search($params)
     {
-        $query = GoodsScenePreview::find();
+        $query = GoodsScenePreview::find()->alias('preview');
 
         // add conditions that should always apply here
 
@@ -57,18 +58,19 @@ class GoodsScenePreviewSearch extends GoodsScenePreview
         }
 
         $query->with('materialValue','scene');
+        $query->leftJoin(['scene' => GoodsScene::tableName()],'scene.id = preview.scene_id');
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'goods_id' => $this->goods_id,
-            'material_id' => $this->material_id,
-            'material_value_id' => $this->material_value_id,
-            'scene_id' => $this->scene_id,
-            'is_del' => $this->is_del,
+            'preview.id' => $this->id,
+            'preview.goods_id' => $this->goods_id,
+            'preview.material_id' => $this->material_id,
+            'preview.material_value_id' => $this->material_value_id,
+            'preview.scene_id' => $this->scene_id,
+            'preview.is_del' => $this->is_del,
         ]);
 
-        $query->andFilterWhere(['like', 'effect_url', $this->effect_url]);
+        $query->orderBy('scene.sort_order asc');
 
         return $dataProvider;
     }

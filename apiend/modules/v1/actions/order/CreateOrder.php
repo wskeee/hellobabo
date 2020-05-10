@@ -134,7 +134,7 @@ class CreateOrder extends BaseAction
         // 初始素材
         OrderGoodsMaterial::initDefaultMaterial($order_goods, $material_value_ids);
         // 初始场景
-        OrderGoodsScene::initDefaultScene($order_goods, $scenes_ids);
+        OrderGoodsScene::initDefaultScene($order_goods, $scenes_ids , $temp_order['material_value_id']);
         // 初始场景页
         OrderGoodsScenePage::initPage($order_goods);
     }

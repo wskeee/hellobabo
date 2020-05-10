@@ -94,11 +94,16 @@ class GoodsScenePreview extends \yii\db\ActiveRecord
      */
     public static function getGoodsPreview($goods_id, $material_value_id)
     {
-        $result = self::find()->where([
-            'goods_id' => $goods_id,
-            'material_value_id' => $material_value_id,
-            'is_del' => 0,
-        ])->asArray()->all();
+        $result = self::find()->alias('preview')
+            ->innerJoin(['scene' => GoodsScene::tableName()], 'scene.id = preview.scene_id AND scene.is_del = 0')
+            ->where([
+                'preview.goods_id' => $goods_id,
+                'preview.material_value_id' => $material_value_id,
+                'preview.is_del' => 0,
+                'scene.immutable' => 0,
+            ])
+            ->orderBy('scene.sort_order asc')
+            ->asArray()->all();
         return $result;
     }
 }

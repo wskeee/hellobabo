@@ -89,7 +89,12 @@ class PagePoseController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['/goods_admin/scene-page/index', 'scene_id' => $model->page->scene_id]);
+            $backurl = Yii::$app->request->getQueryParam('backurl');
+            if($backurl){
+                return $this->redirect($backurl);
+            }else{
+                return $this->redirect(['/goods_admin/scene-page/index', 'scene_id' => $model->page->scene_id]);
+            }
         }
 
         return $this->renderAjax('update', [

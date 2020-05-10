@@ -2,15 +2,24 @@
 
 namespace common\models\goods\searchs;
 
+use common\models\goods\GoodsPagePose;
+use common\models\goods\GoodsScene;
+use common\models\goods\GoodsSceneMaterial;
+use common\models\goods\GoodsScenePage;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\goods\GoodsScene;
 
 /**
  * GoodsSceneSearch represents the model behind the search form of `common\models\goods\GoodsScene`.
  */
 class GoodsSceneSearch extends GoodsScene
 {
+    public $material_value_id;
+    public $page_id;
+    public $page_effect_url;
+    public $page_is_required;
+    public $pose_url;
 
     /**
      * {@inheritdoc}
@@ -18,7 +27,8 @@ class GoodsSceneSearch extends GoodsScene
     public function rules()
     {
         return [
-            [['id', 'goods_id', 'group_id', 'sort_order','is_demo', 'immutable', 'is_required', 'is_selected', 'is_del'], 'integer'],
+            [['id', 'goods_id', 'group_id', 'sort_order', 'is_demo', 'immutable', 'is_required', 'is_selected', 'is_del'], 'integer'],
+            [['material_value_id','page_is_required'], 'integer'],
             [['name', 'effect_url', 'demo_url', 'source_url', 'des'], 'safe'],
         ];
     }
@@ -32,6 +42,17 @@ class GoodsSceneSearch extends GoodsScene
         return Model::scenarios();
     }
 
+    public function attributeLabels()
+    {
+        $arr = array_merge(parent::attributeLabels(), [
+            'material_value_id' => Yii::t('app', 'Material'),
+            'page_effect_url' => '上传效果图',
+            'pose_url' => 'Pose图',
+            'page_is_required' => '必须上图',
+        ]);
+        return $arr;
+    }
+
     /**
      * Creates data provider instance with search query applied
      *
@@ -41,7 +62,7 @@ class GoodsSceneSearch extends GoodsScene
      */
     public function search($params)
     {
-        $query = GoodsScene::find();
+        $query = self::find()->alias('scene');
 
         // add conditions that should always apply here
 
@@ -60,27 +81,39 @@ class GoodsSceneSearch extends GoodsScene
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'goods_id' => $this->goods_id,
-            'group_id' => $this->group_id,
-            'sort_order' => $this->sort_order,
-            'is_demo' => $this->is_demo,
-            'immutable' => $this->immutable,
-            'is_required' => $this->is_required,
-            'is_selected' => $this->is_selected,
-            'is_del' => $this->is_del,
+        $query->leftJoin(['material_rel' => GoodsSceneMaterial::tableName()], 'material_rel.scene_id = scene.id');
+        $query->leftJoin(['page' => GoodsScenePage::tableName()], 'page.scene_id = scene.id');
+        $query->leftJoin(['pose' => GoodsPagePose::tableName()], 'page.id = pose.page_id');
+
+        $query->select([
+            'scene.*',
+            'material_rel.material_value_id',
+            'page.id page_id',
+            'page.effect_url page_effect_url',
+            'pose.filepath pose_url',
+            'page.is_required page_is_required',
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name])
-                ->andFilterWhere(['like', 'effect_url', $this->effect_url])
-                ->andFilterWhere(['like', 'demo_url', $this->demo_url])
-                ->andFilterWhere(['like', 'source_url', $this->source_url])
-                ->andFilterWhere(['like', 'des', $this->des]);
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'scene.id' => $this->id,
+            'scene.goods_id' => $this->goods_id,
+            'scene.group_id' => $this->group_id,
+            'scene.sort_order' => $this->sort_order,
+            'scene.is_demo' => $this->is_demo,
+            'scene.immutable' => $this->immutable,
+            'scene.is_required' => $this->is_required,
+            'scene.is_selected' => $this->is_selected,
+            'scene.is_del' => $this->is_del,
 
-        $query->orderBy(['sort_order' => SORT_ASC]);
+            'material_rel.material_value_id' => $this->material_value_id,
+            'page.is_required' => $this->page_is_required,
+        ]);
 
+        $query->andFilterWhere(['like', 'scene.name', $this->name])
+            ->andFilterWhere(['like', 'scene.des', $this->des]);
+
+        $query->orderBy(['scene.sort_order' => SORT_ASC]);
         return $dataProvider;
     }
 

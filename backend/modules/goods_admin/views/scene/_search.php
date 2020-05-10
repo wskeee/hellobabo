@@ -1,6 +1,7 @@
 <?php
 
 use common\models\goods\Goods;
+use common\models\goods\GoodsMaterialValue;
 use common\models\goods\SceneGroup;
 use common\models\goods\searchs\GoodsSceneSearch;
 use common\utils\I18NUitl;
@@ -31,7 +32,7 @@ use yii\widgets\ActiveForm;
             <?=
             Html::activeTextInput($model, 'name', [
                 'class' => 'form-control',
-                'placeholder' => Yii::t('app', 'Name'),
+                'placeholder' => $model->getAttributeLabel('name'),
                 'onBlur' => 'submitForm()',])
             ?>
         </div>
@@ -43,9 +44,9 @@ use yii\widgets\ActiveForm;
             <?=
             Select2::widget([
                 'model' => $model,
-                'attribute' => 'group_id',
-                'data' => SceneGroup::getGroup($goodsModel->id),
-                'options' => ['placeholder' => Yii::t('app', 'Group')],
+                'attribute' => 'material_value_id',
+                'data' => GoodsMaterialValue::getGoodsMaterialValue($model->goods_id, true),
+                'options' => ['placeholder' => $model->getAttributeLabel('material_value_id')],
                 'pluginOptions' => ['allowClear' => true],
                 'pluginEvents' => ['change' => 'function(){ submitForm()}']
             ])
@@ -61,7 +62,7 @@ use yii\widgets\ActiveForm;
                 'model' => $model,
                 'attribute' => 'is_demo',
                 'data' => ['否', '是'],
-                'options' => ['placeholder' => I18NUitl::t('app', '{Is} {Demo}')],
+                'options' => ['placeholder' => $model->getAttributeLabel('is_demo')],
                 'pluginOptions' => ['allowClear' => true],
                 'pluginEvents' => ['change' => 'function(){ submitForm()}']
             ])
@@ -77,7 +78,7 @@ use yii\widgets\ActiveForm;
                 'model' => $model,
                 'attribute' => 'is_selected',
                 'data' => ['否', '是'],
-                'options' => ['placeholder' => Yii::t('app', 'Is Selected')],
+                'options' => ['placeholder' => $model->getAttributeLabel('is_selected')],
                 'pluginOptions' => ['allowClear' => true],
                 'pluginEvents' => ['change' => 'function(){ submitForm()}']
             ])
@@ -93,7 +94,23 @@ use yii\widgets\ActiveForm;
                 'model' => $model,
                 'attribute' => 'immutable',
                 'data' => ['否', '是'],
-                'options' => ['placeholder' => Yii::t('app', 'Immutable')],
+                'options' => ['placeholder' => $model->getAttributeLabel('immutable')],
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' => ['change' => 'function(){ submitForm()}']
+            ])
+            ?>
+        </div>
+    </div>
+
+    <!-- 必需上图 -->
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown">
+            <?=
+            Select2::widget([
+                'model' => $model,
+                'attribute' => 'page_is_required',
+                'data' => ['否', '是'],
+                'options' => ['placeholder' => $model->getAttributeLabel('page_is_required')],
                 'pluginOptions' => ['allowClear' => true],
                 'pluginEvents' => ['change' => 'function(){ submitForm()}']
             ])

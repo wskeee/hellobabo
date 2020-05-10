@@ -24,22 +24,6 @@ use yii\widgets\ActiveForm;
     <!-- 名称 -->
     <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => Yii::t('app', 'Optional')]) ?>
 
-    <!-- 拍摄角度 -->
-    <?=
-    $form->field($model, 'angle_id')->widget(Select2::class, [
-        'data' => ShootingAngle::getValues(),
-        'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
-    ])
-    ?>
-
-    <!-- 拍摄表情 -->
-    <?=
-    $form->field($model, 'face_id')->widget(Select2::class, [
-        'data' => ShootingFace::getValues(),
-        'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
-    ])
-    ?>
-
     <!-- 效果图 -->
     <?= $form->field($model, 'effect_url')->widget(ImagePicker::class) ?>
 

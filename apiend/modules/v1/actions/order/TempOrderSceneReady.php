@@ -46,12 +46,11 @@ class TempOrderSceneReady extends BaseAction
 
         // 素材和商品素材值
         $material_value_id = $tempOrder['material_value_id'];
-        $previews = GoodsScenePreview::getGoodsPreview($goods_id,$material_value_id);
-        $scenes = ArrayHelper::index(GoodsScene::find()->where(['id' => array_column($previews,'scene_id')])->all(),'id');
-
+        $previews = GoodsScene::getGoodsPreview($goods_id,$material_value_id);
+        //$scenes = ArrayHelper::index(GoodsScene::find()->where(['id' => array_column($previews,'scene_id')])->all(),'id');
         $data = [
             'goods' => $goods,
-            'scenes' => $scenes,
+            //'scenes' => $scenes,
             'previews' => $previews,
             'temp_order' => $tempOrder,
         ];

@@ -56,7 +56,7 @@ class GoodsScene extends ActiveRecord
     public function rules()
     {
         return [
-            [['goods_id', 'group_id', 'name'], 'required'],
+            [['goods_id', 'name'], 'required'],
             [['goods_id', 'group_id', 'sort_order', 'is_demo', 'immutable', 'is_required', 'is_selected', 'is_del'], 'integer'],
             [['name'], 'string', 'max' => 20],
             [['pos'], 'string', 'max' => 10],
@@ -79,10 +79,10 @@ class GoodsScene extends ActiveRecord
             'source_url' => Yii::t('app', 'Source Url'),
             'sort_order' => Yii::t('app', 'Sort Order'),
             'pos' => Yii::t('app', 'Pos'),
-            'is_demo' => I18NUitl::t('app', '{Is} {Demo}'),
+            'is_demo' => I18NUitl::t('app', '{Demo}'),
             'immutable' => Yii::t('app', 'Immutable'),
             'is_required' => Yii::t('app', 'Required Img'),
-            'is_selected' => Yii::t('app', 'Is Selected'),
+            'is_selected' => Yii::t('app', 'Default Selected'),
             'is_del' => Yii::t('app', 'Is Del'),
             'des' => Yii::t('app', 'Des'),
         ];
@@ -116,6 +116,29 @@ class GoodsScene extends ActiveRecord
     {
         $result = self::find()->where(['goods_id' => $goods_id, 'is_del' => 0])->all();
         return $map ? ArrayHelper::map($result, 'id', 'name') : $result;
+    }
+
+    /**
+     * 获取商品对应场景预览
+     *
+     * @param int $goods_id
+     * @param int $material_value_id
+     */
+    public static function getGoodsPreview($goods_id, $material_value_id)
+    {
+        $result = self::find()
+            ->select(['scene.*','scene.id scene_id'])
+            ->alias('scene')
+            ->innerJoin(['material_rel' => GoodsSceneMaterial::tableName()], 'scene.id = material_rel.scene_id AND material_rel.is_del = 0')
+            ->where([
+                'scene.goods_id' => $goods_id,
+                'material_rel.material_value_id' => $material_value_id,
+                'scene.immutable' => 0,
+                'scene.is_del' => 0
+            ])
+            ->orderBy('scene.sort_order asc')
+            ->asArray()->all();
+        return $result;
     }
 
 }

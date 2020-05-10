@@ -347,6 +347,7 @@ return [
     'User Img Url' => '用户图片',
     'Finish Url' => '成品',
     'Is Selected' => '是否选择',
+    'Default Selected' => '默认选中',
     'Required Img' => '必须上图',
     'Up Img' => '上图',
     'Immutable' => '不可选',

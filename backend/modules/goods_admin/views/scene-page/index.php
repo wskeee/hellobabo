@@ -35,39 +35,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn', 'headerOptions' => ['style' => 'width:60px']],
             'name',
-            "scene.name:text:{$searchModel->getAttributeLabel('scene_id')}",
-            [
-                'attribute' => 'angle_id',
-                'format' => 'raw',
-                'value' => function($model) {
-                    $img = Html::img($model->angle->url, ['style' => 'width:64px;']);
-                    $name = Html::tag('span', $model->angle->name);
-                    return Html::tag('div', "{$img}</br>{$name}");
-                }
-            ],
-            [
-                'attribute' => 'face_id',
-                'format' => 'raw',
-                'value' => function($model) {
-                    $img = Html::img($model->face->url, ['style' => 'width:64px;']);
-                    $name = Html::tag('span', $model->face->name);
-                    return Html::tag('div', "{$img}</br>{$name}");
-                }
-            ],
-            [
-                'label' => Yii::t('app', 'Shooting Action'),
-                'format' => 'raw',
-                'value' => function($model) {
-                    /* @var $action ShootingAction */
-                    $actions = [];
-                    foreach ($model->actions as $action) {
-                        $img = Html::img($action->url, ['style' => 'width:64px;']);
-                        $name = Html::tag('span', $action->name);
-                        $actions[] = Html::tag('div', "{$img}</br>{$name}");
-                    }
-                    return Html::tag('div', implode('', $actions), ['style' => 'display: flex;justify-content: space-around;']);
-                }
-            ],
             [
                 'attribute' => 'effect_url',
                 'format' => 'raw',

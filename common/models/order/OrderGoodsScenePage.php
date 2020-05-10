@@ -114,7 +114,8 @@ class OrderGoodsScenePage extends ActiveRecord
         $query = (new Query())
             ->select([
                 'OrderGoodsScene.id order_goods_scene_id', 'OrderGoodsScene.sort_order scene_sort_order',
-                'ScenePage.*'
+                'ScenePage.*',
+                'OrderGoodsScene.effect_url' // 使用场景预览图替换
             ])
             ->from(['OrderGoodsScene' => OrderGoodsScene::tableName()])
             ->leftJoin(['ScenePage' => GoodsScenePage::tableName()], 'ScenePage.scene_id = OrderGoodsScene.scene_id')
