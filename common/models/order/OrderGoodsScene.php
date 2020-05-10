@@ -7,6 +7,7 @@ use common\models\goods\GoodsSceneMaterial;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\db\Expression;
 use yii\db\Query;
 
 /**
@@ -88,18 +89,18 @@ class OrderGoodsScene extends ActiveRecord
      */
     public static function initDefaultScene($order_goods, $scene_ids, $material_value_id)
     {
-        $scenes = GoodsScene::find()->alias('scene')
-            ->select(['scene.*', 'IFNULL(material_rel.effect_url,scene.effect_url) AS effect_url'])
+        $query = GoodsScene::find()->alias('scene')
+            ->select(['scene.*'])
             ->leftJoin(['material_rel' => GoodsSceneMaterial::tableName()],
                 "material_rel.scene_id = scene.id AND material_rel.material_value_id = $material_value_id AND material_rel.is_del = 0")
             ->where([
                 'scene.goods_id' => $order_goods->goods_id,
                 'scene.is_del' => 0])
-            ->andWhere(['or', ['scene.id' => $scene_ids], ['scene.is_selected' => 1 , 'material_rel.scene_id = scene.id']])
+            ->andWhere(['or', ['scene.id' => $scene_ids], ['scene.is_selected' => 1 , 'material_rel.scene_id' => new Expression('scene.id')]])
             ->orderBy('scene.sort_order asc')
-            ->asArray()
-            ->all();
+            ->asArray();
 
+        $scenes = $query->all();
         if (empty($scenes)) {
             return 0;
         }

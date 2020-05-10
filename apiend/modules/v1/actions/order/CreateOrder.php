@@ -97,7 +97,7 @@ class CreateOrder extends BaseAction
             return new Response(Response::CODE_COMMON_OK, null, $order);
         } catch (\Exception $ex) {
             $tran->rollBack();
-            return new Response(Response::CODE_ORDER_CREATE_FAILED, '下单失败', $ex->getMessage());
+            return new Response(Response::CODE_ORDER_CREATE_FAILED, '下单失败', $ex);
         }
     }
 
