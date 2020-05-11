@@ -57,7 +57,10 @@ return [
             'class' => 'frontend\modules\activity\Module',
         ],
         'jump' => [
-            'class' => 'app\modules\jump\Module',
+            'class' => 'frontend\modules\jump\Module',
+        ],
+        'wechat' => [
+            'class' => 'frontend\modules\wechat\Module',
         ],
     ],
     
