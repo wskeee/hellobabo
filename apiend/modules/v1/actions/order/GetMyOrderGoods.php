@@ -24,7 +24,7 @@ class GetMyOrderGoods extends BaseAction
                 ->where(['created_by' => $user->id, 'is_del' => 0])
                 ->andWhere(['<>', 'status', OrderGoods::STATUS_UNREADY])
                 ->andWhere(['<>', 'status', OrderGoods::STATUS_INVALID])
-                ->orderBy(['created_at' => SORT_DESC])
+                ->orderBy(['created_at' => SORT_ASC])
                 ->with(['creater','comments','comments.creater'])
                 ->all();
         /* 团购 */

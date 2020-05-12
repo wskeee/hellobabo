@@ -25,6 +25,10 @@ class PoseUtil
         $res = self::getPose($filepath);
         if(isset($res['error_code']) && $res['error_code'] > 0){
             throw new \Exception($res['error_msg']);
+        }else if(count($res['person_info']) == 0){
+            return [
+                'avg_score' => 0
+            ];
         }
         $d = $res['person_info'][0]['body_parts'];
 
