@@ -91,8 +91,6 @@ class CreateOrder extends BaseAction
 
             // 提交数据
             $tran->commit();
-            // 清除临时订单
-            GetTempOrder::clearTempOrder($user_id, $goods_id);
 
             return new Response(Response::CODE_COMMON_OK, null, $order);
         } catch (\Exception $ex) {

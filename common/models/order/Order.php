@@ -2,6 +2,7 @@
 
 namespace common\models\order;
 
+use apiend\modules\v1\actions\order\GetTempOrder;
 use common\components\redis\RedisService;
 use common\models\goods\Goods;
 use common\models\goods\GoodsSpecPrice;
@@ -198,6 +199,9 @@ class Order extends ActiveRecord
             $tran->commit();
 
             if ($bo) {
+                // 清除临时订单
+                GetTempOrder::clearTempOrder(Yii::$app->user->id, $order->orderGoods[0]->id);
+                // 检查推荐人
                 $this->checkRecommend();
             }
 
