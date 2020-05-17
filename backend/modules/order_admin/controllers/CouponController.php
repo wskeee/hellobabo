@@ -66,8 +66,11 @@ class CouponController extends Controller
     {
         $model = new Coupon();
         $model->loadDefaultValues();
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
+        } else if ($error = $model->getErrorSummary(true)) {
+            Yii::$app->session->setFlash('error', implode(',', $error));
         }
 
         return $this->render('create', [
@@ -87,7 +90,9 @@ class CouponController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
+        } else if ($error = $model->getErrorSummary(true)) {
+            Yii::$app->session->setFlash('error', implode(',', $error));
         }
 
         return $this->render('update', [

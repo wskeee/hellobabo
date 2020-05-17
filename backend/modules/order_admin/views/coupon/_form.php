@@ -35,9 +35,9 @@ use yii\widgets\ActiveForm;
         'data' => Goods::getUseableList(),
     ]); ?>
 
-    <?= $form->field($model, 'with_amount')->textInput(['type' => 'number']) ?>
+    <?= $form->field($model, 'with_amount')->textInput(['type' => 'number', 'step' => "0.01"]) ?>
 
-    <?= $form->field($model, 'used_amount')->textInput(['type' => 'number']) ?>
+    <?= $form->field($model, 'used_amount')->textInput(['type' => 'number', 'step' => "0.01"]) ?>
 
     <?= $form->field($model, 'quota')->textInput(['type' => 'number']) ?>
 
@@ -51,13 +51,37 @@ use yii\widgets\ActiveForm;
         'options' => ['placeholder' => '不限制',]
     ]) ?>
 
-    <?= $form->field($model, 'end_time')->textInput() ?>
+    <?= $form->field($model, 'end_time')->widget(DatePicker::class, [
+        'pluginOptions' => [
+            'convertFormat' => true,
+            'autoclose' => true,
+            'todayHighlight' => true,
+            'format' => 'yyyy-mm-dd',
+        ],
+        'options' => ['placeholder' => '不限制',]
+    ]) ?>
 
     <?= $form->field($model, 'valid_type')->radioList(Coupon::$validTypeNames, ['onchange' => 'onValidTypeChanged();']) ?>
 
-    <?= $form->field($model, 'valid_start_time')->textInput() ?>
+    <?= $form->field($model, 'valid_start_time')->widget(DatePicker::class, [
+        'pluginOptions' => [
+            'convertFormat' => true,
+            'autoclose' => true,
+            'todayHighlight' => true,
+            'format' => 'yyyy-mm-dd',
+        ],
+        'options' => ['placeholder' => '不限制',]
+    ]) ?>
 
-    <?= $form->field($model, 'valid_end_time')->textInput() ?>
+    <?= $form->field($model, 'valid_end_time')->widget(DatePicker::class, [
+        'pluginOptions' => [
+            'convertFormat' => true,
+            'autoclose' => true,
+            'todayHighlight' => true,
+            'format' => 'yyyy-mm-dd',
+        ],
+        'options' => ['placeholder' => '不限制',]
+    ]) ?>
 
     <?= $form->field($model, 'valid_days')->textInput() ?>
 

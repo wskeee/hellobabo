@@ -41,9 +41,9 @@ class GetCouponList extends BaseAction
             // 已经发布
             ->where(['status' => Coupon::STATUS_PUBLISHED,])
             // 到了指定发布时间和结束时间内
-            ->andWhere(['>=', 'start_time', $time])
-            ->andWhere(['<=', 'end_time', $time])
-            ->andWhere(['>', 'quota', 'take_countjk']);
+            ->andWhere(['<=', 'start_time', $time])
+            ->andWhere(['>=', 'end_time', $time])
+            ->andWhere(['>', 'quota', 'take_count']);
 
         if ($goods_id) {
             $query->andWhere(['or',
@@ -55,13 +55,11 @@ class GetCouponList extends BaseAction
                 ['used' => Coupon::USED_GOODS, 'with_id' => $goods->$goods_id],
             ]);
         } else {
-            $query->andWhere(['used' => [Coupon::USED_NEWER, Coupon::USED_PLATFORM]]);
+            $query->andWhere(['used' => [Coupon::USED_NEWER, Coupon::USED_PLATFORM, Coupon::USED_GOODS]]);
         }
 
         // 过滤已领取的卷
         $query->andFilterWhere(['NOT IN', 'id', $user_coupon_ids]);
-
-        var_dump($query->createCommand()->rawSql);exit;
 
         // 结果
         $list = $query->asArray()->all();

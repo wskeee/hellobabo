@@ -1,5 +1,6 @@
 <?php
 
+use common\models\order\Coupon;
 use common\utils\I18NUitl;
 use yii\helpers\Html;
 use yii\grid\GridView;
@@ -25,13 +26,51 @@ $this->params['breadcrumbs'][] = $this->title;
         //'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
+            [
+                'attribute' => 'used',
+                'value' => function ($model) {
+                    return Coupon::$usedNames[$model->used];
+                }
+            ],
+            [
+                'attribute' => 'type',
+                'value' => function ($model) {
+                    return Coupon::$typeNames[$model->type];
+                }
+            ],
             'title',
-            'icon_url:url',
+            [
+                'attribute' => 'icon_url',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return Html::img($model->icon_url, ['width' => '100px;']);
+                }
+            ],
+            'with_amount',
+            'used_amount',
+            'quota',
+            'take_count',
+            'used_count',
+            'start_time',
+            'end_time',
+            'valid_start_time',
+            [
+                'attribute' => 'valid_end_time',
+                'value' => function ($model) {
+                    if($model->valid_type == Coupon::VALID_TYPE_ABSOLUTE){
+                        return $model->valid_end_time;
+                    }else{
+                        return "领用{$model->valid_days}后";
+                    }
+                }
+            ],
+            [
+                'attribute' => 'status',
+                'value' => function ($model) {
+                    return Coupon::$statusNames[$model->status];
+                }
+            ],
             'des',
-            'used',
-            //'type',
             //'with_special',
             //'with_id',
             //'with_amount',
