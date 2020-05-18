@@ -23,7 +23,7 @@ class PayCb extends Action
             // 使用通知里的 "微信支付订单号" 或者 "商户订单号" 去自己的数据库找到订单
             $order = Order::findOne(['order_sn' => $message['out_trade_no']]);
 
-            if (!$order || $order->order_status != Order::STATUS_WAITPAY) { // 如果订单不存在 或者 订单已经支付过了
+            if (!$order || $order->order_status != Order::ORDER_STATUS_WAIT_PAY) { // 如果订单不存在 或者 订单已经支付过了
                 return true; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
             }
 
