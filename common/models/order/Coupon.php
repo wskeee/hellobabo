@@ -18,6 +18,7 @@ use Yii;
  * @property float $with_amount 满多少金额可用
  * @property float $used_amount 用券金额
  * @property int $quota 配额：发券数量
+ * @property int $user_max_count 用户限领多少张卷
  * @property int $take_count 已领取的优惠券数量
  * @property int $used_count 已使用的优惠券数量
  * @property int $start_time 发放开始时间
@@ -89,7 +90,7 @@ class Coupon extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['used', 'type', 'with_special', 'with_id', 'quota', 'take_count', 'used_count', 'with_amount', 'valid_type', 'valid_days', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['used', 'type', 'with_special', 'with_id', 'quota', 'user_max_count', 'take_count', 'used_count', 'with_amount', 'valid_type', 'valid_days', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['used_amount',], 'number'],
             [['title'], 'string', 'max' => 64],
             [['icon_url', 'des'], 'string', 'max' => 255],
@@ -129,6 +130,7 @@ class Coupon extends \yii\db\ActiveRecord
             'with_amount' => Yii::t('app', 'With Amount'),
             'used_amount' => Yii::t('app', 'Used Amount'),
             'quota' => Yii::t('app', 'Quota'),
+            'user_max_count' => Yii::t('app', 'User Max Count'),
             'take_count' => Yii::t('app', 'Take Count'),
             'used_count' => Yii::t('app', 'Used Count'),
             'start_time' => Yii::t('app', 'Start Grant Time'),

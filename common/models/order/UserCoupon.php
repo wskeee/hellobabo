@@ -20,6 +20,16 @@ use Yii;
  */
 class UserCoupon extends \yii\db\ActiveRecord
 {
+    const STATUS_UNUSED = 1;
+    const STATUS_USED = 2;
+    const STATUS_TIMEOUT = 3;
+
+    public static $statusNames = [
+        self::STATUS_UNUSED => '未使用',
+        self::STATUS_USED => '已使用',
+        self::STATUS_TIMEOUT => '已过期',
+    ];
+
     /**
      * {@inheritdoc}
      */
