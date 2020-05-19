@@ -3,6 +3,7 @@
 namespace common\models\order;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%user_coupon}}".
@@ -30,6 +31,11 @@ class UserCoupon extends \yii\db\ActiveRecord
         self::STATUS_TIMEOUT => '已过期',
     ];
 
+    public function behaviors()
+    {
+        return [TimestampBehavior::class];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -44,7 +50,6 @@ class UserCoupon extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
             [['id', 'user_id', 'coupon_id', 'valid_start_time', 'valid_end_time', 'used_time', 'status', 'order_id', 'created_at', 'updated_at'], 'integer'],
             [['id'], 'unique'],
         ];

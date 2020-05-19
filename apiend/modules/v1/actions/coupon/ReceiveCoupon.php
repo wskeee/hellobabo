@@ -8,6 +8,7 @@ use apiend\models\Response;
 use apiend\modules\v1\actions\BaseAction;
 use common\models\order\Coupon;
 use common\models\order\UserCoupon;
+use yii\db\Exception;
 
 class ReceiveCoupon extends BaseAction
 {
@@ -23,6 +24,11 @@ class ReceiveCoupon extends BaseAction
             return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => '优惠卷']);
         }
 
+        if($coupon->quota <= $coupon->take_count){
+            // 卷已被领光
+            return new Response(Response::CODE_ORDER_COUPON_RECEIVE_FAIL, '出手晚啦,优惠卷被人枪光了！');
+        }
+
         // 检查重复领取
         $receive_count = UserCoupon::find()->where(['user_id' => $user_id, 'coupon_id' => $coupon_id])->count();
         if ($receive_count && $coupon->user_max_count <= $receive_count) {
@@ -31,15 +37,17 @@ class ReceiveCoupon extends BaseAction
 
         // 检查是否过期
         $time = time();
-        if ($coupon->start_time > $time || $coupon->end_time < $time) {
-            return new Response(Response::CODE_ORDER_COUPON_RECEIVE_FAIL, '优惠卷已下架');
+        if ($coupon->getOldAttribute('start_time') > $time) {
+            return new Response(Response::CODE_ORDER_COUPON_RECEIVE_FAIL, '优惠卷未上架', $coupon->start_time);
+        } else if ($coupon->getOldAttribute('end_time') < $time) {
+            return new Response(Response::CODE_ORDER_COUPON_RECEIVE_FAIL, '优惠卷已下架', $coupon->end_time);
         }
 
         // 领取
         $daySecond = 60 * 60 * 24;
         $isAbsolute = $coupon->valid_type == Coupon::VALID_TYPE_ABSOLUTE;
-        $valid_start_time = $isAbsolute ? $coupon->valid_start_time : $time;
-        $valid_end_time = $isAbsolute ? $coupon->valid_end_time : $time + $coupon->valid_days * $daySecond;
+        $valid_start_time = $isAbsolute ? $coupon->getOldAttribute('valid_start_time') : $time;
+        $valid_end_time = $isAbsolute ? $coupon->getOldAttribute('valid_end_time') : $time + $coupon->valid_days * $daySecond;
 
         $user_coupon = new UserCoupon([
             'user_id' => $user_id,
@@ -50,9 +58,20 @@ class ReceiveCoupon extends BaseAction
         ]);
         $user_coupon->loadDefaultValues();
 
+        $tran = \Yii::$app->db->beginTransaction();
         if ($user_coupon->validate() && $user_coupon->save()) {
+            // 增加领卷数
+            $coupon->take_count++;
+            try{
+                $coupon->save();
+                $tran->commit();
+            }catch (Exception $e){
+                $tran->rollBack();
+                return new Response(Response::CODE_ORDER_COUPON_RECEIVE_FAIL, null, $e);
+            }
             return new Response(Response::CODE_COMMON_OK, null, $user_coupon);
-        }else{
+        } else {
+            $tran->rollBack();
             return new Response(Response::CODE_ORDER_COUPON_RECEIVE_FAIL, null, $user_coupon->getErrorSummary(true));
         }
     }

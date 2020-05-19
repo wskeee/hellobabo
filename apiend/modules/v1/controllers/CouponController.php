@@ -3,7 +3,12 @@
 namespace apiend\modules\v1\controllers;
 
 use apiend\controllers\ApiController;
+use apiend\modules\v1\actions\coupon\ExchangeCoupon;
+use apiend\modules\v1\actions\coupon\GetCouponBest;
 use apiend\modules\v1\actions\coupon\GetCouponList;
+use apiend\modules\v1\actions\coupon\GetMyCouponList;
+use apiend\modules\v1\actions\coupon\ReceiveCoupon;
+use apiend\modules\v1\actions\coupon\SearchCouponByCode;
 use apiend\modules\v1\actions\order\CancelOrder;
 use apiend\modules\v1\actions\order\CheckPay;
 use apiend\modules\v1\actions\order\CheckPose;
@@ -49,6 +54,11 @@ class CouponController extends ApiController
         ];
         $behaviors['verbs']['actions'] = [
             'get-coupon-list' => ['get'],
+            'get-coupon-best' => ['get'],
+            'get-my-coupon-list' => ['get'],
+            'exchange-coupon' => ['post'],
+            'receive-coupon' => ['post'],
+            'search-coupon-by-code' => ['post'],
         ];
         return $behaviors;
     }
@@ -60,6 +70,11 @@ class CouponController extends ApiController
     {
         return [
             'get-coupon-list' => ['class' => GetCouponList::class],
+            'get-coupon-best' => ['class' => GetCouponBest::class],
+            'get-my-coupon-list' => ['class' => GetMyCouponList::class],
+            'exchange-coupon' => ['class' => ExchangeCoupon::class],
+            'receive-coupon' => ['class' => ReceiveCoupon::class],
+            'search-coupon-by-code' => ['class' => SearchCouponByCode::class],
         ];
     }
 
