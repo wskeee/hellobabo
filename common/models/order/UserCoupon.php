@@ -4,6 +4,8 @@ namespace common\models\order;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%user_coupon}}".
@@ -18,8 +20,10 @@ use yii\behaviors\TimestampBehavior;
  * @property int $order_id 优惠卷使用到的订单ID 关联order id
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
+ *
+ * @property Coupon $coupon
  */
-class UserCoupon extends \yii\db\ActiveRecord
+class UserCoupon extends ActiveRecord
 {
     const STATUS_UNUSED = 1;
     const STATUS_USED = 2;
@@ -72,5 +76,13 @@ class UserCoupon extends \yii\db\ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCoupon()
+    {
+        return $this->hasOne(Coupon::class, ['id', 'coupon_id']);
     }
 }

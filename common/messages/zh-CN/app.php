@@ -378,6 +378,7 @@ return [
     'With Amount' => '满多少金额可用',
     'Used Amount' => '用券金额',
     'Quota' => '发券数量',
+    'User Max Count' => '每人限领数量',
     'Take Count' => '已领取',
     'Used Count' => '已使用',
     'Start Grant Time' => '开始发放时间',
