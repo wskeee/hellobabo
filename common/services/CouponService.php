@@ -4,6 +4,7 @@ namespace common\services;
 
 use common\models\order\Coupon;
 use common\models\order\UserCoupon;
+use common\models\User;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -38,25 +39,17 @@ class CouponService
      */
     public static function getCouponBest($user_id, $goods_id, $amount)
     {
-        $time = time();
-        $user_coupons = UserCoupon::find()
-            ->where([
-                'user_id' => $user_id,
-                'status' => UserCoupon::STATUS_UNUSED,
-            ])
-            ->andWhere(['or',
-                // 新手和平台卷无需其它条件
-                ['used' => [Coupon::USED_NEWER, Coupon::USED_PLATFORM]],
-                // 商品类型卷，类型匹配
-                //['used' => Coupon::USED_TYPE, 'with_id' => $goods_id],
-                // 商品卷
-                ['used' => Coupon::USED_GOODS, 'with_id' => $goods_id],
-            ])
-            ->andWhere(['<=', 'valid_start_time', $time])
-            ->andWhere(['>=', 'valid_end_time', $time])
-            ->with('coupon')
-            ->all();
+        $user_coupons = self::getUseAbleCoupon($user_id, $goods_id);
+        return self::getCouponBaseByCoupons($user_coupons, $amount);
+    }
 
+    /**
+     * 获取当前优惠最大的优惠卷
+     * @param array $user_coupons
+     * @return UserCoupon
+     */
+    public static function getCouponBaseByCoupons($user_coupons, $amount)
+    {
         $max_value = 0;
         $base_coupon = null;
         foreach ($user_coupons as $user_coupon) {
@@ -69,4 +62,84 @@ class CouponService
         }
         return $base_coupon;
     }
+
+    /**
+     * 获取可用优惠卷
+     * @param int $user_id
+     * @param int $goods_id
+     * @return array
+     */
+    public static function getUseAbleCoupon($user_id, $goods_id = null)
+    {
+        $time = time();
+        $query = UserCoupon::find()
+            ->where([
+                'user_id' => $user_id,
+                'status' => UserCoupon::STATUS_UNUSED,
+            ])
+            ->andWhere(['<=', 'valid_start_time', $time])
+            ->andWhere(['>=', 'valid_end_time', $time])
+            ->with('coupon');
+        if ($goods_id) {
+            $query->andWhere(['or',
+                // 新手和平台卷无需其它条件
+                ['used' => [Coupon::USED_NEWER, Coupon::USED_PLATFORM]],
+                // 商品类型卷，类型匹配
+                //['used' => Coupon::USED_TYPE, 'with_id' => $goods_id],
+                // 商品卷
+                ['used' => Coupon::USED_GOODS, 'with_id' => $goods_id],
+            ]);
+        }
+
+        $user_coupons = $query->all();
+        return $user_coupons;
+    }
+
+
+    /**
+     * 获取未用优惠卷
+     * @param int $user_id
+     */
+    public static function getUnuseCoupon($user_id)
+    {
+        $query = UserCoupon::find()
+            ->where([
+                'user_id' => $user_id,
+                'status' => UserCoupon::STATUS_UNUSED
+            ]);
+        return $query->all();
+    }
+
+    /**
+     * 获取已经使用过的优惠卷
+     * @param int $user_id
+     * @return array
+     */
+    public static function getHasUsedCoupon($user_id)
+    {
+        $query = UserCoupon::find()
+            ->where([
+                'user_id' => $user_id,
+                'status' => UserCoupon::STATUS_USED
+            ]);
+        return $query->all();
+    }
+
+    /**
+     * 获取已过期优惠卷
+     * @param int $user_id
+     * @return array
+     */
+    public static function getExpireCoupon($user_id)
+    {
+        $query = UserCoupon::find()
+            ->where([
+                'user_id' => $user_id,
+                'status' => UserCoupon::STATUS_UNUSED,
+            ])
+            ->andWhere(['>=', 'valid_end_time', time()]);
+        return $query->all();
+    }
+
+
 }
