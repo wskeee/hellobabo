@@ -40,7 +40,7 @@ class Coupon extends \yii\db\ActiveRecord
     const TYPE_NO_THRESHOLD = 3;
     public static $typeNames = [
         self::TYPE_FULL => '满减卷',
-        self::TYPE_FULL_OVERLAY => '叠加满减券',
+        //self::TYPE_FULL_OVERLAY => '叠加满减券',
         self::TYPE_NO_THRESHOLD => '无门槛券',
     ];
 
@@ -50,10 +50,10 @@ class Coupon extends \yii\db\ActiveRecord
     const USED_GOODS = 4;
     const USED_CODE = 10;
     public static $usedNames = [
-        self::USED_NEWER => '新人平台券',
-        self::USED_PLATFORM => '平台优惠券',
+        self::USED_NEWER => '新人券',
+        self::USED_PLATFORM => '平台券',
         //self::USED_TYPE => '类目优惠券',
-        self::USED_GOODS => '商品优惠券',
+        self::USED_GOODS => '绘本券',
         self::USED_CODE => '优惠码卷',
     ];
 

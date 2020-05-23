@@ -4,6 +4,7 @@ namespace apiend\modules\v1\controllers;
 
 use apiend\controllers\ApiController;
 use apiend\modules\v1\actions\coupon\ExchangeCoupon;
+use apiend\modules\v1\actions\coupon\GetChooseList;
 use apiend\modules\v1\actions\coupon\GetCouponBest;
 use apiend\modules\v1\actions\coupon\GetCouponList;
 use apiend\modules\v1\actions\coupon\GetMyCouponList;
@@ -55,6 +56,7 @@ class CouponController extends ApiController
         $behaviors['verbs']['actions'] = [
             'get-coupon-list' => ['get'],
             'get-coupon-best' => ['get'],
+            'get-choose-list' => ['get'],
             'get-my-coupon-list' => ['get'],
             'exchange-coupon' => ['post'],
             'receive-coupon' => ['post'],
@@ -71,6 +73,7 @@ class CouponController extends ApiController
         return [
             'get-coupon-list' => ['class' => GetCouponList::class],
             'get-coupon-best' => ['class' => GetCouponBest::class],
+            'get-choose-list' => ['class' => GetChooseList::class],
             'get-my-coupon-list' => ['class' => GetMyCouponList::class],
             'exchange-coupon' => ['class' => ExchangeCoupon::class],
             'receive-coupon' => ['class' => ReceiveCoupon::class],

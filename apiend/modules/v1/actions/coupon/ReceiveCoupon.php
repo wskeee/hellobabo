@@ -44,10 +44,9 @@ class ReceiveCoupon extends BaseAction
         }
 
         // 领取
-        $daySecond = 60 * 60 * 24;
         $isAbsolute = $coupon->valid_type == Coupon::VALID_TYPE_ABSOLUTE;
         $valid_start_time = $isAbsolute ? $coupon->getOldAttribute('valid_start_time') : $time;
-        $valid_end_time = $isAbsolute ? $coupon->getOldAttribute('valid_end_time') : $time + $coupon->valid_days * $daySecond;
+        $valid_end_time = $isAbsolute ? $coupon->getOldAttribute('valid_end_time') : strtotime("today +{$coupon->valid_days} 23:59:59");
 
         $user_coupon = new UserCoupon([
             'user_id' => $user_id,

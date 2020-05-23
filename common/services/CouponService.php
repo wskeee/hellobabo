@@ -2,6 +2,7 @@
 
 namespace common\services;
 
+use common\models\goods\Goods;
 use common\models\order\Coupon;
 use common\models\order\UserCoupon;
 use common\models\User;
@@ -39,8 +40,8 @@ class CouponService
      */
     public static function getCouponBest($user_id, $goods_id, $amount)
     {
-        $user_coupons = self::getUseAbleCoupon($user_id, $goods_id);
-        return self::getCouponBaseByCoupons($user_coupons, $amount);
+        $user_coupons = self::getUseAbleCoupon($user_id, $goods_id, $amount);
+        return self::getCouponBestByCoupons($user_coupons, $amount);
     }
 
     /**
@@ -48,14 +49,14 @@ class CouponService
      * @param array $user_coupons
      * @return UserCoupon
      */
-    public static function getCouponBaseByCoupons($user_coupons, $amount)
+    public static function getCouponBestByCoupons($user_coupons, $amount)
     {
+        if (empty($user_coupons) || $amount <= 0) return null;
         $max_value = 0;
         $base_coupon = null;
         foreach ($user_coupons as $user_coupon) {
-            /** @var UserCoupon $user_coupon */
-            $value = $user_coupon->coupon->used_amount < 1 ? $user_coupon->coupon->used_amount * $amount : $user_coupon->coupon->used_amount;
-            if (!$base_coupon || $value >= $max_value) {
+            $value = $user_coupon['used_amount'] < 1 ? (1 - $user_coupon['used_amount']) * $amount : $user_coupon['used_amount'];
+            if (!$base_coupon || $value > $max_value) {
                 $max_value = $value;
                 $base_coupon = $user_coupon;
             }
@@ -67,32 +68,52 @@ class CouponService
      * 获取可用优惠卷
      * @param int $user_id
      * @param int $goods_id
+     * @param int $amount 商品金额
      * @return array
      */
-    public static function getUseAbleCoupon($user_id, $goods_id = null)
+    public static function getUseAbleCoupon($user_id, $goods_id = null, $amount = 0)
     {
         $time = time();
         $query = UserCoupon::find()
-            ->where([
-                'user_id' => $user_id,
-                'status' => UserCoupon::STATUS_UNUSED,
+            ->alias('user_coupon')
+            ->select([
+                'user_coupon.*',
+                'coupon.title',
+                'coupon.with_id',
+                'coupon.used',
+                'coupon.with_amount',
+                'coupon.used_amount',
             ])
-            ->andWhere(['<=', 'valid_start_time', $time])
-            ->andWhere(['>=', 'valid_end_time', $time])
-            ->with('coupon');
+            ->leftJoin(['coupon' => Coupon::tableName()], 'coupon.id = user_coupon.coupon_id')
+            ->where([
+                'user_coupon.user_id' => $user_id,
+                'user_coupon.status' => UserCoupon::STATUS_UNUSED,
+            ])
+            ->andWhere(['<=', 'user_coupon.valid_start_time', $time])
+            ->andWhere(['>=', 'user_coupon.valid_end_time', $time]);
         if ($goods_id) {
             $query->andWhere(['or',
                 // 新手和平台卷无需其它条件
-                ['used' => [Coupon::USED_NEWER, Coupon::USED_PLATFORM]],
+                ['coupon.used' => [Coupon::USED_NEWER, Coupon::USED_PLATFORM]],
                 // 商品类型卷，类型匹配
                 //['used' => Coupon::USED_TYPE, 'with_id' => $goods_id],
                 // 商品卷
-                ['used' => Coupon::USED_GOODS, 'with_id' => $goods_id],
+                ['coupon.used' => Coupon::USED_GOODS, 'with_id' => $goods_id],
             ]);
         }
+        // 当传了金额时，检查满减配置
+        if ($amount > 0) {
+            $query->andWhere(['or',
+                ['coupon.type' => Coupon::TYPE_NO_THRESHOLD],
+                ['and', ['coupon.type' => Coupon::TYPE_FULL], ['>=', 'coupon.with_amount', $amount]]]);
+        }
 
-        $user_coupons = $query->all();
-        return $user_coupons;
+        $user_coupons = $query->asArray()->all();
+        // 值转换
+        foreach ($user_coupons as &$item) {
+            $item = self::appendCoupon($item);
+        }
+        return $user_coupons ? $user_coupons : [];
     }
 
 
@@ -103,11 +124,50 @@ class CouponService
     public static function getUnuseCoupon($user_id)
     {
         $query = UserCoupon::find()
+            ->alias('user_coupon')
+            ->leftJoin(['coupon' => Coupon::tableName()], 'coupon.id = user_coupon.coupon_id')
+            ->select([
+                'user_coupon.*',
+                'coupon.title',
+                'coupon.with_id',
+                'coupon.used',
+                'coupon.with_amount',
+                'coupon.used_amount',
+            ])
             ->where([
-                'user_id' => $user_id,
-                'status' => UserCoupon::STATUS_UNUSED
+                'user_coupon.user_id' => $user_id,
+                'user_coupon.status' => UserCoupon::STATUS_UNUSED
             ]);
-        return $query->all();
+        $result = $query->asArray()->all();
+        // 值转换
+        foreach ($result as &$item) {
+            $item = self::appendCoupon($item);
+        }
+        return $result;
+    }
+
+    /**
+     * 附加其它属性到优惠卷
+     * @param array $coupon
+     * @return array
+     */
+    private static function appendCoupon($item)
+    {
+        $item['valid_start_time_text'] = date('Y-m-d', $item['valid_start_time']);
+        $item['valid_end_time_text'] = date('Y-m-d', $item['valid_end_time']);
+
+        // 绘本优惠卷
+        if (($item['used'] == Coupon::USED_GOODS || $item['used'] == Coupon::USED_CODE) && !empty($item['with_id'])) {
+            $goods = Goods::findOne(['id' => $item['with_id']]);
+            if ($goods) {
+                $item['used_text'] = Coupon::$usedNames[$item['used']] . "({$goods->goods_name})";
+            } else {
+                $item['used_text'] = Coupon::$usedNames[$item['used']];
+            }
+        } else {
+            $item['used_text'] = Coupon::$usedNames[$item['used']];
+        }
+        return $item;
     }
 
     /**

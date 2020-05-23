@@ -28,6 +28,8 @@ use yii\db\Query;
  * @property string $order_sn 订单编号，eg：201812131415221234
  * @property string $order_amount 应付金额（商品总价-折扣）
  * @property int $order_status 状态 0待付款 5待准备 15待制作 20待发货 25待确认 30已完成 35已取消 99已作废
+ * @property string $goods_amount 商品总价
+ * @property string $coupon_amount 优惠金额
  * @property string $user_note 用户留言
  * @property string $pay_code 付款方式标识，如：alpay
  * @property string $pay_sn 付款流水号
@@ -103,7 +105,7 @@ class Order extends ActiveRecord
             [['country', 'province', 'city', 'district', 'town',], 'integer'],
             [['zipcode'], 'string', 'max' => 6],
             [['address'], 'string', 'max' => 255],
-            [['order_amount'], 'number'],
+            [['order_amount','goods_amount','coupon_amount'], 'number'],
             [['order_sn', 'pay_code'], 'string', 'max' => 20],
             [['user_note'], 'string', 'max' => 255],
             [['pay_sn'], 'string', 'max' => 50],
@@ -120,6 +122,8 @@ class Order extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'order_sn' => Yii::t('app', 'Order Sn'),
             'order_amount' => I18NUitl::t('app', '{Order}{Amount}'),
+            'goods_amount' => I18NUitl::t('app', '{Goods}{Amount}'),
+            'coupon_amount' => I18NUitl::t('app', '{Coupon}{Amount}'),
             'order_status' => I18NUitl::t('app', '{Order}{Status}'),
             'user_note' => Yii::t('app', 'User Note'),
             'pay_code' => Yii::t('app', 'Pay Code'),
