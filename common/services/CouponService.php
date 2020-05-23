@@ -26,14 +26,14 @@ class CouponService
         }
 
         // 检查原优惠卷状态
-        if($coupon->coupon->status != Coupon::STATUS_PUBLISHED){
-            return ['result' => 0, 'msg' => '优惠卷'.Coupon::$statusNames[$coupon->coupon->status], 'data' => null];
+        if ($coupon->coupon->status != Coupon::STATUS_PUBLISHED) {
+            return ['result' => 0, 'msg' => '优惠卷' . Coupon::$statusNames[$coupon->coupon->status], 'data' => null];
         }
 
         // 检查优惠卷使用状态
-        if($coupon->status == UserCoupon::STATUS_USED){
+        if ($coupon->status == UserCoupon::STATUS_USED) {
             return ['result' => 0, 'msg' => '优惠卷已使用', 'data' => null];
-        }else if($coupon->status == UserCoupon::STATUS_TIMEOUT){
+        } else if ($coupon->status == UserCoupon::STATUS_TIMEOUT) {
             return ['result' => 0, 'msg' => '优惠卷已过期', 'data' => null];
         }
 
@@ -41,18 +41,18 @@ class CouponService
         $time = time();
         if ($coupon->valid_start_time > $time) {
             return ['result' => 0, 'msg' => '优惠卷未开始', 'data' => null];
-        }else if($coupon->valid_end_time < $time){
+        } else if ($coupon->valid_end_time < $time) {
             return ['result' => 0, 'msg' => '优惠卷已过期', 'data' => null];
         }
 
         // 检查类型
-        if(!empty($coupon->coupon->with_id) && $coupon->coupon->with_id != $goods_id){
+        if (!empty($coupon->coupon->with_id) && $coupon->coupon->with_id != $goods_id) {
             return ['result' => 0, 'msg' => '优惠卷仅限专属绘本使用', 'data' => null];
         }
 
         // 满减
-        if($coupon->coupon->type == Coupon::TYPE_FULL && $coupon->coupon->with_amount > $amount){
-            return ['result' => 0, 'msg' => '优惠卷不满足最低金额限制', 'data' => ['with_amount' => $coupon->coupon->with_amount,'order_amount' => $amount]];
+        if ($coupon->coupon->type == Coupon::TYPE_FULL && $coupon->coupon->with_amount > $amount) {
+            return ['result' => 0, 'msg' => '优惠卷不满足最低金额限制', 'data' => ['with_amount' => $coupon->coupon->with_amount, 'order_amount' => $amount]];
         }
 
         return ['result' => 1, 'msg' => 'OK', 'data' => $coupon];
@@ -121,17 +121,7 @@ class CouponService
     public static function getUseAbleCoupon($user_id, $goods_id = null, $amount = 0)
     {
         $time = time();
-        $query = UserCoupon::find()
-            ->alias('user_coupon')
-            ->select([
-                'user_coupon.*',
-                'coupon.title',
-                'coupon.with_id',
-                'coupon.used',
-                'coupon.with_amount',
-                'coupon.used_amount',
-            ])
-            ->leftJoin(['coupon' => Coupon::tableName()], 'coupon.id = user_coupon.coupon_id')
+        $query = self::getQuery()
             // 查询属于我的并且未用
             ->where([
                 'user_coupon.user_id' => $user_id,
@@ -160,7 +150,7 @@ class CouponService
                 ['and', ['coupon.type' => Coupon::TYPE_FULL], ['<=', 'coupon.with_amount', $amount]]]);
         }
 
-        $user_coupons = $query->asArray()->all();
+        $user_coupons = $query->all();
         // 值转换
         foreach ($user_coupons as &$item) {
             $item = self::appendCoupon($item);
@@ -174,27 +164,42 @@ class CouponService
      */
     public static function getUnuseCoupon($user_id)
     {
-        $query = UserCoupon::find()
-            ->alias('user_coupon')
-            ->leftJoin(['coupon' => Coupon::tableName()], 'coupon.id = user_coupon.coupon_id')
-            ->select([
-                'user_coupon.*',
-                'coupon.title',
-                'coupon.with_id',
-                'coupon.used',
-                'coupon.with_amount',
-                'coupon.used_amount',
-            ])
+        $query = self::getQuery()
             ->where([
                 'user_coupon.user_id' => $user_id,
                 'user_coupon.status' => UserCoupon::STATUS_UNUSED
             ]);
-        $result = $query->asArray()->all();
+        $result = $query->all();
         // 值转换
         foreach ($result as &$item) {
             $item = self::appendCoupon($item);
         }
         return $result;
+    }
+
+    /**
+     * 获取不可用优惠卷
+     *
+     * @param int $user_id
+     * @param array $useable
+     * @return array
+     */
+    public static function getUnableUseCoupon($user_id, $useable = null)
+    {
+        if (empty($useable)) {
+            $useable = self::getUseAbleCoupon($user_id);
+        }
+        $useable_map = ArrayHelper::map($useable, 'id', 'id');
+        // 未用的
+        $unuse = self::getUnuseCoupon($user_id);
+        // 不可用的
+        $unuseable = [];
+        foreach ($unuse as $i => $item) {
+            if (!isset($useable_map[$item['id']])) {
+                $unuseable[] = $item;
+            }
+        }
+        return $unuseable;
     }
 
     /**
@@ -228,10 +233,10 @@ class CouponService
      */
     public static function getHasUsedCoupon($user_id)
     {
-        $query = UserCoupon::find()
+        $query = self::getQuery()
             ->where([
-                'user_id' => $user_id,
-                'status' => UserCoupon::STATUS_USED
+                'user_coupon.user_id' => $user_id,
+                'user_coupon.status' => UserCoupon::STATUS_USED
             ]);
         return $query->all();
     }
@@ -243,14 +248,38 @@ class CouponService
      */
     public static function getExpireCoupon($user_id)
     {
-        $query = UserCoupon::find()
+        $query = self::getQuery()
             ->where([
-                'user_id' => $user_id,
-                'status' => UserCoupon::STATUS_UNUSED,
+                'user_coupon.user_id' => $user_id,
+                'user_coupon.status' => UserCoupon::STATUS_UNUSED,
             ])
-            ->andWhere(['>=', 'valid_end_time', time()]);
+            ->andWhere(['<', 'user_coupon.valid_end_time', time()]);
         return $query->all();
     }
 
+    //-------------------------------------------------------------------------------
+    //
+    // util
+    //
+    //-------------------------------------------------------------------------------
+    /**
+     * 公共查询条件
+     * @return Query
+     */
+    private static function getQuery()
+    {
+        $query = new Query();
+        $query->from(['user_coupon' => UserCoupon::tableName()])
+            ->leftJoin(['coupon' => Coupon::tableName()], 'coupon.id = user_coupon.coupon_id')
+            ->select([
+                'user_coupon.*',
+                'coupon.title',
+                'coupon.with_id',
+                'coupon.used',
+                'coupon.with_amount',
+                'coupon.used_amount',
+            ]);
+        return $query;
+    }
 
 }
