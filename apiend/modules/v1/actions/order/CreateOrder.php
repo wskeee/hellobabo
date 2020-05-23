@@ -13,6 +13,8 @@ use common\models\order\OrderGoodsComment;
 use common\models\order\OrderGoodsMaterial;
 use common\models\order\OrderGoodsScene;
 use common\models\order\OrderGoodsScenePage;
+use common\models\order\UserCoupon;
+use common\services\CouponService;
 use Yii;
 
 /**
@@ -40,6 +42,8 @@ class CreateOrder extends BaseAction
         $goods_id = $this->getSecretParam('goods_id');
         //临时订单标识
         $temp_order_sign = $this->getSecretParam('temp_order_sign', null);
+        // 优惠卷
+        $coupon_id = $this->getSecretParam('coupon_id', null);
 
         $goods = Goods::findOne(['id' => $this->getSecretParam('goods_id')]); //绘本商品
         /* @var GoodsSpecPrice $spec_price */
@@ -61,6 +65,16 @@ class CreateOrder extends BaseAction
             return new Response(Response::CODE_ORDER_CREATE_FAILED, '订单数据出错！');
         }
 
+        /* 优惠卷合法性 */
+        $coupon = null;
+        if ($coupon_id) {
+            $result = CouponService::checkCouponCanUse($coupon_id, $goods_id, $spec_price->goods_price * $goods_num);
+            if (!$result['result']) {
+                return new Response(Response::CODE_ORDER_CREATE_FAILED, $result['msg'], $result['data']);
+            }
+            $coupon = $result['data'];
+        }
+
         $tran = Yii::$app->db->beginTransaction();
 
         try {
@@ -72,6 +86,7 @@ class CreateOrder extends BaseAction
                 'groupon_id' => $groupon_id,
                 'recommend_by' => $recommend_by,
                 'user_note' => $user_note,
+                'coupon' => $coupon,
             ]);
 
             //首个用户订单创建团购
@@ -81,6 +96,11 @@ class CreateOrder extends BaseAction
             //添加团购关联
             if ($groupon_id != null) {
                 Groupon::joinGroupon($groupon, $user_id, $order->id, $order_goods->id);
+            }
+
+            // 更新优惠卷
+            if ($coupon) {
+                $this->updateCoupon($coupon, $order->id);
             }
 
             // 初始订单默认数据
@@ -100,9 +120,33 @@ class CreateOrder extends BaseAction
     }
 
     /**
+     * 更新优惠卷
+     * @param UserCoupon $coupon
+     * @param int $order_id
+     * @throws
+     */
+    private function updateCoupon($coupon, $order_id)
+    {
+        // 修改优惠卷记录
+        $coupon->status = UserCoupon::STATUS_USED;
+        $coupon->order_id = $order_id;
+        $coupon->used_time = time();
+        // 修改使用数量
+        $coupon->coupon->used_count++;
+
+        if (!$coupon->save()) {
+            throw new \Exception(implode(',', $coupon->getErrorSummary(true)));
+        }
+        if (!$coupon->coupon->save()) {
+            throw new \Exception(implode(',', $coupon->coupon->getErrorSummary(true)));
+        }
+    }
+
+    /**
      * 创建团购
      *
      * @param OrderGoods $order_goods
+     * @throws
      */
     private function createGroupon($order_goods)
     {
@@ -117,7 +161,7 @@ class CreateOrder extends BaseAction
     /**
      * 订单商品
      * @param OrderGoods $order_goods
-     * @throws Exception
+     * @throws
      */
     private function initDefault($order_goods)
     {
@@ -132,7 +176,7 @@ class CreateOrder extends BaseAction
         // 初始素材
         OrderGoodsMaterial::initDefaultMaterial($order_goods, $material_value_ids);
         // 初始场景
-        OrderGoodsScene::initDefaultScene($order_goods, $scenes_ids , $temp_order['material_value_id']);
+        OrderGoodsScene::initDefaultScene($order_goods, $scenes_ids, $temp_order['material_value_id']);
         // 初始场景页
         OrderGoodsScenePage::initPage($order_goods);
     }
@@ -146,7 +190,7 @@ class CreateOrder extends BaseAction
     {
         $user_id = $order_goods->created_by;
         $count = OrderGoods::find()->where(['created_by' => $user_id])->count();
-        $count ++;
+        $count++;
         $params = [
             'order_goods_id' => $order_goods->id,
             'content' => "宝贝的第{$count}套个性化绘本",
@@ -154,15 +198,15 @@ class CreateOrder extends BaseAction
         ];
         $model = new OrderGoodsComment($params);
         $model->loadDefaultValues();
-        if(!$model->save()){
-            throw new \Exception(implode(',',$model->getErrorSummary(true)));
+        if (!$model->save()) {
+            throw new \Exception(implode(',', $model->getErrorSummary(true)));
         }
 
         $params['content'] = '今天开始跟宝贝制作绘本啦';
         $model = new OrderGoodsComment($params);
         $model->loadDefaultValues();
-        if(!$model->save()){
-            throw new \Exception(implode(',',$model->getErrorSummary(true)));
+        if (!$model->save()) {
+            throw new \Exception(implode(',', $model->getErrorSummary(true)));
         }
     }
 }

@@ -22,7 +22,7 @@ use yii\widgets\ActiveForm;
         'options' => ['onchange' => 'onUsedChanged($(this));']
     ]); ?>
 
-    <?= $form->field($model, 'type')->radioList(Coupon::$typeNames) ?>
+    <?= $form->field($model, 'type')->radioList(Coupon::$typeNames, ['onchange' => 'onTypeChanged($(this));']) ?>
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
@@ -37,7 +37,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'with_amount')->textInput(['type' => 'number']) ?>
 
-    <?= $form->field($model, 'used_amount')->textInput(['type' => 'number']) ?>
+    <?= $form->field($model, 'used_amount')->textInput(['type' => 'number', 'step' => "0.01"]) ?>
 
     <?= $form->field($model, 'quota')->textInput(['type' => 'number']) ?>
 
@@ -51,13 +51,37 @@ use yii\widgets\ActiveForm;
         'options' => ['placeholder' => '不限制',]
     ]) ?>
 
-    <?= $form->field($model, 'end_time')->textInput() ?>
+    <?= $form->field($model, 'end_time')->widget(DatePicker::class, [
+        'pluginOptions' => [
+            'convertFormat' => true,
+            'autoclose' => true,
+            'todayHighlight' => true,
+            'format' => 'yyyy-mm-dd',
+        ],
+        'options' => ['placeholder' => '不限制',]
+    ]) ?>
 
     <?= $form->field($model, 'valid_type')->radioList(Coupon::$validTypeNames, ['onchange' => 'onValidTypeChanged();']) ?>
 
-    <?= $form->field($model, 'valid_start_time')->textInput() ?>
+    <?= $form->field($model, 'valid_start_time')->widget(DatePicker::class, [
+        'pluginOptions' => [
+            'convertFormat' => true,
+            'autoclose' => true,
+            'todayHighlight' => true,
+            'format' => 'yyyy-mm-dd',
+        ],
+        'options' => ['placeholder' => '不限制',]
+    ]) ?>
 
-    <?= $form->field($model, 'valid_end_time')->textInput() ?>
+    <?= $form->field($model, 'valid_end_time')->widget(DatePicker::class, [
+        'pluginOptions' => [
+            'convertFormat' => true,
+            'autoclose' => true,
+            'todayHighlight' => true,
+            'format' => 'yyyy-mm-dd',
+        ],
+        'options' => ['placeholder' => '不限制',]
+    ]) ?>
 
     <?= $form->field($model, 'valid_days')->textInput() ?>
 
@@ -75,8 +99,23 @@ use yii\widgets\ActiveForm;
 
     window.onload = function () {
         onUsedChanged($('#coupon-used'));
+        onTypeChanged($('#coupon-type'));
         onValidTypeChanged();
     };
+
+    /**
+     * 类型改变 满减OR无门坎
+     **/
+    function onTypeChanged($dom) {
+        $dom = $dom.find(':checked');
+        var value = $dom.val();
+        var is_nothreshold = value == <?= Coupon::TYPE_NO_THRESHOLD ?>;
+        if (is_nothreshold) {
+            $('#coupon-with_amount').prop('readonly', true).val(0);
+        } else {
+            $('#coupon-with_amount').prop('readonly', false);
+        }
+    }
 
     /**
      * 卷用途改变事件
