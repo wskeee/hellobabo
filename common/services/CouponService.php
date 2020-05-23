@@ -12,6 +12,53 @@ use yii\helpers\ArrayHelper;
 class CouponService
 {
     /**
+     * 检查优惠卷是否能用
+     * @param int $coupon_id
+     * @param int $goods_id
+     * @param int $amount 订单原价/商品总价
+     *
+     * @return array
+     */
+    public static function checkCouponCanUse($coupon_id, $goods_id, $amount)
+    {
+        if (empty($coupon_id) || !($coupon = UserCoupon::findOne(['id' => $coupon_id]))) {
+            return ['result' => 0, 'msg' => '找不到优惠卷', 'data' => null];
+        }
+
+        // 检查原优惠卷状态
+        if($coupon->coupon->status != Coupon::STATUS_PUBLISHED){
+            return ['result' => 0, 'msg' => '优惠卷'.Coupon::$statusNames[$coupon->coupon->status], 'data' => null];
+        }
+
+        // 检查优惠卷使用状态
+        if($coupon->status == UserCoupon::STATUS_USED){
+            return ['result' => 0, 'msg' => '优惠卷已使用', 'data' => null];
+        }else if($coupon->status == UserCoupon::STATUS_TIMEOUT){
+            return ['result' => 0, 'msg' => '优惠卷已过期', 'data' => null];
+        }
+
+        // 检查时间
+        $time = time();
+        if ($coupon->valid_start_time > $time) {
+            return ['result' => 0, 'msg' => '优惠卷未开始', 'data' => null];
+        }else if($coupon->valid_end_time < $time){
+            return ['result' => 0, 'msg' => '优惠卷已过期', 'data' => null];
+        }
+
+        // 检查类型
+        if(!empty($coupon->coupon->with_id) && $coupon->coupon->with_id != $goods_id){
+            return ['result' => 0, 'msg' => '优惠卷仅限专属绘本使用', 'data' => null];
+        }
+
+        // 满减
+        if($coupon->coupon->type == Coupon::TYPE_FULL && $coupon->coupon->with_amount > $amount){
+            return ['result' => 0, 'msg' => '优惠卷不满足最低金额限制', 'data' => ['with_amount' => $coupon->coupon->with_amount,'order_amount' => $amount]];
+        }
+
+        return ['result' => 1, 'msg' => 'OK', 'data' => $coupon];
+    }
+
+    /**
      * 获取用户优惠卷的数量
      * @param int $user_id
      * @param array|int $coupon_id
@@ -85,12 +132,17 @@ class CouponService
                 'coupon.used_amount',
             ])
             ->leftJoin(['coupon' => Coupon::tableName()], 'coupon.id = user_coupon.coupon_id')
+            // 查询属于我的并且未用
             ->where([
                 'user_coupon.user_id' => $user_id,
                 'user_coupon.status' => UserCoupon::STATUS_UNUSED,
             ])
+            // 已发布的优惠卷
+            ->andWhere(['coupon.status' => Coupon::STATUS_PUBLISHED])
+            // 当前可用未过期
             ->andWhere(['<=', 'user_coupon.valid_start_time', $time])
             ->andWhere(['>=', 'user_coupon.valid_end_time', $time]);
+
         if ($goods_id) {
             $query->andWhere(['or',
                 // 新手和平台卷无需其它条件
@@ -105,7 +157,7 @@ class CouponService
         if ($amount > 0) {
             $query->andWhere(['or',
                 ['coupon.type' => Coupon::TYPE_NO_THRESHOLD],
-                ['and', ['coupon.type' => Coupon::TYPE_FULL], ['>=', 'coupon.with_amount', $amount]]]);
+                ['and', ['coupon.type' => Coupon::TYPE_FULL], ['<=', 'coupon.with_amount', $amount]]]);
         }
 
         $user_coupons = $query->asArray()->all();
@@ -115,7 +167,6 @@ class CouponService
         }
         return $user_coupons ? $user_coupons : [];
     }
-
 
     /**
      * 获取未用优惠卷

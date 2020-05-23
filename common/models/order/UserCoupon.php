@@ -83,6 +83,6 @@ class UserCoupon extends ActiveRecord
      */
     public function getCoupon()
     {
-        return $this->hasOne(Coupon::class, ['id', 'coupon_id']);
+        return $this->hasOne(Coupon::class, ['id' => 'coupon_id']);
     }
 }

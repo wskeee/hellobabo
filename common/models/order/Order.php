@@ -105,7 +105,7 @@ class Order extends ActiveRecord
             [['country', 'province', 'city', 'district', 'town',], 'integer'],
             [['zipcode'], 'string', 'max' => 6],
             [['address'], 'string', 'max' => 255],
-            [['order_amount','goods_amount','coupon_amount'], 'number'],
+            [['order_amount', 'goods_amount', 'coupon_amount'], 'number'],
             [['order_sn', 'pay_code'], 'string', 'max' => 20],
             [['user_note'], 'string', 'max' => 255],
             [['pay_sn'], 'string', 'max' => 50],
@@ -413,10 +413,20 @@ class Order extends ActiveRecord
         $recommend_by = $params['recommend_by'];
         $user_note = $params['user_note'];
         $address = UserAddress::findOne(['id' => $address_id]);
+        $goods_amount = $spec_price->goods_price * $goods_num; //商品总价
+        /** @var $coupon UserCoupon */
+        $coupon = $params['coupon'];
+        // 优惠金额
+        $coupon_amount = $coupon ?
+            ($coupon->coupon->used_amount < 1 ? (1 - $coupon->coupon->used_amount) * $goods_amount : $coupon->coupon->used_amount) : 0;
+        // 订单应付金额
+        $order_amount = $goods_amount - $coupon_amount;
 
         $order = new Order([
             'order_sn' => self::getRandomSN(),
-            'order_amount' => $spec_price->goods_price * $goods_num, //订单总额使用套餐价格
+            'goods_amount' => $goods_amount,
+            'order_amount' => $order_amount, //订单总额 = 商品总价 - 折扣
+            'coupon_amount' => $coupon_amount,
             //推荐
             'is_recommend' => $recommend_by != null ? 1 : 0, //是否为推荐订单
             'recommend_by' => $recommend_by, //推挤人ID
@@ -458,6 +468,7 @@ class Order extends ActiveRecord
             if (!$order_goods->save()) {
                 throw new \yii\base\Exception(implode(',', $order_goods->getErrorSummary(true)));
             }
+
             // 创建记录日志
             OrderAction::saveLog([$order->id], '创建订单', '');
             OrderGoodsAction::saveLog([$order_goods->id], '订单创建', '');
