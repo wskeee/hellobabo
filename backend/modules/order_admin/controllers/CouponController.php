@@ -65,6 +65,7 @@ class CouponController extends Controller
     public function actionCreate()
     {
         $model = new Coupon();
+        $model->created_by = Yii::$app->user->id;
         $model->loadDefaultValues();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -88,6 +89,7 @@ class CouponController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->updated_by = Yii::$app->user->id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);

@@ -3,6 +3,7 @@
 namespace common\models\order;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%coupon}}".
@@ -82,6 +83,11 @@ class Coupon extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%coupon}}';
+    }
+
+    public function behaviors()
+    {
+        return [TimestampBehavior::class];
     }
 
     /**
