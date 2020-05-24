@@ -104,7 +104,11 @@ $canEdit = $model->status == WorkflowDesign::STATUS_RUNGING || $model->status ==
                                         'uploadComplete' => "function(evt,dbFile,file){onProductUploadSuccess($model->id,dbFile)}",
                                     ]
                         ]);
-                        return $canEdit ? $picker : ($model->finish_url == "" ? '<span style="color:#ff3300">未上传</span>' : '<span style="color:#28b28b">已上传</span>');
+                        if($model->is_hide){
+                            return '<span style="color:#28b28b">隐藏页，无需上传</span>';
+                        }else{
+                            return $canEdit ? $picker : ($model->finish_url == "" ? '<span style="color:#ff3300">未上传</span>' : '<span style="color:#28b28b">已上传</span>');
+                        }
                     }
                 ],
                 'des',
