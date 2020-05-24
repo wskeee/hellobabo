@@ -118,6 +118,22 @@ use yii\widgets\ActiveForm;
         </div>
     </div>
 
+    <!-- 是否隐藏 -->
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown">
+            <?=
+            Select2::widget([
+                'model' => $model,
+                'attribute' => 'page_is_hide',
+                'data' => ['否', '是'],
+                'options' => ['placeholder' => $model->getAttributeLabel('page_is_hide')],
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' => ['change' => 'function(){ submitForm()}']
+            ])
+            ?>
+        </div>
+    </div>
+
     
 
 <?php ActiveForm::end(); ?>

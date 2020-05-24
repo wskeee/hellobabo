@@ -19,6 +19,7 @@ class GoodsSceneSearch extends GoodsScene
     public $page_id;
     public $page_effect_url;
     public $page_is_required;
+    public $page_is_hide;
     public $pose_url;
 
     /**
@@ -28,7 +29,7 @@ class GoodsSceneSearch extends GoodsScene
     {
         return [
             [['id', 'goods_id', 'group_id', 'sort_order', 'is_demo', 'immutable', 'is_required', 'is_selected', 'is_del'], 'integer'],
-            [['material_value_id','page_is_required'], 'integer'],
+            [['material_value_id','page_is_required','page_is_hide'], 'integer'],
             [['name', 'effect_url', 'demo_url', 'source_url', 'des'], 'safe'],
         ];
     }
@@ -49,6 +50,7 @@ class GoodsSceneSearch extends GoodsScene
             'page_effect_url' => '上传效果图',
             'pose_url' => 'Pose图',
             'page_is_required' => '必须上图',
+            'page_is_hide' => '成品隐藏',
         ]);
         return $arr;
     }
@@ -92,6 +94,7 @@ class GoodsSceneSearch extends GoodsScene
             'page.effect_url page_effect_url',
             'pose.filepath pose_url',
             'page.is_required page_is_required',
+            'page.is_hide page_is_hide',
         ]);
 
         // grid filtering conditions
@@ -108,6 +111,7 @@ class GoodsSceneSearch extends GoodsScene
 
             'material_rel.material_value_id' => $this->material_value_id,
             'page.is_required' => $this->page_is_required,
+            'page.is_hide' => $this->page_is_hide,
         ]);
 
         $query->andFilterWhere(['like', 'scene.name', $this->name])

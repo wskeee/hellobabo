@@ -198,10 +198,15 @@ class SceneController extends GridViewChangeSelfController
      */
     public function actionChangeValue($id, $fieldName, $value)
     {
-        if ($fieldName == 'page_is_required') {
+        if ($fieldName == 'page_is_required' || $fieldName == 'page_is_hide') {
             $page = GoodsScenePage::findOne(['scene_id' => $id]);
             if($page){
-                $page->is_required = $value;
+                if($fieldName == 'page_is_required'){
+                    $page->is_required = $value;
+                }else{
+                    $page->is_hide = $value;
+                }
+
                 $page->save();
                 return ['result' => 1, 'message' => '更新成功'];
             }else{
