@@ -62,8 +62,11 @@ class SaveSceneUserImage extends BaseAction
          * 当得分在80~90分之间时，出现文字：动作不错，+5个演绎分。
          * 当得分在80分以下时，出现文字：动作不行喔，请重新拍摄上传。
          */
-        $marks = [80, 90, 100];
-        $play_scores = [0, 5, 10];
+        $marks = [
+            ['avg_score' => 0,'play_score' => 0,],
+            ['avg_score' => 80,'play_score' => 5,],
+            ['avg_score' => 90,'play_score' => 10,]
+        ];
 
         $filepath .= '?x-oss-process=image/resize,m_lfit,h_720,w_720';
         /* @var $user User */
@@ -75,12 +78,14 @@ class SaveSceneUserImage extends BaseAction
             $check_result = PoseUtil::check($filepath, json_decode($source_page->pose->required_data, true));
             $avg_score = $check_result['avg_score'];
             $play_score = 0;
+
             for ($i = count($marks)-1; $i >= 0; $i--) {
-                if ($avg_score >= $marks[$i]) {
-                    $play_score = $play_scores[$i];
+                if ($avg_score >= $marks[$i]['score']) {
+                    $play_score = $marks[$i]['play_score'];
                     break;
                 }
             }
+
             // 更新用户表演积分
             $game_data = $user->gameData;
             $game_data->play_score = $game_data->play_score + $play_score;
