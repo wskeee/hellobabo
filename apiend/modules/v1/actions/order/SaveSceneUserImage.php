@@ -80,7 +80,7 @@ class SaveSceneUserImage extends BaseAction
             $play_score = 0;
 
             for ($i = count($marks)-1; $i >= 0; $i--) {
-                if ($avg_score >= $marks[$i]['score']) {
+                if ($avg_score >= $marks[$i]['avg_score']) {
                     $play_score = $marks[$i]['play_score'];
                     break;
                 }
