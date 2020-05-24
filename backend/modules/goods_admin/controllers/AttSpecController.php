@@ -44,7 +44,7 @@ class AttSpecController extends GridViewChangeSelfController
         $model = $this->findModel($goods_id);
 
         return $this->render('index', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
@@ -99,7 +99,7 @@ class AttSpecController extends GridViewChangeSelfController
 
     /**
      * 保存商品属性
-     * @param int  $goods_id
+     * @param int $goods_id
      */
     public function actionSaveAttribute($goods_id)
     {
@@ -127,7 +127,7 @@ class AttSpecController extends GridViewChangeSelfController
 
     /**
      * 保存商品规格
-     * @param int  $goods_id
+     * @param int $goods_id
      */
     public function actionSaveSpec($goods_id)
     {
@@ -143,6 +143,7 @@ class AttSpecController extends GridViewChangeSelfController
                     $goods_id,
                     $spec['goods_cost'],
                     $spec['goods_price'],
+                    $spec['original_price'],
                     $spec['scene_num'],
                     $spec['spec_key'],
                     $spec['spec_key_name'],
@@ -153,7 +154,7 @@ class AttSpecController extends GridViewChangeSelfController
                 ];
             }
             //更新选择类型引用数据
-            MysqlUtil::batchInsertDuplicateUpdate(GoodsSpecPrice::tableName(), ['goods_id', 'goods_cost', 'goods_price', 'scene_num', 'spec_key', 'spec_key_name', 'spec_img_url', 'spec_des', 'store_count', 'is_del'], $rows, ['goods_cost', 'goods_price', 'scene_num', 'spec_key_name', 'spec_img_url', 'spec_des', 'store_count', 'is_del']);
+            MysqlUtil::batchInsertDuplicateUpdate(GoodsSpecPrice::tableName(), ['goods_id', 'goods_cost', 'goods_price', 'original_price', 'scene_num', 'spec_key', 'spec_key_name', 'spec_img_url', 'spec_des', 'store_count', 'is_del'], $rows, ['goods_cost', 'goods_price', 'original_price','scene_num', 'spec_key_name', 'spec_img_url', 'spec_des', 'store_count', 'is_del']);
         } catch (\Exception $ex) {
             return new ApiResponse(ApiResponse::CODE_COMMON_SAVE_DB_FAIL, $ex->getMessage(), $ex);
         }

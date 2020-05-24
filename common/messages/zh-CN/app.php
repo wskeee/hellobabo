@@ -428,6 +428,7 @@ return [
     'Payable' => '应付',
     'Confirm' => '确认',
     'Total Price' => '总价',
+    'Original Price' => '原价',
     'User Note' => '用户留言',
     'Income' => '收入',
     'Visit' => '访问',

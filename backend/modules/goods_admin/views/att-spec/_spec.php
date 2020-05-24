@@ -73,6 +73,7 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
                     <!-- 固定列 -->
                     <th><?= Yii::t('app', 'Image') ?></th>
                     <th><?= Yii::t('app', 'Des') ?></th>
+                    <th style = 'width:130px;'><?= Yii::t('app', 'Original Price') ?></th>
                     <th style = 'width:130px;'><?= Html::textInput('spec_item_price_input', null, ['class' => 'form-control', 'placeholder' => Yii::t('app', 'Price Placeholder')]) ?></th>
                     <th style = 'width:130px;'><?= Html::textInput('spec_item_store_input', null, ['class' => 'form-control', 'placeholder' => Yii::t('app', 'Store Placeholder')]) ?></th>
                     <th style = 'width:130px;'><?= Html::textInput('spec_item_scene_num_input', null, ['class' => 'form-control', 'placeholder' => Yii::t('app', 'Scene Num Placeholder')]) ?></th>
@@ -430,6 +431,7 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
     function priceItemChanged(spec_key, attrName, $dom) {
         var itemSpriteVO = spec_item_prices[spec_key];
         itemSpriteVO[attrName] = $dom.val();
+        console.log(itemSpriteVO,attrName,$dom.val());
     }
     /**
      * 自动合并table行列
@@ -548,6 +550,7 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
         this.spec_key_name = spec_key_name;
         this.goods_cost = 0;
         this.goods_price = 0;
+        this.original_price = 0;
         this.scene_num = 0;
         this.spec_img_url = '';
         this.spec_des = '';
