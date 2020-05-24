@@ -37,7 +37,7 @@ class Pay extends BaseAction
             'openid' => $user->auths->identifier,
             'body' => "Hellobabo 绘本购买",
             'out_trade_no' => $order->order_sn,
-            'total_fee' => 1, //intval(floatval($order->order_amount)*100),  //传参以分为单位
+            'total_fee' => intval(floatval($order->order_amount)*100),  //传参以分为单位
             'trade_type' => 'JSAPI', // 请对应换成你的支付方式对应的值类型
         ];
 
