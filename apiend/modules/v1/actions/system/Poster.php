@@ -97,7 +97,11 @@ class Poster extends BaseAction
                     'height' => 66,],
             ],
             // 封面
-            'background' => $model_img,
+            'background' => [
+                'url' => $model_img,
+                'width' => 600,
+                'height' => 988
+            ],
         ];
         // 新建文件路径
         $filename = $type == 1 ? "share_{$user->id}_{$goods_model->id}.jpg" : "share_{$user->id}_{$model->id}.jpg";

@@ -140,6 +140,19 @@ $goodsDetails = $model->isNewRecord ? new GoodsDetail() : $model->goodsDetails;
         </div>
     </div>
 
+    <!-- 移动商品购买详情 -->
+    <div class="from-group tile-group">
+        <div class="group-item">
+            <label class="control-label form-label">
+                <?= $goodsDetails->getAttributeLabel('mobile_buy_content') ?>
+            </label>
+            <div>
+                <?= Html::hiddenInput('GoodsDetail[mobile_buy_content][]') ?>
+                <?= ImagePicker::widget(['name' => 'GoodsDetail[mobile_buy_content][]', 'value' => $goodsDetails->mobile_buy_content, 'pluginOptions' => ['fileNumLimit' => 20]]) ?>
+            </div>
+        </div>
+    </div>
+
     <div class="form-group">
         <label class="col-sm-1 control-label form-label"></label>
         <div class="col-sm-9">

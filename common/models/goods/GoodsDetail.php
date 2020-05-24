@@ -14,6 +14,7 @@ use yii\helpers\Html;
  * @property int $goods_id 商品id，关联goods表id字段
  * @property string $content 商品详情 描述/简介
  * @property string $mobile_content 移动端商品详情
+ * @property string $mobile_buy_content 移动端商品购买详情
  *
  * @property Goods $goods
  */
@@ -37,8 +38,8 @@ class GoodsDetail extends ActiveRecord
             [['goods_id'], 'required'],
             [['goods_id'], 'integer'],
             [['content'], 'string'],
-            [['mobile_content'], 'arrTostr'],
-            [['goods_id'], 'exist', 'skipOnError' => true, 'targetClass' => Goods::className(), 'targetAttribute' => ['goods_id' => 'id']],
+            [['mobile_content','mobile_buy_content'], 'arrTostr'],
+            [['goods_id'], 'exist', 'skipOnError' => true, 'targetClass' => Goods::class, 'targetAttribute' => ['goods_id' => 'id']],
         ];
     }
     
@@ -66,7 +67,8 @@ class GoodsDetail extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'goods_id' => Yii::t('app', 'Goods'),
             'content' => Yii::t('app', 'Details'),
-            'mobile_content' => Yii::t('app', 'Details'),
+            'mobile_content' => Yii::t('app', '介绍页详情'),
+            'mobile_buy_content' => Yii::t('app', '购买页详情'),
         ];
     }
 
@@ -92,7 +94,7 @@ class GoodsDetail extends ActiveRecord
      */
     public function getGoods()
     {
-        return $this->hasOne(Goods::className(), ['id' => 'goods_id']);
+        return $this->hasOne(Goods::class, ['id' => 'goods_id']);
     }
 
 }

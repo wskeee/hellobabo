@@ -35,18 +35,18 @@ class PosterUtils
             'fontColor' => '255,255,255', //字体颜色
             'angle' => 0,
         );
-        $background = $config['background']; //海报最底层得背景
+        $backgroundConfig = $config['background']; //海报最底层得背景
         //背景方法
-        $backgroundInfo = getimagesize($background);
+        $backgroundInfo = getimagesize($backgroundConfig['url']);
         $backgroundFun = 'imagecreatefrom' . image_type_to_extension($backgroundInfo[2], false);
-        $background = $backgroundFun($background);
-        $backgroundWidth = imagesx($background);  //背景宽度
-        $backgroundHeight = imagesy($background);  //背景高度
+        $background = $backgroundFun($backgroundConfig['url']);
+        $backgroundWidth = $backgroundConfig['width'];//imagesx($background);  //背景宽度
+        $backgroundHeight = $backgroundConfig['height'];//imagesy($background);  //背景高度
         $imageRes = imageCreatetruecolor($backgroundWidth, $backgroundHeight);
         $color = imagecolorallocate($imageRes, 0, 0, 0);
         imagefill($imageRes, 0, 0, $color);
         // imageColorTransparent($imageRes, $color);  //颜色透明
-        imagecopyresampled($imageRes, $background, 0, 0, 0, 0, imagesx($background), imagesy($background), imagesx($background), imagesy($background));
+        imagecopyresampled($imageRes, $background, 0, 0, 0, 0, $backgroundWidth, $backgroundHeight, imagesx($background), imagesy($background));
         //处理了图片
         if (!empty($config['image'])) {
             foreach ($config['image'] as $key => $val) {
@@ -56,7 +56,8 @@ class PosterUtils
                 if (isset($val['stream']) && $val['stream']) {   //如果传的是字符串图像流
                     $info = getimagesizefromstring($val['url']);
                     $function = 'imagecreatefromstring';
-                    var_dump($info);exit;
+                    var_dump($info);
+                    exit;
                 }
                 $res = $function($val['url']);
                 $resWidth = $info[0];
@@ -68,7 +69,7 @@ class PosterUtils
                 //imagefill($canvas, 0, 0, $color);
                 //关键函数，参数（目标资源，源，目标资源的开始坐标x,y, 源资源的开始坐标x,y,目标资源的宽高w,h,源资源的宽高w,h）
                 //imagecopyresampled($canvas, $res, 0, 0, 0, 0, $val['width'], $val['height'], $resWidth, $resHeight);
-                $val = self::calculate($val,$backgroundWidth,$backgroundHeight);
+                $val = self::calculate($val, $backgroundWidth, $backgroundHeight);
                 //放置图像
                 imagecopyresampled($imageRes, $res, $val['left'], $val['top'], 0, 0, $val['width'], $val['height'], $resWidth, $resHeight); //左，上，右，下，宽度，高度，透明度
             }
@@ -82,9 +83,9 @@ class PosterUtils
                 // 计算字体宽高
                 $font_box = ImageTTFBBox($val['fontSize'], $val['angle'], $val['fontPath'], $val['text']);
                 $val['width'] = $font_box[2] - $font_box[0];
-                $val['height'] =  $font_box[3] - $font_box[5];
+                $val['height'] = $font_box[3] - $font_box[5];
                 // 计算 left/top
-                $val = self::calculate($val,$backgroundWidth,$backgroundHeight);
+                $val = self::calculate($val, $backgroundWidth, $backgroundHeight);
                 // 把文字画到图片上
                 imagettftext($imageRes, $val['fontSize'], $val['angle'], $val['left'], $val['top'], $fontColor, $val['fontPath'], $val['text']);
             }
@@ -105,7 +106,7 @@ class PosterUtils
     /**
      * 计算 left/top/left/bottom
      * @param array $val
-     * @param int $targetWidth  相对宽度
+     * @param int $targetWidth 相对宽度
      * @param int $targetHeight 相对高度
      * @return array
      */

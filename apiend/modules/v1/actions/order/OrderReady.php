@@ -65,6 +65,7 @@ class OrderReady extends BaseAction
 
         $goods_arr = $goods->toArray();
         $goods_arr['mobile_content'] = explode(',', $goods->goodsDetails->mobile_content);
+        $goods_arr['mobile_buy_content'] = explode(',', $goods->goodsDetails->mobile_buy_content);
 
         return new Response(Response::CODE_COMMON_OK, null, [
             'temp_order' => $temp_order,
