@@ -250,7 +250,7 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
         });
         //显示
         $specBox = $(".spec-box[data-id=" + item.spec_id + "]");
-        $specItem = $(Wskeee.StringUtil.renderDOM(spec_item_dom, item)).appendTo($specBox);
+        $specItem = $(Wskeee.StringUtil.renderDOMWithReg(spec_item_dom, item)).appendTo($specBox);
         $specItem.find('.close').on('click', function (e) {
             removeSpecItem($(this).parent().attr('data-id'));
             return false;
@@ -394,7 +394,7 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
      * @returns {Dom}
      */
     function _createItemPriceTrDom(itemPrice) {
-        var $tr = $(Wskeee.StringUtil.renderDOM(spec_item_price_tr_dom, itemPrice));
+        var $tr = $(Wskeee.StringUtil.renderDOMWithReg(spec_item_price_tr_dom, itemPrice));
         var d_tr = '';
         var spec_keys = itemPrice.spec_key.split('_');
         var spec_key_names = itemPrice.spec_key_name.split('_');

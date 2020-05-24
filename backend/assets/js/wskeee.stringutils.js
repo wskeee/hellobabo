@@ -35,6 +35,21 @@
     };
 
     /**
+     * 使用正则替换
+     * @param renderer string
+     * @param data array
+     */
+    StringUtil.renderDOMWithReg = function(renderer, data){
+        var _renderer = renderer;
+        var reg;
+        for(var key in data){
+            reg = new RegExp("\{\%"+key+"\%\}",'g');
+            _renderer = _renderer.replace(reg, data[key]);
+        }
+        return _renderer;
+    };
+
+    /**
      * 数字转换成时间格式
      * @param integer $value
      * @param boolean $default [true(hh:mm:ss), false(mm:ss)]

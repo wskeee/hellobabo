@@ -6,7 +6,12 @@
                   onchange="priceItemChanged(\'{%spec_key%}\',\'spec_des\',$(this));" >{%spec_des%}</textarea>
     </td>
     <td>
-        <input name="original_price" class="form-control" value="{%original_price%}" onchange="priceItemChanged(\'{%spec_key%}\',\'original_price\',$(this));" onkeyup="inputNumCheck($(this))" onblur="inputNumCheck($(this))" />
+        <input name="original_price"
+               class="form-control"
+               value="{%original_price%}"
+               onchange="priceItemChanged(\'{%spec_key%}\',\'original_price\',$(this));"
+               onkeyup="inputNumCheck($(this))"
+               onblur="inputNumCheck($(this))" />
     </td>
     <td>
         <input name="goods_price" 
