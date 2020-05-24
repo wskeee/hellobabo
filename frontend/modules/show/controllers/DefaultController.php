@@ -86,7 +86,7 @@ class DefaultController extends Controller
     public function actionUg($ogid, $readyonly = 0)
     {
         $pages = OrderGoodsScenePage::find()
-                ->where(['order_goods_id' => $ogid, 'is_del' => 0])
+                ->where(['order_goods_id' => $ogid, 'is_del' => 0 , 'is_hide' => 0])
                 ->orderBy(['sort_order' => SORT_ASC])
                 ->all();
 

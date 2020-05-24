@@ -91,11 +91,9 @@ class SceneController extends GridViewChangeSelfController
                 $tran->commit();
                 return $this->redirect(['index', 'goods_id' => $goods_id, 'material_value_id' => $scene_material_model->material_value_id]);
             } else {
-                var_dump(2);
                 $tran->rollBack();
             }
         } else {
-            var_dump($model->getErrorSummary(true));
             $tran->rollBack();
         }
 

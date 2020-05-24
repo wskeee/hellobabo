@@ -105,6 +105,9 @@ use yii\widgets\ActiveForm;
     <div style="display: inline-block;margin-right: 20px;">
         <?= $form->field($page_model, 'is_required')->checkbox() ?>
     </div>
+    <div style="display: inline-block;margin-right: 20px;">
+        <?= $form->field($page_model, 'is_hide')->checkbox() ?>
+    </div>
     <span style="color: #aaa">（注意：设置为不可选时，用户无法看到（选择）该场景）</span>
 
     <?php

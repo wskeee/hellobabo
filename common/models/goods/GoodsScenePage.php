@@ -21,6 +21,7 @@ use yii\db\ActiveRecord;
  * @property string $pos 位置：left,right,center
  * @property int $is_required 是否必需上传相片 0否 1是
  * @property int $is_del 是否删除
+ * @property int $is_hide 是否隐藏
  * @property string $des 备注
  * 
  * @property-read GoodsScene $scene 场景
@@ -54,7 +55,7 @@ class GoodsScenePage extends ActiveRecord
     public function rules()
     {
         return [
-            [['scene_id', 'angle_id', 'face_id', 'is_required', 'is_del'], 'integer'],
+            [['scene_id', 'angle_id', 'face_id', 'is_required', 'is_del' , 'is_hide'], 'integer'],
             [['source_id'], 'string', 'max' => 32],
             [['name'], 'string', 'max' => 50],
             [['effect_url', 'source_url', 'des'], 'string', 'max' => 255],
@@ -79,6 +80,7 @@ class GoodsScenePage extends ActiveRecord
             'pos' => Yii::t('app', 'Pos'),
             'is_required' => Yii::t('app', 'Page Is Required'),
             'is_del' => Yii::t('app', 'Is Del'),
+            'is_hide' => Yii::t('app', '成品隐藏'),
             'des' => Yii::t('app', 'Des'),
         ];
     }
