@@ -35,16 +35,18 @@ $pages = $model->orderGoodsScenePages;
                     }
                 ],
                 [
-                    'attribute' => 'effect_url',
-                    'headerOptions' => ['style' => 'width:100px;'],
+                    'label' => 'Pose图',
+                    'headerOptions' => ['style' => 'width:250px;'],
                     'format' => 'raw',
                     'value' => function($model) {
-                        return Html::img($model->effect_url, ['style' => 'width:100%;']);
+                        /** @var $model OrderGoodsScenePage */
+                        $pose = $model->sourcePage->pose;
+                        return $pose ? Html::img($model->sourcePage->pose->filepath, ['style' => 'width:100%;']) : '';
                     }
                 ],
                 [
                     'attribute' => 'user_img_url',
-                    'headerOptions' => ['style' => 'width:100px;'],
+                    'headerOptions' => ['style' => 'width:250px;'],
                     'format' => 'raw',
                     'value' => function($model) {
                         /* @var $model OrderGoodsScenePage */

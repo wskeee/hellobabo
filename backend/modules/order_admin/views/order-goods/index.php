@@ -46,7 +46,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'goods_price',
             //'goods_cost',
             //'goods_num',
-            'user_cover_url:url',
+            [
+                'attribute' => 'user_cover_url',
+                'format' => 'raw',
+                'value' => function($model) {
+                    return Html::img($model->user_cover_url, ['style' => 'width:60px;']);
+                }
+            ],
             //'spec_id',
             //'spec_key',
             'spec_key_name',
