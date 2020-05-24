@@ -431,7 +431,6 @@ $initGoodsSpecPrices = $model->getGoodsSpecPrices();
     function priceItemChanged(spec_key, attrName, $dom) {
         var itemSpriteVO = spec_item_prices[spec_key];
         itemSpriteVO[attrName] = $dom.val();
-        console.log(itemSpriteVO,attrName,$dom.val());
     }
     /**
      * 自动合并table行列
