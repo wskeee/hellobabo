@@ -1,8 +1,8 @@
 <tr class="item-price-box" data-id="{%spec_key%}">
     <td><div id="spec-img-{%spec_key%}" class="spec_img"></div></td>
     <td>
-        <textarea name="spec_des"
-                  class="form-control"
+        <textarea name="spec_des" 
+                  class="form-control" 
                   onchange="priceItemChanged(\'{%spec_key%}\',\'spec_des\',$(this));" >{%spec_des%}</textarea>
     </td>
     <td>
