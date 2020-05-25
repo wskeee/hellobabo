@@ -31,28 +31,28 @@ class DefaultController extends Controller
     public function actionPg($gid = 2, $readyonly = 0)
     {
         $query = (new Query())
-                ->select([
-                    'Scene.id scene_id',
-                    'Scene.pos scene_pos',
-                    'Scene.sort_order scene_sort_order',
-                    'Page.id page_id',
-                    'Page.pos page_pos',
-                    'Page.source_id',
-                    'Page.source_url'
-                ])
-                ->from(['Scene' => GoodsScene::tableName()])
-                ->leftJoin(['Page' => GoodsScenePage::tableName()], 'Scene.id = Page.scene_id')
-                ->where([
-                    'Scene.goods_id' => $gid,
-                    'Scene.is_selected' => 1,
-                    'Scene.is_demo' => 1,
-                    'Scene.is_del' => 0,
-                    'Page.is_del' => 0,
-                ])
-                ->orderBy([
-            'scene_sort_order' => SORT_ASC,
-            'page_pos' => SORT_ASC,
-        ]);
+            ->select([
+                'Scene.id scene_id',
+                'Scene.pos scene_pos',
+                'Scene.sort_order scene_sort_order',
+                'Page.id page_id',
+                'Page.pos page_pos',
+                'Page.source_id',
+                'Page.source_url'
+            ])
+            ->from(['Scene' => GoodsScene::tableName()])
+            ->leftJoin(['Page' => GoodsScenePage::tableName()], 'Scene.id = Page.scene_id')
+            ->where([
+                'Scene.goods_id' => $gid,
+                'Scene.is_selected' => 1,
+                'Scene.is_demo' => 1,
+                'Scene.is_del' => 0,
+                'Page.is_del' => 0,
+            ])
+            ->orderBy([
+                'scene_sort_order' => SORT_ASC,
+                'page_pos' => SORT_ASC,
+            ]);
 
         $pages = $query->all();
 
@@ -68,7 +68,7 @@ class DefaultController extends Controller
         foreach ($pages as $page) {
             $scenes [] = [
                 'id' => $page['source_id'],
-                'path' => pathinfo($page['source_url'], PATHINFO_DIRNAME) . '/',
+                'path' => $this->replaceHttps(pathinfo($page['source_url'], PATHINFO_DIRNAME) . '/'),
                 'lock' => false
             ];
         }
@@ -86,9 +86,9 @@ class DefaultController extends Controller
     public function actionUg($ogid, $readyonly = 0)
     {
         $pages = OrderGoodsScenePage::find()
-                ->where(['order_goods_id' => $ogid, 'is_del' => 0 , 'is_hide' => 0])
-                ->orderBy(['sort_order' => SORT_ASC])
-                ->all();
+            ->where(['order_goods_id' => $ogid, 'is_del' => 0, 'is_hide' => 0])
+            ->orderBy(['sort_order' => SORT_ASC])
+            ->all();
 
         $orderGoods = OrderGoods::findOne(['id' => $ogid]);
 
@@ -102,7 +102,7 @@ class DefaultController extends Controller
             $path = $page->finish_url == '' ? $page->source_url : $page->finish_url;
             $scenes [] = [
                 'id' => $id,
-                'path' => pathinfo($path, PATHINFO_DIRNAME) . '/',
+                'path' => $this->replaceHttps(pathinfo($path, PATHINFO_DIRNAME) . '/'),
                 'lock' => false
             ];
         }
@@ -117,14 +117,14 @@ class DefaultController extends Controller
      * 预览绘本 source 页
      * @param string $page_ids id,id,id 显示预览的页面id
      * @param string $target 显示预览的目标属性 有 source 和 finish
-     * 
+     *
      * @return type
      */
     public function actionSourcePreview($page_ids, $target = 'source')
     {
         $pages = GoodsScenePage::find()
-                ->where(['id' => explode(',', $page_ids)])
-                ->all();
+            ->where(['id' => explode(',', $page_ids)])
+            ->all();
 
         $app_data = [
             'common' => ['id' => "E4019F635D6CBC488C42C0A8B05F0249", 'path' => 'common/'],
@@ -133,7 +133,7 @@ class DefaultController extends Controller
         foreach ($pages as $page) {
             $scenes [] = [
                 'id' => $page["{$target}_id"],
-                'path' => pathinfo($page["{$target}_url"], PATHINFO_DIRNAME) . '/',
+                'path' => $this->replaceHttps(pathinfo($page["{$target}_url"], PATHINFO_DIRNAME) . '/'),
                 'lock' => false
             ];
         }
@@ -146,15 +146,15 @@ class DefaultController extends Controller
      * 预览
      * @param string $page_ids id,id,id 显示预览的页面id
      * @param string $target 显示预览的目标属性 有 source 和 finish
-     * 
+     *
      * @return type
      */
     public function actionPreview($page_ids, $target = 'finish')
     {
         $pages = OrderGoodsScenePage::find()
-                ->where(['id' => explode(',', $page_ids)])
-                ->orderBy(['sort_order' => SORT_ASC])
-                ->all();
+            ->where(['id' => explode(',', $page_ids)])
+            ->orderBy(['sort_order' => SORT_ASC])
+            ->all();
 
         $app_data = [
             'common' => ['id' => "E4019F635D6CBC488C42C0A8B05F0249", 'path' => 'common/'],
@@ -163,13 +163,22 @@ class DefaultController extends Controller
         foreach ($pages as $page) {
             $scenes [] = [
                 'id' => $page["{$target}_id"],
-                'path' => pathinfo($page["{$target}_url"], PATHINFO_DIRNAME) . '/',
+                'path' => $this->replaceHttps(pathinfo($page["{$target}_url"], PATHINFO_DIRNAME) . '/'),
                 'lock' => false
             ];
         }
         $app_data['scenes'] = $scenes;
 
         return $this->render('perview', ['app_data' => $app_data]);
+    }
+
+    private function replaceHttps($path)
+    {
+        $host_info = \Yii::$app->request->getHostInfo();
+        if(strpos($host_info,'http://') !== false){
+            return str_replace('http://', 'https://', $path);
+        }
+        return $path;
     }
 
 }
