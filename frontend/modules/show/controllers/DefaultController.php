@@ -175,7 +175,7 @@ class DefaultController extends Controller
     private function replaceHttps($path)
     {
         $host_info = \Yii::$app->request->getHostInfo();
-        if(strpos($host_info,'http://') !== false){
+        if(strpos($host_info,'http://') === false){
             return str_replace('http://', 'https://', $path);
         }
         return $path;
