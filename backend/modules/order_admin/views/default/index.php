@@ -68,6 +68,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
+                'attribute' => 'referrer.nickname',
+                'label'=> Yii::t('app','Recommend By'),
+                'headerOptions' => ['style' => 'width:80px;'],
+            ],
+            [
                 'attribute' => 'consignee',
                 'headerOptions' => ['style' => 'width:80px;'],
             ],
