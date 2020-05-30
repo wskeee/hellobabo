@@ -90,7 +90,19 @@ $this->params['breadcrumbs'][] = $this->title;
             //'created_at',
             //'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'buttons' => [
+                    'updata' => function ($url, $model) {
+                        return Html::a(Yii::t('yii', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-default','data-toggle' => 'wsk-modal']);
+                    },
+                    'swap' => function ($url, $model) {
+                        return Html::a(I18NUitl::t('app', '{Swap}{Code}'), ['/order_admin/coupon-swap/index', 'coupon_id' => $model->id], ['class' => 'btn btn-default']);
+                    },
+                ],
+                'headerOptions' => ['style' => 'width:150px'],
+                'template' => '{updata} {swap}',
+            ],
         ],
     ]); ?>
 </div>

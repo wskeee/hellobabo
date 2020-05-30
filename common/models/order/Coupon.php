@@ -3,6 +3,9 @@
 namespace common\models\order;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%coupon}}".
@@ -32,8 +35,10 @@ use Yii;
  * @property int $updated_by 更新用户ID 关联 admin_user id
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
+ *
+ * @property array<CouponSwap> swaps 兑换码
  */
-class Coupon extends \yii\db\ActiveRecord
+class Coupon extends ActiveRecord
 {
     const TYPE_FULL = 1;
     const TYPE_FULL_OVERLAY = 2;
@@ -82,6 +87,11 @@ class Coupon extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%coupon}}';
+    }
+
+    public function behaviors()
+    {
+        return [TimestampBehavior::class];
     }
 
     /**
@@ -154,5 +164,13 @@ class Coupon extends \yii\db\ActiveRecord
         $this->valid_start_time = $this->valid_start_time == 0 ? '' : date('Y-m-d H:i:s', $this->valid_start_time);
         $this->valid_end_time = $this->valid_end_time == 0 ? '' : date('Y-m-d H:i:s', $this->valid_end_time);
         parent::afterFind();
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getSwaps()
+    {
+        return $this->hasMany(CouponSwap::class, ['coupon_id', 'id']);
     }
 }

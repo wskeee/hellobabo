@@ -388,6 +388,12 @@ return [
     'Valid Start Time' => '使用开始时间',
     'Valid End Time' => '使用结束时间',
     'Valid Days' => '自领取之日起有效天数',
+    'Swap' => '兑换',
+    'Swaps' => '兑换列表',
+    'Code' => '码',
+    'Is Swap' => '是否兑换',
+    'Swap At' => '兑换时间',
+    'Swap By' => '兑换人',
 
     //后台-商品配置
     'Storage' => '存储',

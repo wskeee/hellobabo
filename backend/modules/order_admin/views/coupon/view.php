@@ -1,5 +1,7 @@
 <?php
 
+use common\models\goods\Goods;
+use common\models\order\Coupon;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -29,28 +31,65 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'title',
-            'icon_url:url',
+            //'icon_url:url',
             'des',
-            'used',
-            'type',
-            'with_special',
-            'with_id',
+            [
+                'attribute' => 'used',
+                'value' => Coupon::$usedNames[$model->used],
+            ],
+            [
+                'attribute' => 'type',
+                'value' => Coupon::$typeNames[$model->type],
+            ],
+            //'with_special',
+            [
+                'attribute' => 'with_id',
+                'value' => function($model){
+                    $goods = empty($model->with_id) ? null : Goods::findOne(['id' => $model->with_id]);
+                    return $goods ? $goods->goods_name : '全场通用';
+                }
+            ],
             'with_amount',
-            'used_amount',
+            [
+                'attribute' => 'used_amount',
+                'value' => function($model){
+                    return $model->used_amount > 1 ? "{$model->used_amount}元" : $model->used_amount*100 . '折';
+                }
+            ],
             'quota',
             'take_count',
             'used_count',
-            'start_time',
-            'end_time',
-            'valid_type',
-            'valid_start_time',
-            'valid_end_time',
-            'valid_days',
-            'status',
+            [
+                'attribute' => '发放时间',
+                'value' => function($model){
+                    return "{$model->start_time} / {$model->end_time}";
+                }
+            ],
+            [
+                'attribute' => 'valid_type',
+                'value' => Coupon::$validTypeNames[$model->valid_type],
+            ],
+            [
+                'attribute' => '有效期',
+                'value' => function($model){
+                    $is_absolute = $model->valid_type == Coupon::VALID_TYPE_ABSOLUTE;
+                    return $is_absolute ? "{$model->valid_start_time} / {$model->valid_end_time}" : "领取 {$model->valid_days} 天后过期";
+                }
+            ],
+            [
+                'attribute' => 'status',
+                'value' => Coupon::$statusNames[$model->status],
+            ],
             'created_by',
             'updated_by',
-            'created_at',
-            'updated_at',
+            [
+                'attribute' => 'created_at',
+                'value' => date('Y-m-d H:i:s',$model->created_at),
+            ],
+            [
+                'attribute' => 'updated_at',
+                'value' => date('Y-m-d H:i:s',$model->updated_at),
+            ],
         ],
     ]) ?>
 

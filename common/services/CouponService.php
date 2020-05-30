@@ -4,13 +4,113 @@ namespace common\services;
 
 use common\models\goods\Goods;
 use common\models\order\Coupon;
+use common\models\order\CouponSwap;
 use common\models\order\UserCoupon;
-use common\models\User;
+use yii\db\Exception;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 class CouponService
 {
+    /**
+     * 领卷
+     * @param int $coupon_id
+     * @param int $user_id
+     * @return array
+     */
+    public static function receive($coupon_id, $user_id)
+    {
+        $coupon = Coupon::findOne(['id' => $coupon_id, 'status' => Coupon::STATUS_PUBLISHED]);
+        if (!$coupon) {
+            return ['result' => 0, 'msg' => '找不到优惠卷', 'data' => null];
+        }
+
+        if ($coupon->quota <= $coupon->take_count) {
+            // 卷已被领光
+            return ['result' => 0, 'msg' => '出手晚啦,优惠卷被人枪光了！', 'data' => null];
+        }
+
+        // 检查重复领取
+        $receive_count = UserCoupon::find()->where(['user_id' => $user_id, 'coupon_id' => $coupon_id])->count();
+        if ($receive_count && $coupon->user_max_count <= $receive_count) {
+            return ['result' => 0, 'msg' => '领取数量超出限制', 'data' => null];
+        }
+
+        // 检查是否过期
+        $time = time();
+        if ($coupon->getOldAttribute('start_time') > $time) {
+            return ['result' => 0, 'msg' => '优惠卷未上架', 'data' => $coupon->start_time];
+        } else if ($coupon->getOldAttribute('end_time') < $time) {
+            return ['result' => 0, 'msg' => '优惠卷已下架', 'data' => $coupon->end_time];
+        }
+
+        // 领取
+        $isAbsolute = $coupon->valid_type == Coupon::VALID_TYPE_ABSOLUTE;
+        $valid_start_time = $isAbsolute ? $coupon->getOldAttribute('valid_start_time') : $time;
+        $valid_end_time = $isAbsolute ? $coupon->getOldAttribute('valid_end_time') : strtotime("today +{$coupon->valid_days} day 23:59:59");
+
+        $user_coupon = new UserCoupon([
+            'user_id' => $user_id,
+            'coupon_id' => $coupon_id,
+            'valid_start_time' => $valid_start_time,
+            'valid_end_time' => $valid_end_time,
+            'status' => UserCoupon::STATUS_UNUSED,
+        ]);
+        $user_coupon->loadDefaultValues();
+
+        $tran = \Yii::$app->db->beginTransaction();
+        if ($user_coupon->validate() && $user_coupon->save()) {
+            // 增加领卷数
+            $coupon->take_count++;
+            try {
+                $coupon->save();
+                $tran->commit();
+            } catch (Exception $e) {
+                $tran->rollBack();
+                return ['result' => 0, 'msg' => '领卷失败', 'data' => $e];
+            }
+            return ['result' => 1, 'msg' => 'OK', 'data' => $user_coupon];
+        } else {
+            $tran->rollBack();
+            return ['result' => 0, 'msg' => '领卷失败', 'data' => $user_coupon->getErrorSummary(true)];
+        }
+    }
+
+    /**
+     * 兑换
+     * @param string $code
+     * @param int $user_id
+     * @return array
+     */
+    public static function exchange($code, $user_id)
+    {
+        $coupon = CouponSwap::findOne(['code' => $code, 'is_del' => 0, 'is_swap' => 0]);
+        if (!$coupon) {
+            return ['result' => 0, 'msg' => '找不到兑换卷', 'data' => null];
+        }
+        $tran = \Yii::$app->db->beginTransaction();
+
+        $res = self::receive($coupon->coupon_id, $user_id);
+        if ($res['result']) {
+            /** @var UserCoupon $user_coupon */
+            $user_coupon = $res['data'];
+            $coupon->is_swap = CouponSwap::IS_SWAP_YES;
+            $coupon->swap_id = $user_coupon->id;
+            $coupon->swap_at = time();
+            $coupon->swap_by = $user_id;
+            if ($coupon->save()) {
+                $tran->commit();
+                return ['result' => 1, 'msg' => 'OK', 'data' => $coupon];
+            } else {
+                $tran->rollBack();
+                return ['result' => 0, 'msg' => implode(',', $coupon->getErrorSummary(true)), 'data' => null];
+            }
+        } else {
+            $tran->rollBack();
+            return $res;
+        }
+    }
+
     /**
      * 检查优惠卷是否能用
      * @param int $coupon_id
@@ -136,7 +236,7 @@ class CouponService
         if ($goods_id) {
             $query->andWhere(['or',
                 // 新手和平台卷无需其它条件
-                ['coupon.used' => [Coupon::USED_NEWER, Coupon::USED_PLATFORM]],
+                ['coupon.used' => [Coupon::USED_NEWER, Coupon::USED_PLATFORM, Coupon::USED_CODE]],
                 // 商品类型卷，类型匹配
                 //['used' => Coupon::USED_TYPE, 'with_id' => $goods_id],
                 // 商品卷
