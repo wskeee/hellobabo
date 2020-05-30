@@ -13,17 +13,19 @@ namespace common\utils;
  *
  * @author Kiwi°
  */
-class StringUtil {
+class StringUtil
+{
 
     //put your code here
     /**
      * 补全文件路径
-     * @param srting $path  路径
+     * @param srting $path 路径
      * @param string|array $withStr 指定的字符，默认['http://', 'https://', '/']
-     * @param srting $appendStr  补全的字符，默认‘/’
+     * @param srting $appendStr 补全的字符，默认‘/’
      * @return srting
      */
-    public static function completeFilePath($path, $withStr = '', $appendStr = '/') {
+    public static function completeFilePath($path, $withStr = '', $appendStr = '/')
+    {
         //如果$withStr为空的，默认['http://', 'https://', '/']
         if (empty($withStr)) {
             $withStr = ['http://', 'https://', '/'];
@@ -58,7 +60,8 @@ class StringUtil {
      * 3、第二位数字必须在345678中的其中一个
      * @param type $phone
      */
-    public static function checkPhoneValid($phone) {
+    public static function checkPhoneValid($phone)
+    {
         return preg_match('/^[1][345678][0-9]{9}$/', $phone);
     }
 
@@ -67,7 +70,8 @@ class StringUtil {
      * @param string $file
      * @return string
      */
-    public static function getFileExtensionName($file) {
+    public static function getFileExtensionName($file)
+    {
         $extName = '';
         //获取文件的后缀名
         $ext = pathinfo($file, PATHINFO_EXTENSION);
@@ -87,13 +91,14 @@ class StringUtil {
 
         return $extName;
     }
-    
+
     /**
      * 数字转为大写中文
      * @param integer $num
      * @return string
      */
-    public static function toUpcaseChinese($num){
+    public static function toUpcaseChinese($num)
+    {
         $c1 = "零壹贰叁肆伍陆柒捌玖";
         $c2 = "分角元拾佰仟万拾佰仟亿";
         $num = round($num, 2);
@@ -105,7 +110,7 @@ class StringUtil {
         $c = "";
         while (1) {
             if ($i == 0) {
-                $n = substr($num, strlen($num)-1, 1);
+                $n = substr($num, strlen($num) - 1, 1);
             } else {
                 $n = $num % 10;
             }
@@ -131,17 +136,17 @@ class StringUtil {
                 $left = substr($c, 0, $j);
                 $right = substr($c, $j + 3);
                 $c = $left . $right;
-                $j = $j-3;
-                $slen = $slen-3;
+                $j = $j - 3;
+                $slen = $slen - 3;
             }
             $j = $j + 3;
         }
-        if (substr($c, strlen($c)-3, 3) == '零') {
-            $c = substr($c, 0, strlen($c)-3);
+        if (substr($c, strlen($c) - 3, 3) == '零') {
+            $c = substr($c, 0, strlen($c) - 3);
         }
         if (empty($c)) {
             return "零元整";
-        }else{
+        } else {
             return $c . "整";
         }
 
@@ -149,24 +154,56 @@ class StringUtil {
 
     /**
      * 生成16位随机码
-     * @param array $codes              开始字符数组
-     * @param interger $start_year      开始年份
+     * @param array $codes 开始字符数组
+     * @param interger $start_year 开始年份
      * @return string
      */
-    public static function getRandomSN($codes = null, $start_year = 2019) {
+    public static function getRandomSN($codes = null, $start_year = 2019)
+    {
         $yCode = $codes ? $codes : array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
         $orderSn = $yCode[intval(date('Y')) - $start_year] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
         return $orderSn;
     }
-    
+
+    /**
+     * 创建随机字段串
+     * @param int $num 长度
+     * @param bool $only_num 是否指定为数字
+     * @return string
+     */
+    public static function getSimpleRandomStr($num, $only_num = false)
+    {
+        $strTlp = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
+        $numTlp = '0123456789';
+        $tlp = $only_num ? $numTlp : $strTlp;
+        $str = '';
+        $tlp_count = strlen($tlp);
+        for ($i = 0; $i < $num; $i++) {
+            $str .= substr($tlp, rand(0, $tlp_count), 1);
+        }
+        return $str;
+    }
+
+    /**
+     * 生成不重复随机字符串
+     * @param int $num 长度
+     * @param int $offset 起始位置 0
+     * @return false|string
+     */
+    public static function getRandomStr($num = 16, $offset = 8)
+    {
+        return substr(md5(time() . rand(1, 1000000)), 0, $num);
+    }
+
     /**
      * 字符串大小转字节
      * @param string $size
      * @return interger
      */
-    public static function StringSizeToBytes($size) {
+    public static function StringSizeToBytes($size)
+    {
         //把所有字符转换为小写
-        $size = strtolower($size);  
+        $size = strtolower($size);
         //执行一个正则表达式的搜索和替换
         $unit = preg_replace('/[^a-z]/', '', $size);
         //截取单位前的数值
@@ -176,6 +213,6 @@ class StringUtil {
         // 获取指数值
         $exponent = isset($units[$unit]) ? $units[$unit] : 0;
         //函数返回 1024 的几次方
-        return intval($value * pow(1024, $exponent));           
+        return intval($value * pow(1024, $exponent));
     }
 }
