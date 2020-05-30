@@ -54,27 +54,27 @@ class DesignController extends Controller
         //查询团购完成度
         $grouponIds = array_filter(ArrayHelper::getColumn($dataProvider->getModels(), 'orderGoods.groupon_id'));
         $result = (new Query())
-                ->select(['groupon_id', 'count(id) as value'])
-                ->from(['OrderGoods' => OrderGoods::tableName()])
-                ->where(['groupon_id' => $grouponIds])
-                ->andWhere(['>=', 'status', OrderGoods::STATUS_WAIT_DESIGN])
-                ->andWhere(['<>', 'status', OrderGoods::STATUS_INVALID])
-                ->groupBy(['groupon_id'])
-                ->all();
+            ->select(['groupon_id', 'count(id) as value'])
+            ->from(['OrderGoods' => OrderGoods::tableName()])
+            ->where(['groupon_id' => $grouponIds])
+            ->andWhere(['>=', 'status', OrderGoods::STATUS_WAIT_DESIGN])
+            ->andWhere(['<>', 'status', OrderGoods::STATUS_INVALID])
+            ->groupBy(['groupon_id'])
+            ->all();
         $grouponReadyCount = ArrayHelper::map($result, 'groupon_id', 'value');
         $grouponNeedCountResult = GrouponRecord::find()
-                ->select(['groupon_id', 'count(id) as value'])
-                ->where(['groupon_id' => $grouponIds])
-                ->andWhere(['<>', 'status', GrouponRecord::STATUS_INVALID])
-                ->groupBy(['groupon_id'])
-                ->all();
+            ->select(['groupon_id', 'count(id) as value'])
+            ->where(['groupon_id' => $grouponIds])
+            ->andWhere(['<>', 'status', GrouponRecord::STATUS_INVALID])
+            ->groupBy(['groupon_id'])
+            ->all();
         $grouponNeedCount = ArrayHelper::map($grouponNeedCountResult, 'groupon_id', 'value');
 
         return $this->render('index', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
-                    'grouponReadyCount' => $grouponReadyCount,
-                    'grouponNeedCount' => $grouponNeedCount,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'grouponReadyCount' => $grouponReadyCount,
+            'grouponNeedCount' => $grouponNeedCount,
         ]);
     }
 
@@ -87,7 +87,7 @@ class DesignController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-                    'model' => $this->findModel($id),
+            'model' => $this->findModel($id),
         ]);
     }
 
@@ -105,7 +105,7 @@ class DesignController extends Controller
         }
 
         return $this->render('create', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
@@ -125,7 +125,7 @@ class DesignController extends Controller
         }
 
         return $this->render('update', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
@@ -170,7 +170,7 @@ class DesignController extends Controller
 
     /**
      * 开始团购的任务，同一人接受团购所有任务
-     * @param string $id  WorkflowDesign.id
+     * @param string $id WorkflowDesign.id
      */
     public function actionBatchStart($id)
     {
@@ -193,7 +193,7 @@ class DesignController extends Controller
             'worker_id' => \Yii::$app->user->id,
             'start_at' => time(),
             'status' => WorkflowDesign::STATUS_RUNGING,
-                ], ['order_goods_id' => $orderGoodsIds]);
+        ], ['order_goods_id' => $orderGoodsIds]);
         // 更新商品状态
         OrderGoods::updateAll(['status' => OrderGoods::STATUS_DESIGNING], ['id' => $orderGoodsIds]);
         // 保存日志 
@@ -256,8 +256,36 @@ class DesignController extends Controller
     }
 
     /**
-     * 保存成品 
-     * 
+     * 保存用户分享缩略图
+     */
+    public function actionSaveShareThumb()
+    {
+        Yii::$app->response->format = 'json';
+        $ogid = Yii::$app->request->post('ogid');
+        $share_thumb_url = Yii::$app->request->post('share_thumb_url');
+        if ($ogid == '') {
+            return new ApiResponse(ApiResponse::CODE_COMMON_MISS_PARAM, null, null, ['param' => 'pid']);
+        }
+        $model = OrderGoods::findOne(['id' => $ogid]);
+        if (!$model) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_NOT_FOUND, null, null, ['param' => I18NUitl::t('app', '{Order}{Goods}')]);
+        }
+        // 必须为设计阶段才可以上传封面
+        if (($model->status != OrderGoods::STATUS_DESIGNING && $model->status != OrderGoods::STATUS_DESIGN_CHECK_FAIL)) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_FORBIDDEN);
+        }
+        // 保存封面
+        $model->share_thumb_url = $share_thumb_url;
+        if ($model->save()) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_OK);
+        } else {
+            return new ApiResponse(ApiResponse::CODE_COMMON_SAVE_DB_FAIL, implode(',', $model->getErrorSummary(true)));
+        }
+    }
+
+    /**
+     * 保存成品
+     *
      * @param type $pid
      * @param type $path
      */
@@ -277,18 +305,10 @@ class DesignController extends Controller
             return new ApiResponse(ApiResponse::CODE_COMMON_NOT_FOUND, null, null, ['param' => 'OrderGoodsScenePage']);
         }
 
-        if ($skin_url == '') {
-            $page->finish_id = '';
-            $page->finish_url = '';
-            if ($page->save()) {
-                return new ApiResponse(ApiResponse::CODE_COMMON_OK);
-            }
-        } else {
-            $page->finish_id = $adobe_id;
-            $page->finish_url = $skin_url;
-            if ($page->save()) {
-                return new ApiResponse(ApiResponse::CODE_COMMON_OK);
-            }
+        $page->finish_id = $skin_url == '' ? '' : $adobe_id;
+        $page->finish_url = $skin_url == '' ? '' : $skin_url;
+        if ($page->save()) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_OK);
         }
         return new ApiResponse(ApiResponse::CODE_COMMON_SAVE_DB_FAIL, implode(',', $page->getErrorSummary(true)));
     }
@@ -324,6 +344,7 @@ class DesignController extends Controller
         }
         //发送文件
         Yii::$app->response->sendFile($zipPath);
+        exit;
     }
 
     /**

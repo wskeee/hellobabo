@@ -26,6 +26,7 @@ use yii\db\ActiveRecord;
  * @property int $goods_num 购买数
  * @property string $goods_params 附加参数
  * @property string $user_cover_url 用户封面路径
+ * @property string $share_thumb_url 用户缩略分享图
  * @property int $spec_id 规格id
  * @property string $spec_key 商品规格key
  * @property string $spec_key_name 规格对应的中文名字
@@ -116,7 +117,7 @@ class OrderGoods extends ActiveRecord
             [['goods_price', 'goods_cost', 'amount'], 'number'],
             [['order_sn'], 'string', 'max' => 20],
             [['goods_name', 'spec_key', 'spec_key_name'], 'string', 'max' => 100],
-            [['goods_img', 'user_cover_url'], 'string', 'max' => 255],
+            [['goods_img', 'user_cover_url','share_thumb_url'], 'string', 'max' => 255],
             [['goods_params'], 'string'],
         ];
     }
@@ -139,6 +140,7 @@ class OrderGoods extends ActiveRecord
             'goods_cost' => Yii::t('app', 'Cost'),
             'goods_num' => Yii::t('app', 'Num'),
             'user_cover_url' => I18NUitl::t('app', '{User}{Cover}'),
+            'share_thumb_url' => I18NUitl::t('app', '{Share}{Thumb}'),
             'spec_id' => Yii::t('app', 'Spec ID'),
             'spec_key' => Yii::t('app', 'Spec Key'),
             'spec_key_name' => Yii::t('app', 'Spec'),
