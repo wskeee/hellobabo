@@ -127,6 +127,14 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                     ],
                     [
+                        'attribute' => 'page_is_hide',
+                        'class' => GridViewChangeSelfColumn::class,
+                        'headerOptions' => ['style' => 'width:80px'],
+                        'plugOptions' => [
+                            'url' => '/goods_admin/scene/change-value'
+                        ],
+                    ],
+                    [
                         'attribute' => 'sort_order',
                         'class' => GridViewChangeSelfColumn::class,
                         'headerOptions' => ['style' => 'width:60px'],

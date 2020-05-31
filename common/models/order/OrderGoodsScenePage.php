@@ -27,8 +27,9 @@ use yii\db\Query;
  * @property int $sort_order 排序
  * @property int $is_required 是否必需上传相片 0否 1是
  * @property int $is_del 是否删除
+ * @property int $is_hide 是否隐藏
  * @property string $des 备注
- * 
+ *
  * @property GoodsScenePage sourcePage;
  * @property OrderGoodsSceme $scene 场景
  */
@@ -49,7 +50,7 @@ class OrderGoodsScenePage extends ActiveRecord
     public function rules()
     {
         return [
-            [['order_goods_id', 'order_goods_scene_id', 'page_id', 'sort_order', 'is_required', 'is_del'], 'integer'],
+            [['order_goods_id', 'order_goods_scene_id', 'page_id', 'sort_order', 'is_required', 'is_del', 'is_hide'], 'integer'],
             [['source_id', 'finish_id'], 'string', 'max' => 32],
             [['name'], 'string', 'max' => 50],
             [['effect_url', 'source_url', 'user_img_url', 'finish_url', 'des'], 'string', 'max' => 255],
@@ -79,13 +80,14 @@ class OrderGoodsScenePage extends ActiveRecord
             'sort_order' => Yii::t('app', 'Sort Order'),
             'is_required' => Yii::t('app', 'Is Required'),
             'is_del' => Yii::t('app', 'Is Del'),
+            'is_hide' => Yii::t('app', 'Is Hide'),
             'des' => Yii::t('app', 'Des'),
         ];
     }
 
     /**
      * 源页
-     * 
+     *
      * @return ActiveQuery
      */
     public function getSourcePage()
@@ -95,7 +97,7 @@ class OrderGoodsScenePage extends ActiveRecord
 
     /**
      * 场景
-     * 
+     *
      * @return ActiveQuery
      */
     public function getScene()
@@ -139,6 +141,7 @@ class OrderGoodsScenePage extends ActiveRecord
                 $page['source_url'],
                 $page['pos'],
                 $page['is_required'],
+                $page['is_hide'],
                 $page['des'],
                 $sort_order++,
             ];
@@ -147,7 +150,7 @@ class OrderGoodsScenePage extends ActiveRecord
         //OrderGoodsScenePage::updateAll(['is_del' => 1], ['order_goods_id' => $model->id]);
 
         $result = Yii::$app->db->createCommand()->batchInsert(OrderGoodsScenePage::tableName(), [
-            'order_goods_id', 'order_goods_scene_id', 'page_id', 'source_id', 'name', 'effect_url', 'source_url', 'pos', 'is_required', 'des', 'sort_order'
+            'order_goods_id', 'order_goods_scene_id', 'page_id', 'source_id', 'name', 'effect_url', 'source_url', 'pos', 'is_required', 'is_hide', 'des', 'sort_order'
         ], $rows)->execute();
 
         return $result;

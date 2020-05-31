@@ -299,7 +299,7 @@ class Order extends ActiveRecord
                 $this->ar_save($wallet_log);
 
                 //支出
-                $model = new Withdrawals([
+                /*$model = new Withdrawals([
                     'user_id' => $referrer->id,
                     'order_sn' => Withdrawals::getRandomSN(),
                     'amount' => $order_recommend->amount,
@@ -311,7 +311,7 @@ class Order extends ActiveRecord
                     'status' => Withdrawals::STATUS_CHECK_SUCCESS,
                 ]);
 
-                $this->ar_save($model);
+                $this->ar_save($model);*/
             }
 
             $tran->commit();

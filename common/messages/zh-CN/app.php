@@ -16,6 +16,7 @@ return [
     'Pass' => '通过',
     'Un Pass' => '不通过',
     'Is Del' => '是否删除',
+    'Is Hide' => '是否隐藏',
     'Automatic Login' => '自动登录',
     
     //公共- 用户

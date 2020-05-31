@@ -5,6 +5,7 @@ namespace common\models\platform;
 use common\components\redis\RedisService;
 use common\models\User;
 use common\utils\I18NUitl;
+use EasyWeChat\Payment\Application;
 use Exception;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -144,14 +145,14 @@ class Withdrawals extends ActiveRecord
             $this->pay_error_code = '用户金额校检失败！';
             $this->save();
         } else {
-            $newMoney = (floatval($user->money) * 10000 - floatval($this->amount) * 10000) / 10000;
-
+            $newMoney = floatval($user->money) - floatval($this->amount);
+            $newMoney = floor($newMoney * 10000)/10000;
             if ($newMoney < 0) {
                 $this->status = self::STATUS_PAY_FAILED;
                 $this->pay_error_code = '提现金额超出余额！';
                 $this->save();
             } else {
-                /* @var $payment Application 
+                /* @var $payment Application */
                   $payment = Yii::$app->wechat->payment;
 
                   $message = $payment->transfer->toBalance([
@@ -161,9 +162,9 @@ class Withdrawals extends ActiveRecord
                   're_user_name' => $this->pay_realname, // 如果 check_name 设置为FORCE_CHECK，则必填用户真实姓名
                   'amount' => $this->amount * 100, // 企业付款金额，单位为分
                   'desc' => "用户提现", // 企业付款操作说明信息。必填
-                  ]); */
+                  ]);
 
-                $message = $this->test();
+                //$message = $this->test();
 
                 $tran = Yii::$app->db->beginTransaction();
                 try {
