@@ -41,6 +41,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'quota')->textInput(['type' => 'number']) ?>
 
+    <?= $form->field($model, 'user_max_count')->textInput(['type' => 'number']) ?>
+
     <?= $form->field($model, 'start_time')->widget(DatePicker::class, [
         'pluginOptions' => [
             'convertFormat' => true,
