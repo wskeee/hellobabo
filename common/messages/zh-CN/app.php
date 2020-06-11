@@ -394,6 +394,7 @@ return [
     'Is Swap' => '是否兑换',
     'Swap At' => '兑换时间',
     'Swap By' => '兑换人',
+    'Is Hide' => '匿名',
 
     //后台-商品配置
     'Storage' => '存储',
