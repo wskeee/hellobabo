@@ -113,7 +113,10 @@ class Poster extends BaseAction
         // 传输到阿里云
         Aliyun::getOss()->multiuploadFile($oss_object, $filepath . $filename);
 
-        return new Response(Response::CODE_COMMON_OK, null, ['poster_url' => Aliyun::absolutePath($oss_object), 'goods' => $goods_model]);
+        return new Response(Response::CODE_COMMON_OK, null, [
+            'poster_url' => Aliyun::absolutePath($oss_object),
+            'share_thumb_url' => empty($model->share_thumb_url) ? $goods_model->share_thumb_url : $model->share_thumb_url,
+            'goods' => $goods_model]);
     }
 
     /**
