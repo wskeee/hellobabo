@@ -87,6 +87,7 @@ use common\widgets\Menu;
                             ['label' => '活动管理', 'icon' => 'circle-o', 'url' => ['/platform_admin/vote-activity/index']],
                             ['label' => '订单列表', 'icon' => 'circle-o', 'url' => ['/order_admin/default/index']],
                             ['label' => '优惠卷', 'icon' => 'circle-o', 'url' => ['/order_admin/coupon/index']],
+                            ['label' => '留言', 'icon' => 'circle-o', 'url' => ['/platform_admin/comment/index']],
                         ],
                     ],
                     [
