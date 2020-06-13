@@ -420,7 +420,10 @@ class Order extends ActiveRecord
         $coupon_amount = $coupon ?
             ($coupon->coupon->used_amount < 1 ? (1 - $coupon->coupon->used_amount) * $goods_amount : $coupon->coupon->used_amount) : 0;
         // 订单应付金额
-        $order_amount = $goods_amount - $coupon_amount;
+        $order_amount = round(($goods_amount - $coupon_amount)*100)/100;
+        if($order_amount <= 0){
+            throw new \yii\base\Exception('定单金额异常');
+        }
 
         $order = new Order([
             'order_sn' => self::getRandomSN(),
