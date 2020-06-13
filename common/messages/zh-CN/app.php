@@ -16,7 +16,6 @@ return [
     'Pass' => '通过',
     'Un Pass' => '不通过',
     'Is Del' => '是否删除',
-    'Is Hide' => '是否隐藏',
     'Automatic Login' => '自动登录',
     
     //公共- 用户
@@ -395,6 +394,7 @@ return [
     'Swap At' => '兑换时间',
     'Swap By' => '兑换人',
     'Is Hide' => '匿名',
+    'Comments' => '评论列表',
 
     //后台-商品配置
     'Storage' => '存储',

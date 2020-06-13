@@ -48,7 +48,6 @@ class Comment extends ActiveRecord
     {
         return [
             [['related_id', 'pid', 'depth', 'created_by', 'is_del', 'is_hide', 'created_at', 'updated_at'], 'integer'],
-            [['thread'], 'required'],
             [['thread'], 'string'],
             [['title'], 'string', 'max' => 50],
             [['content'], 'string', 'max' => 255],
@@ -82,5 +81,13 @@ class Comment extends ActiveRecord
     public function getCreator()
     {
         return $this->hasOne(User::class, ['id' => 'created_by']);
+    }
+
+    public function toArray(array $fields = [], array $expand = [], $recursive = true)
+    {
+        $arr = parent::toArray($fields, $expand, $recursive);
+        $arr['creator'] = $this->creator;
+        $arr['created_text'] = date('Y-m-d H:i:s', $this->created_at);
+        return $arr;
     }
 }

@@ -19,7 +19,7 @@ class AddComment extends BaseAction
         $content = $this->getSecretParam('content', '');
         $is_hide = $this->getSecretParam('is_hide', 0);
 
-        $comment = CommentService::add($title, $content, $user->user->id, $is_hide);
+        $comment = CommentService::add($title, $content, $user->id, $is_hide);
         if ($comment) {
             return new Response(Response::CODE_COMMON_OK, null, $comment);
         } else {
