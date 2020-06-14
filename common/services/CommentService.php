@@ -76,6 +76,22 @@ class CommentService
     }
 
     /**
+     * 获取指定时间内，留言条数
+     * @param int $created_by
+     * @param int $start_time
+     * @param int $end_time
+     * @return int|string
+     */
+    public static function getCommentNumByDate($created_by, $start_time, $end_time)
+    {
+        return Comment::find()
+            ->where(['created_by' => $created_by,])
+            ->andFilterWhere(['>=', 'created_at', $start_time])
+            ->andFilterWhere(['<=', 'created_at', $end_time])
+            ->count();
+    }
+
+    /**
      * 获取留言
      * @param int $id
      * @return Comment|null

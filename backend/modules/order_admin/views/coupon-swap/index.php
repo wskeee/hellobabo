@@ -102,11 +102,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 num: num,
             }, function (r) {
                 if (r.code == '0') {
-                    layer.close(loadingIndex);
                     window.location.reload();
                 } else {
                     layer.msg(r.msg);
                 }
+                layer.close(loadingIndex);
             });
         });
     }
