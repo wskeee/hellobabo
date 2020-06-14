@@ -57,7 +57,7 @@ class CommentService
     public static function getList($params, $page = 1, $limit = 0, $sort_order = 'created_at desc')
     {
         $page <= 0 && $page = 1;
-        $query = Comment::find()->where($params)->where('is_del', 0);
+        $query = Comment::find()->where($params)->where(['is_del' => 0]);
         $total = $query->count();
 
         if ($limit != 0) {
