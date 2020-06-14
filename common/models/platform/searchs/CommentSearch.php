@@ -81,7 +81,7 @@ class CommentSearch extends Comment
             $query->andFilterWhere(['<=', 'created_at', strtotime("{$params['end_time']} 23:59:59")]);
         }
 
-        $query->orderBy(['created_at desc']);
+        $query->orderBy(['created_at' => SORT_DESC]);
 
 
         return $dataProvider;
