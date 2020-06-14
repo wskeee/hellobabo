@@ -46,3 +46,7 @@ phpunit.phar
 /apiend/web/assets/
 /apiend/web/upload/
 /environments/
+/apiend/config/wechat.log
+/common/config/wechat.log
+/apiend/web/test.php
+/common/components/aip_php_sdk/lib/
