@@ -4,11 +4,13 @@ namespace backend\modules\order_admin\controllers;
 
 use common\models\api\ApiResponse;
 use common\models\order\Coupon;
+use common\services\CouponService;
 use common\utils\StringUtil;
 use Yii;
 use common\models\order\CouponSwap;
 use common\models\order\searchs\CouponSwapSearch;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -35,15 +37,21 @@ class CouponSwapController extends Controller
     /**
      * Lists all CouponSwap models.
      * @return mixed
+     * @throws
      */
     public function actionIndex($coupon_id)
     {
+        $coupon = Coupon::findOne(['id' => $coupon_id]);
+        if ($coupon->used != Coupon::USED_CODE) {
+            throw new ForbiddenHttpException('该优惠卷无法创建优惠码！');
+        }
         $searchModel = new CouponSwapSearch(['coupon_id' => $coupon_id, 'is_del' => 0]);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'remainNum' => $coupon->quota - CouponService::getCouponSwapNum($coupon_id),
         ]);
     }
 
@@ -78,6 +86,11 @@ class CouponSwapController extends Controller
         }
         if ($num <= 0) {
             return new ApiResponse(ApiResponse::CODE_COMMON_DATA_INVALID, null, null, ['param' => 'num']);
+        }
+
+        $coupon_code_num = CouponService::getCouponSwapNum($coupon_id);
+        if ($coupon_code_num + $num > $coupon->quota) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_DATA_INVALID, '超出发行数量');
         }
 
         $rows = [];

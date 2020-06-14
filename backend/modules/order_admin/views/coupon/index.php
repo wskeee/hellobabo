@@ -97,7 +97,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         return Html::a(Yii::t('yii', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-default','data-toggle' => 'wsk-modal']);
                     },
                     'swap' => function ($url, $model) {
-                        return Html::a(I18NUitl::t('app', '{Swap}{Code}'), ['/order_admin/coupon-swap/index', 'coupon_id' => $model->id], ['class' => 'btn btn-default']);
+                        $code_btn = Html::a(I18NUitl::t('app', '{Swap}{Code}'), ['/order_admin/coupon-swap/index', 'coupon_id' => $model->id], ['class' => 'btn btn-default']);
+                        return $model->used == Coupon::USED_CODE ? $code_btn : '';
                     },
                 ],
                 'headerOptions' => ['style' => 'width:150px'],

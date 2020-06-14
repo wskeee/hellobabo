@@ -11,6 +11,7 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\order\searchs\CouponSwapSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $remainNum integer */
 
 LayerAsset::register($this);
 
@@ -24,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
     echo $this->render('_search', ['model' => $searchModel]); ?>
     <p>
         <?= Html::a(I18NUitl::t('app', '{Create}{Swap}'), 'javascript:addSwap();', ['class' => 'btn btn-success']) ?>
+        <span>还可以新增：<?= $remainNum ?> 张</span>
     </p>
 
     <?= GridView::widget([

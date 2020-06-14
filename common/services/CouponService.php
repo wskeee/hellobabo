@@ -357,6 +357,18 @@ class CouponService
         return $query->all();
     }
 
+    /**
+     * 获取优惠卷当前优惠码数量
+     * @param int $coupon_id
+     */
+    public static function getCouponSwapNum($coupon_id)
+    {
+        return CouponSwap::find()->where([
+            'coupon_id' => $coupon_id,
+            'is_del' => 0,
+        ])->count();
+    }
+
     //-------------------------------------------------------------------------------
     //
     // util
