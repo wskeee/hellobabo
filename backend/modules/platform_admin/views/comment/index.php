@@ -24,26 +24,31 @@ $this->params['breadcrumbs'][] = $this->title;
         //'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'title',
             'content',
             //'depth',
             //'thread:ntext',
-            'creator.nickname',
+            [
+                    'attribute' => 'creator.nickname',
+                    'headerOptions' => ['style' => 'width:100px;']
+            ],
             //'is_del',
             [
                 'attribute' => 'is_hide',
+                'headerOptions' => ['style' => 'width:80px;'],
                 'value' => function ($model) {
-                    return $model->is_hide ? '匿名' : '';
+                    return $model->is_hide ? '匿名' : '--';
                 }
             ],
             [
                 'attribute' => 'created_at',
+                'headerOptions' => ['style' => 'width:100px;'],
                 'value' => function ($model) {
                     return date('Y-m-d H:i:s', $model->created_at);
                 }
             ],
             [
                 'class' => GridViewChangeSelfColumn::class,
+                'headerOptions' => ['style' => 'width:100px;'],
                 'attribute' => 'is_del',
             ],
             //'updated_at',
