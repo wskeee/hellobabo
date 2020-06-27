@@ -79,7 +79,9 @@ class WorkflowPrintSearch extends WorkflowPrint
 
         if (!empty($this->date_range)) {
             $timeRang = array_filter(explode(' - ', $this->date_range));
-            $query->andWhere(['between', 'Print.created_at', $timeRang[0], $timeRang[1]]);
+            $start_time = strtotime("$timeRang[0] 00:00:00");
+            $end_time = strtotime("$timeRang[1] 23:59:59");
+            $query->andWhere(['between', 'Print.created_at', $start_time, $end_time]);
         }
 
         $query->andFilterWhere(['like', 'Order.order_sn', $this->order_sn]);

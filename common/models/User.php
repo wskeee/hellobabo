@@ -3,6 +3,7 @@
 namespace common\models;
 
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
 /**
@@ -148,5 +149,14 @@ class User extends BaseUser implements IdentityInterface
     public function getGameData()
     {
         return $this->hasOne(UserGameData::class, ['user_id' => 'id']);
+    }
+
+    public static function getAllUser()
+    {
+        $result = self::find()->select(['id', 'nickname'])
+            ->where(['status' => self::STATUS_ACTIVE])
+            ->where(['<>', 'nickname', ''])
+            ->all();
+        return ArrayHelper::map($result, 'id', 'nickname');
     }
 }

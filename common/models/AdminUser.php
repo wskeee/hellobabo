@@ -30,10 +30,13 @@ class AdminUser extends BaseUser
     const TYPE_GENERAL = 1;
     /* 所有者/作者 */
     const TYPE_OWNER = 2;
+    /* 代理商 */
+    const TYPE_AGENCY = 3;
     /* 用户类型 */
     public static $typeName = [
         self::TYPE_GENERAL => '普通用户',
         self::TYPE_OWNER => '所有者/作者',
+        self::TYPE_AGENCY => '代理商',
     ];
     
     public function scenarios() 

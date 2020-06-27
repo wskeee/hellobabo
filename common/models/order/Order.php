@@ -7,17 +7,17 @@ use common\components\redis\RedisService;
 use common\models\goods\Goods;
 use common\models\goods\GoodsSpecPrice;
 use common\models\platform\WalletLog;
-use common\models\platform\Withdrawals;
 use common\models\system\Config;
 use common\models\User;
 use common\models\UserAddress;
+use common\services\AgencyService;
 use common\utils\I18NUitl;
+use Exception;
 use Yii;
 use yii\base\UserException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use yii\db\Exception;
 use yii\db\Expression;
 use yii\db\Query;
 
@@ -200,18 +200,27 @@ class Order extends ActiveRecord
                 OrderAction::saveLog([$order->id], '支付失败', "{$message['err_code']}\n{$message['err_code_des']}");
             }
 
+            if ($bo) {
+                // 检查推荐人
+                $this->checkRecommend();
+                // 关联代理商
+                $res = AgencyService::orderPay($this->id);
+                if (!$res['result']) {
+                    throw new Exception($res['msg']);
+                }
+            }
+
             $tran->commit();
 
             if ($bo) {
                 // 清除临时订单
                 GetTempOrder::clearTempOrder(Yii::$app->user->id, $order->orderGoods[0]->id);
-                // 检查推荐人
-                $this->checkRecommend();
             }
 
             return true; // 返回处理完成
         } catch (Exception $ex) {
             $tran->rollBack();
+            throw new Exception($ex->getTraceAsString());
             return false;
         }
     }
@@ -420,8 +429,8 @@ class Order extends ActiveRecord
         $coupon_amount = $coupon ?
             ($coupon->coupon->used_amount < 1 ? (1 - $coupon->coupon->used_amount) * $goods_amount : $coupon->coupon->used_amount) : 0;
         // 订单应付金额
-        $order_amount = round(($goods_amount - $coupon_amount)*100)/100;
-        if($order_amount <= 0){
+        $order_amount = round(($goods_amount - $coupon_amount) * 100) / 100;
+        if ($order_amount <= 0) {
             throw new \yii\base\Exception('定单金额异常');
         }
 

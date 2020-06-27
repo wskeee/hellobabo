@@ -97,6 +97,7 @@ return [
     'Center' => '中心',
     'Square' => '广场',
     'Admin' => '管理',
+    'Administrator' => '管理员',
     'Detail' => '详情',
     'Info' => '信息',
     'Operation' => '操作',
@@ -108,7 +109,11 @@ return [
     'Catalog' => '目录',
     'Outside' => '外部',
     'Statistics' => '统计',
-    
+    'Region' => '区域',
+    'Servicer' => '客服',
+    'Servicers' => '客服列表',
+    'Bind' => '绑定',
+
     //公共-操作
     'Add' => '添加',
     'Edit' => '编辑',
@@ -202,7 +207,6 @@ return [
     'Watermark' => '水印',
     'Width' => '宽',
     'Height' => '高',
-    'Level' => '水平',
     'Vertical' => '垂直',
     'Shifting' => '偏移',
     'Position' => '位置',
@@ -246,7 +250,7 @@ return [
     'Province' => '省',
     'City' => '市',
     'District' => '区',
-    'Twon' => '镇',
+    'Town' => '镇',
     'Domain' => '域名',
     'Good ID' => '套餐',
     'Address' => '地址',
@@ -340,7 +344,6 @@ return [
     'Like' => '点赞',
     'Sale' => '销量',
     'Cost' => '成本',
-    'Material' => '素材',
     'Effect Url' => '效果图',
     'Demo Url' => '参考图',
     'Source Url' => '源图',
@@ -397,7 +400,6 @@ return [
     'Comments' => '评论列表',
 
     //后台-商品配置
-    'Storage' => '存储',
     'Dir' => '目录',
     'Include' => '包含',
     'Is Index' => '是否索引',
@@ -430,7 +432,9 @@ return [
     'Check Status' => '审核状态',
     'Check Feedback' => '审核反馈',
     'Hand Num' => '序号',
-    
+    'Agency' => '代理商',
+    'Agencies' => '代理商列表',
+
     //后台-运营管理
     'Purchaser' => '购买人',
     'Payable' => '应付',
@@ -463,6 +467,7 @@ return [
     'Designs' => '设计列表',
     'Designer' => '设计师',
     'Contacter' => '联系人',
+    'Contacts' => '联系人',
     'Print' => '打印',
     'Prints' => '打印列表',
     'Printer' => '打印师',

@@ -25,6 +25,7 @@ class BtnLoaderAsset extends AssetBundle{
         'js/loader.js'
     ];
     public $depends = [
-        'yii\web\YiiAsset'
+        'yii\web\YiiAsset',
+        'kartik\growl\GrowlAsset'
     ];
 }
