@@ -61,7 +61,13 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->redirect('statistics/all-statistics/index');
+        $home_url =[
+            AdminUser::TYPE_GENERAL => '/statistics/all-statistics/index',
+            AdminUser::TYPE_OWNER => '/statistics/all-statistics/index',
+            AdminUser::TYPE_AGENCY => '/platform_admin/agency-order/index',
+        ];
+        $url = $home_url[Yii::$app->user->identity->type];
+        return $this->redirect($url);
     }
 
     /**
