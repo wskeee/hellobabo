@@ -19,19 +19,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="agency-servicer-index">
 
-    <div class="pull-right" style="display: inline-block;">
+    <div class="pull-right" style="display: inline-block;margin-bottom: 10px;">
         <?= $this->render('_search', ['model' => $searchModel, 'agencys' => $agencys]); ?>
     </div>
-
-    <p class="btn-box">
-        <?=
-        Html::button(Yii::t('app', 'Bind'), [
-            'class' => 'btn btn-success',
-            'data-toggle' => "modal",
-            'data-target' => "#bind-modal"
-        ]);
-        ?>
-    </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
