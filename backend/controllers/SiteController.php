@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\controllers;
 
 use common\models\AdminUser;
@@ -61,13 +62,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $home_url =[
-            AdminUser::TYPE_GENERAL => '/statistics/all-statistics/index',
-            AdminUser::TYPE_OWNER => '/statistics/all-statistics/index',
-            AdminUser::TYPE_AGENCY => '/platform_admin/agency-order/index',
-        ];
-        $url = $home_url[Yii::$app->user->identity->type];
-        return $this->redirect($url);
+        return $this->redirect($this->getHomeUrl());
     }
 
     /**
@@ -84,7 +79,7 @@ class SiteController extends Controller
         $model = new LoginAdminForm(['userClass' => AdminUser::class]);
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
 //            return $this->goBack();
-            return $this->redirect(['statistics/all-statistics/index']);
+            return $this->redirect($this->getHomeUrl());
         } else {
             $model->password = '';
 
@@ -104,5 +99,19 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    /**
+     * 获取主页地址
+     */
+    private function getHomeUrl()
+    {
+        $home_url = [
+            AdminUser::TYPE_GENERAL => '/statistics/all-statistics/index',
+            AdminUser::TYPE_OWNER => '/statistics/all-statistics/index',
+            AdminUser::TYPE_AGENCY => '/platform_admin/agency-order/index',
+        ];
+        $url = $home_url[Yii::$app->user->identity->type];
+        return $url;
     }
 }
