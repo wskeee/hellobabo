@@ -46,6 +46,11 @@ $goodsDetails = $model->isNewRecord ? new GoodsDetail() : $model->goodsDetails;
         'data' => Goods::$typeKeyMap,
         'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
     ]) ?>
+
+    <!-- 显示方式 -->
+    <?= $form->field($model, 'orientation')->widget(Select2::class, [
+        'data' => Goods::$orientationNames,
+    ]) ?>
     
     <!-- 商品名称 -->
     <?= $form->field($model, 'goods_name')->textInput(['maxlength' => true]) ?>

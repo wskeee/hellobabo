@@ -61,7 +61,7 @@ class DefaultController extends Controller
          */
         $goods = Goods::findOne(['id' => $gid]);
         $app_data = [
-            'goods' => ['gid' => $gid, 'type' => 1, 'commission' => $goods->commission],
+            'goods' => ['gid' => $gid, 'type' => 1, 'commission' => $goods->commission, 'orientation' => $goods->orientation],
             'common' => ['id' => "E4019F635D6CBC488C42C0A8B05F0249", 'path' => 'common/'],
         ];
         $scenes = [];
@@ -93,18 +93,12 @@ class DefaultController extends Controller
         $orderGoods = OrderGoods::findOne(['id' => $ogid]);
 
         $app_data = [
-            'goods' => ['gid' => $orderGoods->goods->id, 'ogid' => $ogid, 'type' => 2, 'commission' => $orderGoods->goods->commission],
+            'goods' => ['gid' => $orderGoods->goods->id, 'ogid' => $ogid, 'type' => 2, 'commission' => $orderGoods->goods->commission, 'orientation' => $orderGoods->goods->orientation],
             'common' => ['id' => "E4019F635D6CBC488C42C0A8B05F0249", 'path' => 'common/'],
         ];
         $scenes = [];
         foreach ($pages as $page) {
-            $id = $page->finish_id == '' ? $page->source_id : $page->finish_id;
-            $path = $page->finish_url == '' ? $page->source_url : $page->finish_url;
-            $scenes [] = [
-                'id' => $id,
-                'path' => $this->replaceHttps(pathinfo($path, PATHINFO_DIRNAME) . '/'),
-                'lock' => false
-            ];
+            $scenes [] = $this->createScene($page, true);
         }
         $app_data['scenes'] = $scenes;
         if ($readyonly) {
@@ -125,17 +119,15 @@ class DefaultController extends Controller
         $pages = GoodsScenePage::find()
             ->where(['id' => explode(',', $page_ids)])
             ->all();
-
+        /** @var GoodsScenePage $page */
+        $page = $pages[0];
         $app_data = [
+            'goods' => ['gid' => $page->scene->goods_id, 'orientation' => $page->scene->goods->orientation],
             'common' => ['id' => "E4019F635D6CBC488C42C0A8B05F0249", 'path' => 'common/'],
         ];
         $scenes = [];
         foreach ($pages as $page) {
-            $scenes [] = [
-                'id' => $page["{$target}_id"],
-                'path' => $this->replaceHttps(pathinfo($page["{$target}_url"], PATHINFO_DIRNAME) . '/'),
-                'lock' => false
-            ];
+            $scenes [] = $this->createScene($page, false);
         }
         $app_data['scenes'] = $scenes;
 
@@ -156,26 +148,45 @@ class DefaultController extends Controller
             ->orderBy(['sort_order' => SORT_ASC])
             ->all();
 
+        /** @var GoodsScenePage $page */
+        $page = $pages[0];
         $app_data = [
+            'goods' => ['gid' => $page->scene->goods_id, 'orientation' => $page->scene->goods->orientation],
             'common' => ['id' => "E4019F635D6CBC488C42C0A8B05F0249", 'path' => 'common/'],
         ];
         $scenes = [];
         foreach ($pages as $page) {
-            $scenes [] = [
-                'id' => $page["{$target}_id"],
-                'path' => $this->replaceHttps(pathinfo($page["{$target}_url"], PATHINFO_DIRNAME) . '/'),
-                'lock' => false
-            ];
+            $scenes [] = $this->createScene($page, $target == 'finish');
         }
         $app_data['scenes'] = $scenes;
 
         return $this->render('perview', ['app_data' => $app_data]);
     }
 
+    /**
+     * 生成绘本页数据
+     * @param OrderGoodsScenePage|GoodsScenePage $page
+     * @param bool $replace
+     */
+    private function createScene($page, $replace = true)
+    {
+        $source_id = $page instanceof OrderGoodsScenePage ? $page->sourcePage->source_id : $page->source_id;//$page->source_id;//
+        $source_url = $page instanceof OrderGoodsScenePage ? $page->sourcePage->source_url : $page->source_url;//$page->source_url;//
+        // 当前finish_id 为空时，为上传图片，这时使用模板加载上传的图合成绘本页
+        $id = (!$replace || $page->finish_id == '') ? $source_id : $page->finish_id;
+        $path = (!$replace || $page->finish_id == '') ? $source_url : $page->finish_url;
+        return [
+            'id' => $id,
+            'path' => $this->replaceHttps(pathinfo($path, PATHINFO_DIRNAME) . '/'),
+            'lock' => false,
+            'replace' => ($replace && $page->finish_id == '') ? [['id' => 'bg', 'url' => $page->finish_url]] : false,
+        ];
+    }
+
     private function replaceHttps($path)
     {
         $host_info = \Yii::$app->request->getHostInfo();
-        if(strpos($host_info,'http://') === false){
+        if (strpos($host_info, 'http://') === false) {
             return str_replace('http://', 'https://', $path);
         }
         return $path;

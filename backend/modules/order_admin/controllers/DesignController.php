@@ -305,7 +305,7 @@ class DesignController extends Controller
             return new ApiResponse(ApiResponse::CODE_COMMON_NOT_FOUND, null, null, ['param' => 'OrderGoodsScenePage']);
         }
 
-        $page->finish_id = $skin_url == '' ? '' : $adobe_id;
+        $page->finish_id = $adobe_id == '' ? '' : $adobe_id;
         $page->finish_url = $skin_url == '' ? '' : $skin_url;
         if ($page->save()) {
             return new ApiResponse(ApiResponse::CODE_COMMON_OK);

@@ -95,8 +95,8 @@ $canEdit = $model->status == WorkflowDesign::STATUS_RUNGING || $model->status ==
                                             'is_adobe' => 1,
                                         ],
                                         'accept' => [
-                                            'extensions' => 'zip',
-                                            'mimeTypes' => 'application/zip',
+                                            'extensions' => 'zip,jpg,jpeg,',
+                                            'mimeTypes' => 'application/zip,image/jpg,image/jpeg',
                                         ]
                                     ],
                                     'pluginEvents' => [
@@ -210,7 +210,7 @@ $canEdit = $model->status == WorkflowDesign::STATUS_RUNGING || $model->status ==
      */
     function onProductUploadSuccess(pid, dbFile) {
         var skin_url = dbFile ? dbFile.url : "";
-        var adobe_id = dbFile ? dbFile.metadata.adobe_id : "";
+        var adobe_id = (dbFile && dbFile.metadata.adobe_id) ? dbFile.metadata.adobe_id : "";
         $.post('save-product', {pid: pid, skin_url: skin_url, adobe_id: adobe_id});
     }
 

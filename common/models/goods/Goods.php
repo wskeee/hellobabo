@@ -19,6 +19,7 @@ use yii\helpers\ArrayHelper;
  * @property int $category_id 商品的所属类目ID，关联goods_category表id字段
  * @property int $model_id 模型ID,goods_model表,id
  * @property int $owner_id 当前所有者id，关联admin_user表id字段
+ * @property string $orientation 显示方式 general默认竖屏、landscape横屏
  * @property string $goods_sn 商品编码
  * @property string $goods_name 商品名称
  * @property string $goods_english_name 商品英文名称
@@ -73,14 +74,6 @@ class Goods extends ActiveRecord
     /* 已下架 */
     const STATUS_SOLD_OUT = 3;
 
-    /* 类型  */
-    /* 默认 */
-    const TYPE_DEFAULT = 1;
-    /* 赠送、礼物 */
-    const TYPE_PRESENT = 2;
-    /* 团购 */
-    const TYPE_GROUPON = 3;
-
     /* 状态 */
 
     public static $statusKeyMap = [
@@ -89,11 +82,29 @@ class Goods extends ActiveRecord
         self::STATUS_SOLD_OUT => '已下架',
     ];
 
+    /* 类型  */
+    /* 默认 */
+    const TYPE_DEFAULT = 1;
+    /* 赠送、礼物 */
+    const TYPE_PRESENT = 2;
+    /* 团购 */
+    const TYPE_GROUPON = 3;
+    /* 简约版 */
+    const TYPE_SIMPLE = 4;
+
     /* 类型 */
     public static $typeKeyMap = [
-        self::TYPE_DEFAULT => '默认',
-        self::TYPE_PRESENT => '赠送',
-        self::TYPE_GROUPON => '团购',
+        self::TYPE_DEFAULT => '选场景系列（妈妈去那儿）',
+        self::TYPE_PRESENT => '选角色系列（爸爸的日常）',
+        self::TYPE_SIMPLE => '简约列表（帖脸绘本）',
+    ];
+
+    /** 显示方式 */
+    const ORIENTATION_GENERAL = 'general';
+    const ORIENTATION_LANDSCAPE = 'landscape';
+    public static $orientationNames = [
+        self::ORIENTATION_GENERAL => '竖屏',
+        self::ORIENTATION_LANDSCAPE => '横屏',
     ];
 
     /**
@@ -122,7 +133,7 @@ class Goods extends ActiveRecord
             [['goods_cost', 'goods_price', 'commission'], 'number'],
             [['goods_sn'], 'string', 'max' => 20],
             [['goods_name'], 'string', 'max' => 100],
-            [['goods_title'], 'string', 'max' => 50],
+            [['goods_title','orientation'], 'string', 'max' => 50],
             [['show_urls'], 'arrTostr'],
             [['goods_des', 'cover_url', 'video_url', 'poster_url', 'share_thumb_url', 'tags','goods_english_name','goods_title_url'], 'string', 'max' => 255],
             [['params'], 'string'],
@@ -175,6 +186,7 @@ class Goods extends ActiveRecord
             'model_id' => Yii::t('app', 'Model'),
             'owner_id' => Yii::t('app', 'Owner'),
             'type' => Yii::t('app', 'Type'),
+            'orientation' => Yii::t('app', 'Orientation'),
             'commission' => Yii::t('app', 'Commission'),
             'goods_name' => Yii::t('app', 'Name'),
             'goods_english_name' => Yii::t('app', 'Goods English Name'),

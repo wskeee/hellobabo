@@ -125,7 +125,7 @@ class MergeChunksAction extends BaseAction
                 $dbFile->oss_key = $replace_file == null ? "" : $replace_file->oss_key;
                 $dbFile->metadata = json_encode($info);
 
-                if ($isAdobe) {
+                if ($isAdobe && $dbFile->ext == 'zip') {
                     // zip 路径换成 解压后
                     $dbFile->metadata = json_encode([
                         'adobe_id' => AdobeUtil::analyse($uploadPath),
@@ -142,7 +142,7 @@ class MergeChunksAction extends BaseAction
                     //上传到OSS
                     try {
                         $dbFile->uploadOSS();
-                        if ($isAdobe) {
+                        if ($isAdobe && $dbFile->ext == 'zip') {
                             // zip 路径换成 解压后 skin 路径
                             $dbFile->oss_key = AdobeUtil::getSkinPath($dbFile->oss_key, false);
                             $dbFile->save();
