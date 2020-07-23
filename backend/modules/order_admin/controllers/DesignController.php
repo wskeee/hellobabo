@@ -337,14 +337,14 @@ class DesignController extends Controller
             if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
                 $zip->addFile($filename, "{$index}.$ext");
                 $zip->close();
+                unlink($filename);
             } else {
                 Yii::$app->response->format = 'json';
                 return new ApiResponse(ApiResponse::CODE_COMMON_UNKNOWN, '打包文件出错！');
             }
         }
         //发送文件
-        Yii::$app->response->sendFile($zipPath);
-        exit;
+        return Yii::$app->response->sendFile($zipPath);
     }
 
     /**
