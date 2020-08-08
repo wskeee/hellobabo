@@ -101,9 +101,11 @@ class Goods extends ActiveRecord
 
     /** 显示方式 */
     const ORIENTATION_GENERAL = 'general';
+    const ORIENTATION_HYBID = 'hybid';
     const ORIENTATION_LANDSCAPE = 'landscape';
     public static $orientationNames = [
         self::ORIENTATION_GENERAL => '竖屏',
+        self::ORIENTATION_HYBID => '混合',
         self::ORIENTATION_LANDSCAPE => '横屏',
     ];
 

@@ -15,6 +15,7 @@ use apiend\modules\v1\actions\order\EndGrouponInvite;
 use apiend\modules\v1\actions\order\GetGrouponDetail;
 use apiend\modules\v1\actions\order\GetMyOrderGoods;
 use apiend\modules\v1\actions\order\GetOrderDetail;
+use apiend\modules\v1\actions\order\GetOrderGoodsDetail;
 use apiend\modules\v1\actions\order\GetOrderList;
 use apiend\modules\v1\actions\order\GetTempOrder;
 use apiend\modules\v1\actions\order\Init;
@@ -72,6 +73,7 @@ class OrderController extends ApiController
             'temp-order-scene-ready' => ['get'],
             // 订单商品
             'get-my-order-goods' => ['get'],
+            'get-order-goods-detail' => ['get'],
             // 团购
             'create-groupon' => ['post'],
             'get-groupon-detail' => ['get'],
@@ -118,6 +120,7 @@ class OrderController extends ApiController
             'save-temp-order' => ['class' => SaveTempOrder::class],
             // 订单商品
             'get-my-order-goods' => ['class' => GetMyOrderGoods::class],
+            'get-order-goods-detail' => ['class' => GetOrderGoodsDetail::class],
             // 团购
             'create-groupon' => ['class' => CreateGroupon::class],
             'get-groupon-detail' => ['class' => GetGrouponDetail::class],

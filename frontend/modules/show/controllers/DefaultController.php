@@ -60,8 +60,11 @@ class DefaultController extends Controller
          * appData
          */
         $goods = Goods::findOne(['id' => $gid]);
+        $goods_params = json_decode($goods->params);
+        $goods_width = isset($goods_params['width']) ? $goods_params['width'] : 1080;
+        $goods_height = isset($goods_params['height']) ? $goods_params['height'] : 1778;
         $app_data = [
-            'goods' => ['gid' => $gid, 'type' => 1, 'commission' => $goods->commission, 'orientation' => $goods->orientation],
+            'goods' => ['gid' => $gid, 'type' => 1, 'commission' => $goods->commission, 'orientation' => $goods->orientation, 'width' => $goods_width, 'height' => $goods_height],
             'common' => ['id' => "E4019F635D6CBC488C42C0A8B05F0249", 'path' => 'common/'],
         ];
         $scenes = [];
@@ -91,9 +94,11 @@ class DefaultController extends Controller
             ->all();
 
         $orderGoods = OrderGoods::findOne(['id' => $ogid]);
-
+        $goods_params = json_decode($orderGoods->goods->params);
+        $goods_width = isset($goods_params['width']) ? $goods_params['width'] : 1080;
+        $goods_height = isset($goods_params['height']) ? $goods_params['height'] : 1778;
         $app_data = [
-            'goods' => ['gid' => $orderGoods->goods->id, 'ogid' => $ogid, 'type' => 2, 'commission' => $orderGoods->goods->commission, 'orientation' => $orderGoods->goods->orientation],
+            'goods' => ['gid' => $orderGoods->goods->id, 'ogid' => $ogid, 'type' => 2, 'commission' => $orderGoods->goods->commission, 'orientation' => $orderGoods->goods->orientation, 'width' => $goods_width, 'height' => $goods_height],
             'common' => ['id' => "E4019F635D6CBC488C42C0A8B05F0249", 'path' => 'common/'],
         ];
         $scenes = [];
@@ -121,8 +126,11 @@ class DefaultController extends Controller
             ->all();
         /** @var GoodsScenePage $page */
         $page = $pages[0];
+        $goods_params = json_decode($page->scene->goods->params);
+        $goods_width = isset($goods_params['width']) ? $goods_params['width'] : 1080;
+        $goods_height = isset($goods_params['height']) ? $goods_params['height'] : 1778;
         $app_data = [
-            'goods' => ['gid' => $page->scene->goods_id, 'orientation' => $page->scene->goods->orientation],
+            'goods' => ['gid' => $page->scene->goods_id, 'orientation' => $page->scene->goods->orientation, 'width' => $goods_width, 'height' => $goods_height],
             'common' => ['id' => "E4019F635D6CBC488C42C0A8B05F0249", 'path' => 'common/'],
         ];
         $scenes = [];
@@ -150,8 +158,11 @@ class DefaultController extends Controller
 
         /** @var GoodsScenePage $page */
         $page = $pages[0];
+        $goods_params = json_decode($page->scene->goods->params);
+        $goods_width = isset($goods_params['width']) ? $goods_params['width'] : 1080;
+        $goods_height = isset($goods_params['height']) ? $goods_params['height'] : 1778;
         $app_data = [
-            'goods' => ['gid' => $page->scene->goods_id, 'orientation' => $page->scene->goods->orientation],
+            'goods' => ['gid' => $page->scene->goods_id, 'orientation' => $page->scene->goods->orientation, 'width' => $goods_width, 'height' => $goods_height],
             'common' => ['id' => "E4019F635D6CBC488C42C0A8B05F0249", 'path' => 'common/'],
         ];
         $scenes = [];
