@@ -4,8 +4,10 @@ use common\models\AdminUser;
 use common\models\goods\Goods;
 use common\models\goods\GoodsCategory;
 use common\models\goods\searchs\GoodsSearch;
+use common\models\order\Order;
 use common\utils\I18NUitl;
 use kartik\widgets\Select2;
+use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
@@ -14,90 +16,107 @@ use yii\widgets\ActiveForm;
 /* @var $form ActiveForm */
 
 /* 其它选项下拉模板 */
-$dep_template = "<div class=\"col-lg-12 col-md-12 clean-padding\">{input}</div>";
 ?>
 
-<div class="goods-search wsk-search-panel">
+<div class="goods-search pull-right">
 
     <?php
     $form = ActiveForm::begin([
-                'id' => 'goods-search-form',
-                'action' => ['index'],
-                'method' => 'get',
-                'options' => ['class' => 'form form-horizontal',],
-                'fieldConfig' => [
-                    'template' => "{label}\n<div class=\"col-sm-9\" style=\"line-height: 40px;\" >{input}</div>\n<div class=\"col-sm-9\">{error}</div>",
-                    'labelOptions' => ['class' => 'col-sm-1  control-label form-label',],
-                ],
+        'id' => 'search-form',
+        'action' => ['index'],
+        'method' => 'get',
     ]);
     ?>
 
     <!-- 商品编号 -->
-    <?=
-    $form->field($model, 'id')->textInput([
-        'maxlength' => true,
-        'placeholder' => I18NUitl::t('app', '{Please}{Input}{Goods}{SN}'),
-        'onchange' => 'submitForm()',
-    ])
-    ?>
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown">
+            <?=
+            Html::activeTextInput($model, 'goods_sn', [
+                'class' => 'form-control',
+                'placeholder' => I18NUitl::t('app', '{Please}{Input}{Goods}{SN}'),
+                'onBlur' => 'submitForm()',
+            ])
+            ?>
+        </div>
+    </div>
 
     <!-- 类目 -->
-    <?=
-    $form->field($model, 'category_id')->widget(Select2::class, [
-        'data' => GoodsCategory::getCategory(),
-        'options' => ['placeholder' => Yii::t('app', 'All')],
-        'pluginOptions' => ['allowClear' => true],
-        'pluginEvents' => ['change' => 'function(){ submitForm()}']
-    ])
-    ?>
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown" style="width:120px">
+            <?=
+            Select2::widget([
+                'model' => $model,
+                'attribute' => 'category_id',
+                'data' => GoodsCategory::getCategory(),
+                'options' => ['placeholder' => Yii::t('app', 'All')],
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' => ['change' => 'function(){ submitForm()}']
+            ])
+            ?>
+        </div>
+    </div>
 
-    <!-- 封其它选项 -->
-    <div class="form-group">
-        <label class="col-sm-1 control-label form-label">
-            <?= I18NUitl::t('app', '{Other}{Option}') ?>
-        </label>
-        <div class="dep-dropdown-box col-sm-9">
-            <div class="dep-dropdown">
-                <?=
-                $form->field($model, 'owner_id', ['template' => $dep_template,])->widget(Select2::class, [
-                    'data' => AdminUser::getUserByType(AdminUser::TYPE_OWNER),
-                    'options' => ['placeholder' => Yii::t('app', 'Owner')],
-                    'pluginOptions' => ['allowClear' => true],
-                    'pluginEvents' => ['change' => 'function(){ submitForm()}']
-                ])
-                ?>
-            </div>
-            <div class="dep-dropdown">
-                <?=
-                $form->field($model, 'created_by', ['template' => $dep_template,])->widget(Select2::class, [
-                    'data' => AdminUser::getUserByType(AdminUser::TYPE_GENERAL),
-                    'options' => ['placeholder' => Yii::t('app', 'Created By')],
-                    'pluginOptions' => ['allowClear' => true],
-                    'pluginEvents' => ['change' => 'function(){ submitForm()}']
-                ])
-                ?>
-            </div>
-            <div class="dep-dropdown">
-                <?=
-                $form->field($model, 'status', ['template' => $dep_template,])->widget(Select2::class, [
-                    'data' => Goods::$statusKeyMap,
-                    'options' => ['placeholder' => Yii::t('app', 'Status')],
-                    'pluginOptions' => ['allowClear' => true],
-                    'pluginEvents' => ['change' => 'function(){ submitForm()}']
-                ])
-                ?>
-            </div>
+    <!-- 拥有人 -->
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown">
+            <?=
+            Select2::widget([
+                'model' => $model,
+                'attribute' => 'owner_id',
+                'data' => AdminUser::getUserByType(AdminUser::TYPE_OWNER),
+                'options' => ['placeholder' => Yii::t('app', 'Owner')],
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' => ['change' => 'function(){ submitForm()}']
+            ]);
+            ?>
+        </div>
+    </div>
+
+    <!-- 创建人 -->
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown">
+            <?=
+            Select2::widget([
+                'model' => $model,
+                'attribute' => 'created_by',
+                'data' => AdminUser::getUserByType(AdminUser::TYPE_GENERAL),
+                'options' => ['placeholder' => Yii::t('app', 'Created By')],
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' => ['change' => 'function(){ submitForm()}']
+            ]);
+            ?>
+        </div>
+    </div>
+
+    <!-- 状态 -->
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown">
+            <?=
+            Select2::widget([
+                'model' => $model,
+                'attribute' => 'status',
+                'data' => Goods::$statusKeyMap,
+                'options' => ['placeholder' => Yii::t('app', 'Status')],
+                'pluginOptions' => ['allowClear' => true],
+                'pluginEvents' => ['change' => 'function(){ submitForm()}']
+            ]);
+            ?>
         </div>
     </div>
 
     <!-- 关键字 -->
-    <?=
-    $form->field($model, 'keyword')->textInput([
-        'maxlength' => true,
-        'placeholder' => I18NUitl::t('app', '{Please}{Input}{Goods}{Name}{Or}{Tag}'),
-        'onchange' => 'submitForm()',
-    ])
-    ?>
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown">
+            <?=
+            Html::activeTextInput($model, 'keyword', [
+                'class' => 'form-control',
+                'placeholder' => I18NUitl::t('app', '{Please}{Input}{Goods}{Name}{Or}{Tag}'),
+                'onBlur' => 'submitForm()',
+            ])
+            ?>
+        </div>
+    </div>
 
     <?php //$form->field($model, 'id') ?>
 

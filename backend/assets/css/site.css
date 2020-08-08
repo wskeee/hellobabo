@@ -541,19 +541,9 @@ a.desc:after {
  *
 ********************************************************************************/
 .wsk-search-panel{
-    background-color: #f2f2f2;
-    padding: 20px;
-    border: solid 1px #e4e4e4;
-}
-/* 其它选项 */
-.wsk-search-panel .dep-dropdown-box{
-    padding-left: 15px;
-    float: left;
-}
-.wsk-search-panel .dep-dropdown-box .dep-dropdown{
-    display: inline-block;
-    width: 145px;
-    margin-right: 5px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
 }
 /*******************************************************************************
  *

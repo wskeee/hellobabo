@@ -62,7 +62,7 @@ $goodsDetails = $model->isNewRecord ? new GoodsDetail() : $model->goodsDetails;
     <?= $form->field($model, 'goods_title')->textInput(['maxlength' => true]) ?>     
     
     <!-- 商品参数 -->
-    <?= $form->field($model, 'params')->textarea(['maxlength' => true]) ?>
+    <?= $form->field($model, 'params')->textarea(['maxlength' => true,'rows' => 10]) ?>
 
     <!-- 标题图片 -->
     <div class="form-group picker-form-group">

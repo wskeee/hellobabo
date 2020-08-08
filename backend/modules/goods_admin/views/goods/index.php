@@ -24,13 +24,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="goods-index">
 
-    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <div class="btn-box pull-right">
-        <span>&nbsp;</span>
-        <div class="loading"></div>
-        <?= ResourceHelper::a(I18NUitl::t('app', '{Batch}{Publish}'), ['batch-publish'], ['class' => 'btn btn-danger']) ?>
-        <?= ResourceHelper::a(I18NUitl::t('app', '{Batch}{Sold Out}'), ['batch-sold-out'], ['class' => 'btn btn-danger']) ?>
+    <div class="wsk-search-panel">
+        <div>
+            <span></span>
+            <span class="loading"></span>
+            <?= ResourceHelper::a(I18NUitl::t('app', '{Batch}{Publish}'), ['batch-publish'], ['class' => 'btn btn-danger']) ?>
+            <?= ResourceHelper::a(I18NUitl::t('app', '{Batch}{Sold Out}'), ['batch-sold-out'], ['class' => 'btn btn-danger']) ?>
+        </div>
+        <?php echo $this->render('_search', ['model' => $searchModel]); ?>
     </div>
 
     <?=
