@@ -60,7 +60,7 @@ class DefaultController extends Controller
          * appData
          */
         $goods = Goods::findOne(['id' => $gid]);
-        $goods_params = json_decode($goods->params);
+        $goods_params = json_decode($goods->params, true);
         $goods_width = isset($goods_params['width']) ? $goods_params['width'] : 1080;
         $goods_height = isset($goods_params['height']) ? $goods_params['height'] : 1778;
         $app_data = [
@@ -94,7 +94,7 @@ class DefaultController extends Controller
             ->all();
 
         $orderGoods = OrderGoods::findOne(['id' => $ogid]);
-        $goods_params = json_decode($orderGoods->goods->params);
+        $goods_params = json_decode($orderGoods->goods->params, true);
         $goods_width = isset($goods_params['width']) ? $goods_params['width'] : 1080;
         $goods_height = isset($goods_params['height']) ? $goods_params['height'] : 1778;
         $app_data = [
@@ -126,7 +126,7 @@ class DefaultController extends Controller
             ->all();
         /** @var GoodsScenePage $page */
         $page = $pages[0];
-        $goods_params = json_decode($page->scene->goods->params);
+        $goods_params = json_decode($page->scene->goods->params, true);
         $goods_width = isset($goods_params['width']) ? $goods_params['width'] : 1080;
         $goods_height = isset($goods_params['height']) ? $goods_params['height'] : 1778;
         $app_data = [
@@ -158,7 +158,7 @@ class DefaultController extends Controller
 
         /** @var GoodsScenePage $page */
         $page = $pages[0];
-        $goods_params = json_decode($page->scene->goods->params);
+        $goods_params = json_decode($page->scene->goods->params, true);
         $goods_width = isset($goods_params['width']) ? $goods_params['width'] : 1080;
         $goods_height = isset($goods_params['height']) ? $goods_params['height'] : 1778;
         $app_data = [
