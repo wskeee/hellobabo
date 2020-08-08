@@ -25,8 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="goods-index">
 
     <div class="wsk-search-panel">
-        <div>
-            <span></span>
+        <div class="control-btn-box">
             <span class="loading"></span>
             <?= ResourceHelper::a(I18NUitl::t('app', '{Batch}{Publish}'), ['batch-publish'], ['class' => 'btn btn-danger']) ?>
             <?= ResourceHelper::a(I18NUitl::t('app', '{Batch}{Sold Out}'), ['batch-sold-out'], ['class' => 'btn btn-danger']) ?>
@@ -145,7 +144,7 @@ $this->params['breadcrumbs'][] = $this->title;
      */
     function initBatchBtn() {
         //批量发布,批量下架
-        $('.btn-box .btn').on('click', function () {
+        $('.control-btn-box .btn').on('click', function () {
             if (isPosting)
                 return;
             var goodsIds = getSelecteGoodsId();
