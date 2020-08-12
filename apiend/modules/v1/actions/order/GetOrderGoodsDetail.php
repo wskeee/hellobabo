@@ -24,7 +24,7 @@ class GetOrderGoodsDetail extends BaseAction
 
     public function run()
     {
-        $order_goods_id = $this->getSecretParam('id');
+        $order_goods_id = $this->getSecretParam('order_goods_id');
         $model = OrderGoods::findOne(['id' => $order_goods_id]);
 
         if ($model == null) {
