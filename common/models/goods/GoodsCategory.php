@@ -25,6 +25,13 @@ use yii\helpers\ArrayHelper;
  */
 class GoodsCategory extends ActiveRecord
 {
+    const STATUS_DISABLED = 0;
+    const STATUS_ENABLED = 1;
+    public static $statusNames = [
+        self::STATUS_DISABLED => '停用',
+        self::STATUS_ENABLED => '启用',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -39,7 +46,7 @@ class GoodsCategory extends ActiveRecord
     public function rules()
     {
         return [
-            [['level', 'parent_id', 'sort_order', 'created_by', 'created_at', 'updated_at', 'status' ,'is_del'], 'integer'],
+            [['level', 'parent_id', 'sort_order', 'created_by', 'created_at', 'updated_at', 'status', 'is_del'], 'integer'],
             [['name'], 'string', 'max' => 50],
             [['path', 'image', 'des'], 'string', 'max' => 255],
         ];
@@ -66,8 +73,9 @@ class GoodsCategory extends ActiveRecord
             'des' => Yii::t('app', 'Des'),
         ];
     }
-    
-    public static function getCategory($key_to_map = true){
+
+    public static function getCategory($key_to_map = true)
+    {
         $users = self::findAll(['is_del' => 0]);
         return $key_to_map ? ArrayHelper::map($users, 'id', 'name') : $users;
     }

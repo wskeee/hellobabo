@@ -6,6 +6,7 @@ use apiend\controllers\ApiController;
 use apiend\modules\v1\actions\goods\GetGoodsDetail;
 use apiend\modules\v1\actions\goods\GetGoodsList;
 use apiend\modules\v1\actions\goods\GetGoodsMaterialValueList;
+use apiend\modules\v1\actions\goods\GetGoodsTagList;
 use apiend\modules\v1\actions\goods\GetMaterialValueList;
 
 /**
@@ -24,12 +25,14 @@ class GoodsController extends ApiController
             'get-detail',
             'get-material-value-list',
             'get-goods-material-value-list',
+            'get-goods-tag-list',
         ];
         $behaviors['verbs']['actions'] = [
             'get-list' => ['get'],
             'get-detail' => ['get'],
             'get-material-value-list' => ['get'],
             'get-goods-material-value-list' => ['get'],
+            'get-goods-tag-list' => ['get'],
         ];
         return $behaviors;
     }
@@ -44,6 +47,7 @@ class GoodsController extends ApiController
             'get-detail' => ['class' => GetGoodsDetail::class],
             'get-material-value-list' => ['class' => GetMaterialValueList::class],
             'get-goods-material-value-list' => ['class' => GetGoodsMaterialValueList::class],
+            'get-goods-tag-list' => ['class' => GetGoodsTagList::class],
         ];
     }
 
