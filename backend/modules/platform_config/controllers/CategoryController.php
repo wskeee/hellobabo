@@ -4,6 +4,7 @@ namespace backend\modules\platform_config\controllers;
 
 use common\models\goods\GoodsCategory;
 use common\models\goods\searchs\GoodsCategorySearch;
+use common\widgets\grid\GridViewChangeSelfController;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\filters\VerbFilter;
@@ -13,7 +14,7 @@ use yii\web\NotFoundHttpException;
 /**
  * CategoryController implements the CRUD actions for GoodsCategory model.
  */
-class CategoryController extends Controller
+class CategoryController extends GridViewChangeSelfController
 {
     /**
      * {@inheritdoc}
@@ -40,6 +41,7 @@ class CategoryController extends Controller
         $params = array_merge(['limit' => 20], Yii::$app->request->queryParams);
         $results = $searchModel->search($params);
         $dp = new ArrayDataProvider([
+            'key' => 'id',
             'totalCount' => $results['total'],
             'pagination' => [
                 'pageSize' => $params['limit'],

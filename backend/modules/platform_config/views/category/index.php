@@ -1,6 +1,8 @@
 <?php
 
 use common\models\searchs\GoodsCategorySearch;
+use common\utils\I18NUitl;
+use common\widgets\grid\GridViewChangeSelfColumn;
 use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
 use yii\grid\GridView;
@@ -43,16 +45,26 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'attribute' => 'name',
-                'label' => Yii::t('app', '{Goods}{Category}{Name}', [
-                    'Goods' => Yii::t('app', 'Goods'), 'Category' => Yii::t('app', 'Category'), 'Name' => Yii::t('app', 'Name')
-                ]),
+                'label' => I18NUitl::t('app', '{Goods}{Category}{Name}'),
                 'headerOptions' => [
                     'style' => [
-                        'width' => '1000px',
+                        'width' => '200px',
                     ],
                 ],
             ],
+            [
+                'attribute' => 'image',
+                'format' => 'raw',
+                'value' => function($model){
+                    return Html::img($model->image,['style' => ['width' => '120px']]);
+                }
+            ],
 
+            [
+                'attribute' => 'status',
+                'class' => GridViewChangeSelfColumn::class,
+                'headerOptions' => ['style' => 'width:100px'],
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'buttons' => [

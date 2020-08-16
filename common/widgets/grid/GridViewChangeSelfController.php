@@ -21,9 +21,9 @@ class GridViewChangeSelfController extends Controller {
 
     /**
      * 更新表值
-     * @param type $id          id
-     * @param type $fieldName   字段名
-     * @param type $value       新值
+     * @param string|int $id          id
+     * @param string $fieldName   字段名
+     * @param string|int $value       新值
      */
     public function actionChangeValue($id, $fieldName, $value) {
         Yii::$app->getResponse()->format = 'json';

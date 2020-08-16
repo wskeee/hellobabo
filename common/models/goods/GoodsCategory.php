@@ -19,7 +19,8 @@ use yii\helpers\ArrayHelper;
  * @property int $created_by 创建者ID,关联admin_user,id
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
- * @property int $is_show 是否显示
+ * @property int $status 状态 0停用 1启用
+ * @property int $is_del 是否删除
  * @property string $des 描述
  */
 class GoodsCategory extends ActiveRecord
@@ -38,7 +39,7 @@ class GoodsCategory extends ActiveRecord
     public function rules()
     {
         return [
-            [['level', 'parent_id', 'sort_order', 'created_by', 'created_at', 'updated_at', 'is_del'], 'integer'],
+            [['level', 'parent_id', 'sort_order', 'created_by', 'created_at', 'updated_at', 'status' ,'is_del'], 'integer'],
             [['name'], 'string', 'max' => 50],
             [['path', 'image', 'des'], 'string', 'max' => 255],
         ];
@@ -60,6 +61,7 @@ class GoodsCategory extends ActiveRecord
             'created_by' => Yii::t('app', 'Created By'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'status' => Yii::t('app', 'Status'),
             'is_del' => Yii::t('app', 'Is Del'),
             'des' => Yii::t('app', 'Des'),
         ];
