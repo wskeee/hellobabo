@@ -41,6 +41,7 @@ use common\widgets\Menu;
             }else{
                 $menuItems = array_merge($menuItems, [
                     ['label' => '清除缓存', 'icon' => 'eraser', 'url' => ['/system_admin/cache/']],
+                    ['label' => '绘本看板', 'icon' => 'eraser', 'url' => ['/order_admin/order-board/index']],
                     [
                         'label' => '系统',
                         'icon' => 'bars',

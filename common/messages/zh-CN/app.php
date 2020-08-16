@@ -276,7 +276,12 @@ return [
     'Tag' => '标签',
     'Public' => '公用',
     'Goods' => '绘本',
-    
+    'Goods Name' => '绘本名称',
+    'Current Status' => '当前状态',
+    'Last Status Time' => '最后更新时间',
+    'Follower Name' => '跟进人',
+    'Order Board' => '绘本看板',
+
     //后台-文件管理
     'File' => '文件',
     'List' => '列表',
@@ -604,7 +609,8 @@ return [
     'Order' => '订单',
     'Orders' => '订单列表',
     'Order Sn' => '订单编号',
-    'Goods Sn' => '商品编号',
+    'Goods Sn' => '绘本编号',
+    'Goods Name' => '绘本名称',
     'Amount' => '金额',
     'Order Time' => '下单时间',
     'Company' => '公司',
