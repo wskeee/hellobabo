@@ -41,6 +41,9 @@ use yii\widgets\ActiveForm;
                 <!--类目名称-->
                 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
+                <!--类目编码-->
+                <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
+
                 <!-- 类目图片-->
                 <?= $form->field($model, 'image')->widget(ImagePicker::class) ?>
 

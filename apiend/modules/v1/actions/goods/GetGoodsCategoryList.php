@@ -12,7 +12,7 @@ class GetGoodsCategoryList extends BaseAction
 {
     public function run()
     {
-        $list = GoodsCategory::find()->where(['status' => 1, 'is_del' => 0])->all();
+        $list = GoodsCategory::find()->where(['status' => 1, 'is_del' => 0])->orderBy(['sort_order' => SORT_DESC])->all();
         return new Response(Response::CODE_COMMON_OK, null, $list);
     }
 }

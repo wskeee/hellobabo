@@ -3,6 +3,8 @@
 namespace apiend\modules\v1\controllers;
 
 use apiend\controllers\ApiController;
+use apiend\modules\v1\actions\goods\GetCategoryDetail;
+use apiend\modules\v1\actions\goods\GetGoodsCategoryList;
 use apiend\modules\v1\actions\goods\GetGoodsDetail;
 use apiend\modules\v1\actions\goods\GetGoodsList;
 use apiend\modules\v1\actions\goods\GetGoodsMaterialValueList;
@@ -26,6 +28,8 @@ class GoodsController extends ApiController
             'get-material-value-list',
             'get-goods-material-value-list',
             'get-goods-tag-list',
+            'get-category-list',
+            'get-category-detail',
         ];
         $behaviors['verbs']['actions'] = [
             'get-list' => ['get'],
@@ -33,6 +37,8 @@ class GoodsController extends ApiController
             'get-material-value-list' => ['get'],
             'get-goods-material-value-list' => ['get'],
             'get-goods-tag-list' => ['get'],
+            'get-category-list' => ['get'],
+            'get-category-detail' => ['get'],
         ];
         return $behaviors;
     }
@@ -48,6 +54,8 @@ class GoodsController extends ApiController
             'get-material-value-list' => ['class' => GetMaterialValueList::class],
             'get-goods-material-value-list' => ['class' => GetGoodsMaterialValueList::class],
             'get-goods-tag-list' => ['class' => GetGoodsTagList::class],
+            'get-category-list' => ['class' => GetGoodsCategoryList::class],
+            'get-category-detail' => ['class' => GetCategoryDetail::class],
         ];
     }
 

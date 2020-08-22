@@ -60,6 +60,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 ],
 
+                'code',
+
                 [
                     'attribute' => 'status',
                     'class' => GridViewChangeSelfColumn::class,

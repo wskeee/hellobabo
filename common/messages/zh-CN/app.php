@@ -404,6 +404,7 @@ return [
     'Is Hide' => '匿名',
     'Comments' => '评论列表',
     'Orientation' => '显示方式',
+    'Is Top' => '是否置顶',
 
     //后台-商品配置
     'Dir' => '目录',

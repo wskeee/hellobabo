@@ -5,6 +5,7 @@ use common\models\goods\Goods;
 use common\models\goods\searchs\GoodsSearch;
 use common\modules\rbac\components\ResourceHelper;
 use common\utils\I18NUitl;
+use common\widgets\grid\GridViewChangeSelfColumn;
 use kartik\growl\GrowlAsset;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
@@ -23,6 +24,10 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="goods-index">
+
+    <div class="alert alert-danger" role="alert">
+        排序优先级：置顶 > 自定义排序（数字越大越排前）
+    </div>
 
     <div class="wsk-search-panel">
         <div class="control-btn-box">
@@ -96,6 +101,23 @@ $this->params['breadcrumbs'][] = $this->title;
             //'created_by',
             //'updated_by',
             //'updated_at',
+            [
+                'attribute' => 'is_top',
+                'class' => GridViewChangeSelfColumn::class,
+                'headerOptions' => ['style' => 'width:80px'],
+                'plugOptions' => [
+                    'url' => 'change-value'
+                ],
+            ],
+            [
+                'attribute' => 'sort_order',
+                'class' => GridViewChangeSelfColumn::class,
+                'headerOptions' => ['style' => 'width:60px'],
+                'plugOptions' => [
+                    'type' => 'input',
+                    'url' => 'change-value'
+                ],
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'buttons' => [

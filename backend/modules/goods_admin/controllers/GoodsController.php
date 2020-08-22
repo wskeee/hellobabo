@@ -8,6 +8,7 @@ use common\models\goods\GoodsDetail;
 use common\models\goods\GoodsTagRef;
 use common\models\goods\searchs\GoodsSearch;
 use common\models\Tags;
+use common\widgets\grid\GridViewChangeSelfController;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -16,7 +17,7 @@ use yii\web\NotFoundHttpException;
 /**
  * GoodsController implements the CRUD actions for Goods model.
  */
-class GoodsController extends Controller
+class GoodsController extends GridViewChangeSelfController
 {
 
     /**

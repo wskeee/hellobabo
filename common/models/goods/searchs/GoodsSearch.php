@@ -14,7 +14,7 @@ class GoodsSearch extends Goods
 {
     /* 关键字搜索 */
     public $keyword = '';
-    
+
     /**
      * {@inheritdoc}
      */
@@ -72,12 +72,14 @@ class GoodsSearch extends Goods
             'created_by' => $this->created_by,
         ]);
 
-        $query->andFilterWhere(['or',['like', 'tags', $this->keyword],['like', 'goods_name', $this->keyword]]);
+        $query->andFilterWhere(['or', ['like', 'tags', $this->keyword], ['like', 'goods_name', $this->keyword]]);
+        $query->orderBy(['is_top' => SORT_DESC, 'sort_order' => SORT_DESC]);
 
         return $dataProvider;
     }
-    
-    public function attributeLabels() {
+
+    public function attributeLabels()
+    {
         return parent::attributeLabels() + ['keyword' => Yii::t('app', 'Keyword')];
     }
 }

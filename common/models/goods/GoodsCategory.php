@@ -16,6 +16,7 @@ use yii\helpers\ArrayHelper;
  * @property int $parent_id 父级id
  * @property int $sort_order 排序
  * @property string $image 图标路径
+ * @property string $code 编码
  * @property int $created_by 创建者ID,关联admin_user,id
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
@@ -47,7 +48,7 @@ class GoodsCategory extends ActiveRecord
     {
         return [
             [['level', 'parent_id', 'sort_order', 'created_by', 'created_at', 'updated_at', 'status', 'is_del'], 'integer'],
-            [['name'], 'string', 'max' => 50],
+            [['name','code'], 'string', 'max' => 50],
             [['path', 'image', 'des'], 'string', 'max' => 255],
         ];
     }
@@ -65,6 +66,7 @@ class GoodsCategory extends ActiveRecord
             'parent_id' => Yii::t('app', 'Parent ID'),
             'sort_order' => Yii::t('app', 'Sort Order'),
             'image' => Yii::t('app', 'Image'),
+            'code' => Yii::t('app', 'Code'),
             'created_by' => Yii::t('app', 'Created By'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),

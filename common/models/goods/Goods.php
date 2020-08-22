@@ -44,6 +44,8 @@ use yii\helpers\ArrayHelper;
  * @property int $share_count 分享/转发次数
  * @property int $like_count 点赞数
  * @property int $sale_count 销售数量
+ * @property int $sort_order 排序
+ * @property int $is_top 是否置顶
  * @property int $created_by 创建人id，关联admin_user表id字段
  * @property int $updated_by 最后最新人id，关联admin_user表id
  * @property int $created_at 创建时间
@@ -61,7 +63,6 @@ use yii\helpers\ArrayHelper;
  * @property GoodsAttValueRef[] $goodsAttValueRefs
  * @property GoodsDetail $goodsDetails
  * @property GoodsTagRef[] $goodsTagRefs
- * @property Issue[] $issues
  * @property array[] $goodsSpecItems    所有商品规格
  */
 class Goods extends ActiveRecord
@@ -131,13 +132,13 @@ class Goods extends ActiveRecord
     {
         return [
             [['category_id', 'owner_id', 'goods_name'], 'required'],
-            [['category_id', 'model_id', 'owner_id', 'type', 'status', 'store_count', 'comment_count', 'click_count', 'share_count', 'like_count', 'sale_count', 'init_required', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['category_id', 'model_id', 'owner_id', 'type', 'status', 'store_count', 'comment_count', 'click_count', 'share_count', 'like_count', 'sale_count', 'init_required', 'sort_order', 'is_top', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['goods_cost', 'goods_price', 'commission'], 'number'],
             [['goods_sn'], 'string', 'max' => 20],
             [['goods_name'], 'string', 'max' => 100],
-            [['goods_title','orientation'], 'string', 'max' => 50],
+            [['goods_title', 'orientation'], 'string', 'max' => 50],
             [['show_urls'], 'arrTostr'],
-            [['goods_des', 'cover_url', 'video_url', 'poster_url', 'share_thumb_url', 'tags','goods_english_name','goods_title_url'], 'string', 'max' => 255],
+            [['goods_des', 'cover_url', 'video_url', 'poster_url', 'share_thumb_url', 'tags', 'goods_english_name', 'goods_title_url'], 'string', 'max' => 255],
             [['params'], 'string'],
             [['tags'], 'tagVerify',],
         ];
@@ -212,6 +213,8 @@ class Goods extends ActiveRecord
             'like_count' => I18NUitl::t('app', '{Like}{Count}'),
             'sale_count' => I18NUitl::t('app', '{Sale}{Count}'),
             'init_required' => Yii::t('app', 'Init Required'),
+            'sort_order' => Yii::t('app', 'Sort Order'),
+            'is_top' => Yii::t('app', 'Is Top'),
             'created_by' => Yii::t('app', 'Created By'),
             'updated_by' => Yii::t('app', 'Updated By'),
             'created_at' => Yii::t('app', 'Created At'),
