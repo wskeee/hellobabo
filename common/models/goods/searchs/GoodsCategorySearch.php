@@ -46,7 +46,7 @@ class GoodsCategorySearch extends GoodsCategory
         //分页
         $page = ArrayHelper::getValue($params, 'page', 1);               
         //显示数
-        $limit = ArrayHelper::getValue($params, 'limit', 2);     
+        $limit = ArrayHelper::getValue($params, 'limit', 20);
         
         // 查询类目
         $query = GoodsCategory::find();
@@ -66,7 +66,7 @@ class GoodsCategorySearch extends GoodsCategory
             ->asArray()->one();
         
         // 显示数量
-        $query->offset(($page - 1) * $limit)->limit($limit);
+        $query->offset(($page - 1) * $limit)->limit($limit)->orderBy(['sort_order' => SORT_DESC]);
         return [
             'filter' => $params,
             'total' => $totalResults['totalCount'],

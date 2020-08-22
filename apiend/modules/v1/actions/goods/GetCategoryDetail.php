@@ -17,7 +17,11 @@ class GetCategoryDetail extends BaseAction
     {
         $category_id = $this->getSecretParam('category_id');
         $category = GoodsCategory::findOne(['id' => $category_id])->toArray();
-        $res = Goods::find()->andFilterWhere(['category_id' => $category_id])->where(['status' => Goods::STATUS_PUBLISHED])->select(['tags'])->column();
+        $res = Goods::find()
+            ->select(['tags'])
+            ->where(['status' => Goods::STATUS_PUBLISHED])
+            ->andFilterWhere(['category_id' => $category_id])
+            ->column();
         $tags = array_filter(array_unique(explode(',', implode(',', $res))));
         $category['tags'] = $tags;
         return new Response(Response::CODE_COMMON_OK, null, $category);

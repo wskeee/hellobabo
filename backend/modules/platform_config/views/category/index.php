@@ -63,6 +63,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'code',
 
                 [
+                    'attribute' => 'sort_order',
+                    'class' => GridViewChangeSelfColumn::class,
+                    'headerOptions' => ['style' => 'width:60px'],
+                    'plugOptions' => [
+                        'type' => 'input',
+                        'url' => 'change-value'
+                    ],
+                ],
+
+                [
                     'attribute' => 'status',
                     'class' => GridViewChangeSelfColumn::class,
                     'headerOptions' => ['style' => 'width:100px'],
