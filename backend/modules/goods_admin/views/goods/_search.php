@@ -169,7 +169,7 @@ use yii\widgets\ActiveForm;
 
     // 提交表单    
     function submitForm() {
-        $('#goods-search-form').submit();
+        $('#search-form').submit();
     }
 
 </script>
