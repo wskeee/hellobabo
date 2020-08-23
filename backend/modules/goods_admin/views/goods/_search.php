@@ -28,6 +28,19 @@ use yii\widgets\ActiveForm;
     ]);
     ?>
 
+    <!-- 关键字 -->
+    <div class="dep-dropdown-box">
+        <div class="dep-dropdown">
+            <?=
+            Html::activeTextInput($model, 'keyword', [
+                'class' => 'form-control',
+                'placeholder' => I18NUitl::t('app', '{Please}{Input}{Goods}{Name}{Or}{Tag}'),
+                'onBlur' => 'submitForm()',
+            ])
+            ?>
+        </div>
+    </div>
+
     <!-- 商品编号 -->
     <div class="dep-dropdown-box">
         <div class="dep-dropdown">
@@ -101,19 +114,6 @@ use yii\widgets\ActiveForm;
                 'pluginOptions' => ['allowClear' => true],
                 'pluginEvents' => ['change' => 'function(){ submitForm()}']
             ]);
-            ?>
-        </div>
-    </div>
-
-    <!-- 关键字 -->
-    <div class="dep-dropdown-box">
-        <div class="dep-dropdown">
-            <?=
-            Html::activeTextInput($model, 'keyword', [
-                'class' => 'form-control',
-                'placeholder' => I18NUitl::t('app', '{Please}{Input}{Goods}{Name}{Or}{Tag}'),
-                'onBlur' => 'submitForm()',
-            ])
             ?>
         </div>
     </div>
