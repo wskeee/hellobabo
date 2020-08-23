@@ -50,6 +50,9 @@ class AgencyService
 
         // 过滤空
         $autoAgencys = array_filter($autoAgencys);
+        if(!$agency || empty($autoAgencys)) {
+            return self::success();
+        }
         // 增加代理订单数据
         $tran = \Yii::$app->db->beginTransaction();
         $rows = [];

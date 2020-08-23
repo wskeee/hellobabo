@@ -3,6 +3,7 @@
 namespace common\models\goods;
 
 use common\models\AdminUser;
+use common\models\shop\Shop;
 use common\models\system\Issue;
 use common\utils\I18NUitl;
 use Yii;
@@ -19,6 +20,7 @@ use yii\helpers\ArrayHelper;
  * @property int $category_id 商品的所属类目ID，关联goods_category表id字段
  * @property int $model_id 模型ID,goods_model表,id
  * @property int $owner_id 当前所有者id，关联admin_user表id字段
+ * @property int $shop_id  商家id，关联shop表id字段
  * @property string $orientation 显示方式 general默认竖屏、landscape横屏
  * @property string $goods_sn 商品编码
  * @property string $goods_name 商品名称
@@ -52,6 +54,7 @@ use yii\helpers\ArrayHelper;
  * @property int $updated_at 更新时间
  *
  * @property AdminUser $owner   作者
+ * @property Shop $shop   商家
  * @property AdminUser $creater   创建人
  * @property AdminUser $updater   更新人
  * @property GoodsCategory $goodsCategory   分类
@@ -131,8 +134,8 @@ class Goods extends ActiveRecord
     public function rules()
     {
         return [
-            [['category_id', 'owner_id', 'goods_name'], 'required'],
-            [['category_id', 'model_id', 'owner_id', 'type', 'status', 'store_count', 'comment_count', 'click_count', 'share_count', 'like_count', 'sale_count', 'init_required', 'sort_order', 'is_top', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['category_id', 'shop_id', 'goods_name'], 'required'],
+            [['category_id', 'model_id', 'owner_id', 'shop_id', 'type', 'status', 'store_count', 'comment_count', 'click_count', 'share_count', 'like_count', 'sale_count', 'init_required', 'sort_order', 'is_top', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['goods_cost', 'goods_price', 'commission'], 'number'],
             [['goods_sn'], 'string', 'max' => 20],
             [['goods_name'], 'string', 'max' => 100],
@@ -188,6 +191,7 @@ class Goods extends ActiveRecord
             'category_id' => Yii::t('app', 'Category'),
             'model_id' => Yii::t('app', 'Model'),
             'owner_id' => Yii::t('app', 'Owner'),
+            'shop_id' => Yii::t('app', 'Shop'),
             'type' => Yii::t('app', 'Type'),
             'orientation' => Yii::t('app', 'Orientation'),
             'commission' => Yii::t('app', 'Commission'),
@@ -292,6 +296,14 @@ class Goods extends ActiveRecord
     public function getOwner()
     {
         return $this->hasOne(AdminUser::class, ['id' => 'owner_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getShop()
+    {
+        return $this->hasOne(Shop::class, ['id' => 'shop_id']);
     }
 
     /**

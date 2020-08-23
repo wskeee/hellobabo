@@ -7,10 +7,12 @@ use common\components\redis\RedisService;
 use common\models\goods\Goods;
 use common\models\goods\GoodsSpecPrice;
 use common\models\platform\WalletLog;
+use common\models\shop\Shop;
 use common\models\system\Config;
 use common\models\User;
 use common\models\UserAddress;
 use common\services\AgencyService;
+use common\services\ShopService;
 use common\utils\I18NUitl;
 use Exception;
 use Yii;
@@ -25,6 +27,7 @@ use yii\db\Query;
  * This is the model class for table "{{%order}}".
  *
  * @property int $id
+ * @property int $shop_id 商家ID,关联shop.id
  * @property string $order_sn 订单编号，eg：201812131415221234
  * @property string $order_amount 应付金额（商品总价-折扣）
  * @property int $order_status 状态 0待付款 5待准备 15待制作 20待发货 25待确认 30已完成 35已取消 99已作废
@@ -54,6 +57,7 @@ use yii\db\Query;
  *
  * @property User $creater 创建人
  * @property User $referrer 推荐人
+ * @property Shop $shop   商家
  * @property OrderGoods[] $orderGoods 订单绘本
  * @property OrderAction[] $actionLogs 日志记录
  */
@@ -101,7 +105,7 @@ class Order extends ActiveRecord
     {
         return [
             [['order_sn'], 'required'],
-            [['order_status', 'pay_at', 'shipping_at', 'confirm_at', 'address_id', 'is_recommend', 'recommend_by', 'created_by', 'created_at', 'updated_at'], 'integer'],
+            [['shop_id', 'order_status', 'pay_at', 'shipping_at', 'confirm_at', 'address_id', 'is_recommend', 'recommend_by', 'created_by', 'created_at', 'updated_at'], 'integer'],
             [['country', 'province', 'city', 'district', 'town',], 'integer'],
             [['zipcode'], 'string', 'max' => 6],
             [['address'], 'string', 'max' => 255],
@@ -120,6 +124,7 @@ class Order extends ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'shop_id' => Yii::t('app', 'Shop'),
             'order_sn' => Yii::t('app', 'Order Sn'),
             'order_amount' => I18NUitl::t('app', '{Order}{Amount}'),
             'goods_amount' => I18NUitl::t('app', '{Goods}{Amount}'),
@@ -205,9 +210,10 @@ class Order extends ActiveRecord
                 $this->checkRecommend();
                 // 关联代理商
                 $res = AgencyService::orderPay($this->id);
-                if (!$res['result']) {
-                    throw new Exception($res['msg']);
-                }
+                if (!$res['result']) throw new Exception($res['msg']);
+                // 记录商家销售数据
+                $res = ShopService::addSaleRecord($this->id);
+                if (!$res['result']) throw new Exception($res['msg']);
             }
 
             $tran->commit();
@@ -385,6 +391,14 @@ class Order extends ActiveRecord
     }
 
     /**
+     * @return ActiveQuery
+     */
+    public function getShop()
+    {
+        return $this->hasOne(Shop::class, ['id' => 'shop_id']);
+    }
+
+    /**
      * 制作日志
      * @return ActiveQuery
      */
@@ -435,6 +449,7 @@ class Order extends ActiveRecord
         }
 
         $order = new Order([
+            'shop_id' => $goods->shop_id,
             'order_sn' => self::getRandomSN(),
             'goods_amount' => $goods_amount,
             'order_amount' => $order_amount, //订单总额 = 商品总价 - 折扣

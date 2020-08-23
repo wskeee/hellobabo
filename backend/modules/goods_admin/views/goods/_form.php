@@ -5,6 +5,7 @@ use common\models\AdminUser;
 use common\models\goods\Goods;
 use common\models\goods\GoodsCategory;
 use common\models\goods\GoodsDetail;
+use common\services\ShopService;
 use common\widgets\webuploader\ImagePicker;
 use common\widgets\webuploader\VideoPicker;
 use kartik\widgets\Select2;
@@ -117,8 +118,8 @@ $goodsDetails = $model->isNewRecord ? new GoodsDetail() : $model->goodsDetails;
 
     <!-- 作者 -->
     <?=
-    $form->field($model, 'owner_id')->widget(Select2::class, [
-        'data' => AdminUser::getUserByType(AdminUser::TYPE_OWNER),
+    $form->field($model, 'shop_id')->widget(Select2::class, [
+        'data' => ShopService::getUserableList(),
         'options' => ['placeholder' => Yii::t('app', 'Select Placeholder')],
     ])
     ?>

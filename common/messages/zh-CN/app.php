@@ -405,6 +405,9 @@ return [
     'Comments' => '评论列表',
     'Orientation' => '显示方式',
     'Is Top' => '是否置顶',
+    'Shop' => '产品合作方',
+    'Goods Count' => '绘本数',
+    'Order Count' => '订单数',
 
     //后台-商品配置
     'Dir' => '目录',
