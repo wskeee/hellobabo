@@ -2,6 +2,7 @@
 
 namespace common\models\shop;
 
+use common\utils\I18NUitl;
 use Yii;
 
 /**
@@ -17,6 +18,11 @@ use Yii;
  * @property string $cover_url 封面地址
  * @property int $goods_count 商品数
  * @property int $order_count 订单数
+ * @property number $all_income 历史收入
+ * @property number $real_income 实际收入
+ * @property number $day_income 当日收入
+ * @property number $month_income 当月收入
+ * @property int $last_income_time 最后一次收入时间
  */
 class Shop extends \yii\db\ActiveRecord
 {
@@ -44,8 +50,8 @@ class Shop extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'status', 'goods_count', 'order_count'], 'integer'],
-            [['income_value'], 'number'],
+            [['user_id', 'status', 'goods_count', 'order_count', 'last_income_time'], 'integer'],
+            [['income_value', 'all_income', 'real_income', 'day_income', 'month_income'], 'number'],
             [['name'], 'string', 'max' => 50],
             [['logo_url', 'des', 'cover_url'], 'string', 'max' => 255],
         ];
@@ -67,6 +73,11 @@ class Shop extends \yii\db\ActiveRecord
             'cover_url' => Yii::t('app', 'Cover Url'),
             'goods_count' => Yii::t('app', 'Goods Count'),
             'order_count' => Yii::t('app', 'Order Count'),
+            'all_income' => I18NUitl::t('app', 'All Income'),
+            'real_income' => I18NUitl::t('app', 'Real Income'),
+            'day_income' => I18NUitl::t('app', 'Day Income'),
+            'month_income' => I18NUitl::t('app', 'Month Income'),
+            'last_income_time' => I18NUitl::t('app', 'Last Income Time'),
         ];
     }
 }

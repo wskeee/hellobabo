@@ -5,7 +5,6 @@ namespace common\services;
 
 
 use common\models\order\Order;
-use common\models\order\OrderGoods;
 use common\models\shop\Shop;
 use common\models\shop\ShopSaleRecord;
 use yii\helpers\ArrayHelper;
@@ -38,15 +37,30 @@ class ShopService
             $shop->income_value,
             $real_income
         ];
+        // 最近收益日期
+        $last_income_date = date('Ymd', $shop->last_income_time);
+        // 最近收益月
+        $last_income_month = date('Ym', $shop->last_income_time);
+        // 历史收益
+        $shop->all_income += $real_income;
+        // 当前收益
+        $shop->real_income += $real_income;
+        // 当日收益
+        $shop->day_income = (date('Ymd') === $last_income_date ? $shop->day_income + $real_income : $real_income);
+        // 当月收益
+        $shop->month_income = (date('Ym') === $last_income_month ? $shop->month_income + $real_income : $real_income);
+        // 更新最近收益日期
+        $shop->last_income_time = time();
+        // 更新订单数量
+        $shop->goods_count += 1;
 
         // 生成销售记录
         $shopSaleRecord = new ShopSaleRecord($rows);
         $tran = \Yii::$app->db->beginTransaction();
         try {
-            // 增加商家销售计数
-            Shop::updateAllCounters(['order_count' => 1]);
+            // 更新商家
             // 保存商家销售记录
-            if ($shopSaleRecord->save()) {
+            if ($shop->save() && $shopSaleRecord->save()) {
                 $tran->commit();
                 return self::success();
             } else {

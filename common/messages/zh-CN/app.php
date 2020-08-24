@@ -408,6 +408,11 @@ return [
     'Shop' => '产品合作方',
     'Goods Count' => '绘本数',
     'Order Count' => '订单数',
+    'All Income' => '所有收益',
+    'Real Income' => '当前收益',
+    'Day Income' => '当日收益',
+    'Month Income' => '当月收益',
+    'Last Income Time' => '最近收益时间',
 
     //后台-商品配置
     'Dir' => '目录',
