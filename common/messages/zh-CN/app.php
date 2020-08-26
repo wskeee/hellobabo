@@ -268,6 +268,7 @@ return [
     'Use' => '使用',
     'The' => '所属',
     'Account' => '账号',
+    'Account Number' => '账号',
     'True' => '真实',
     'Build' => '建设',
     'Data' => '数据',

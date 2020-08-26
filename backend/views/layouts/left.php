@@ -82,6 +82,7 @@ use common\widgets\Menu;
                             ['label' => '打印', 'icon' => 'circle-o', 'url' => ['/order_admin/print/index']],
                             ['label' => '发货', 'icon' => 'circle-o', 'url' => ['/order_admin/delivery/index']],
                             ['label' => '优惠卷', 'icon' => 'circle-o', 'url' => ['/order_admin/coupon/index']],
+                            ['label' => '产品合作方', 'icon' => 'circle-o', 'url' => ['/platform_admin/shop/index']],
                             ['label' => '提现列表', 'icon' => 'circle-o', 'url' => ['/platform_admin/withdrawals/index']],
                             ['label' => '反馈列表', 'icon' => 'circle-o', 'url' => ['/platform_admin/issue/index']],
                             ['label' => '文章管理', 'icon' => 'circle-o', 'url' => ['/platform_admin/post/index']],
