@@ -78,9 +78,9 @@ class Poster extends BaseAction
             ],
             'image' => [
                 // 绘本个性
-                ['url' => $goods_poster,
+                /*['url' => $goods_poster,
                     'right' => 0,
-                    'bottom' => 0,],
+                    'bottom' => 0,],*/
                 // 二维码
                 ['url' => $code_object, //图片资源路径
                     'bottom' => 115,
@@ -98,7 +98,7 @@ class Poster extends BaseAction
             ],
             // 封面
             'background' => [
-                'url' => $model_img,
+                'url' => $goods_poster,
                 'width' => 600,
                 'height' => 988
             ],

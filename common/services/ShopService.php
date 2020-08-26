@@ -7,6 +7,7 @@ namespace common\services;
 use common\models\order\Order;
 use common\models\shop\Shop;
 use common\models\shop\ShopSaleRecord;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 class ShopService
@@ -32,10 +33,10 @@ class ShopService
         // 计算商家实际收益 = 订单总额 * 分成比例(income_value < 1) 或者 直接分成(income_value > 1)
         $real_income = $shop->income_value > 1 ? $shop->income_value : $order->goods_amount * $shop->income_value;
         $rows = [
-            $shop->id,
-            $order->id,
-            $shop->income_value,
-            $real_income
+            'shop_id' => $shop->id,
+            'order_id' => $order->id,
+            'income_value' => $shop->income_value,
+            'real_income' => $real_income
         ];
         // 最近收益日期
         $last_income_date = date('Ymd', $shop->last_income_time);
@@ -52,7 +53,7 @@ class ShopService
         // 更新最近收益日期
         $shop->last_income_time = time();
         // 更新订单数量
-        $shop->goods_count += 1;
+        $shop->order_count += 1;
 
         // 生成销售记录
         $shopSaleRecord = new ShopSaleRecord($rows);
@@ -93,5 +94,42 @@ class ShopService
             return ArrayHelper::map($result, 'id', 'name');
         }
         return $result;
+    }
+
+    //----------------------------------------------------------------------
+    //
+    // 统计
+    //
+    //----------------------------------------------------------------------
+    /**
+     * 查询收益列表
+     *
+     * @param array $params
+     * @param int $start_time 开始时间
+     * @param int $end_time 结束时间
+     * @param int $page
+     * @param int $page_size
+     * @return array
+     */
+    public static function getIncomeList($params, $start_time, $end_time, $page = 1, $page_size = 20)
+    {
+        $query = ShopSaleRecord::find()
+            ->where($params)
+            ->andFilterWhere(['>=', 'created_at', $start_time])
+            ->andFilterWhere(['<=', 'created_at', $end_time])
+            ->offset(($page - 1) * $page_size)
+            ->limit($page_size);
+
+        $total_query = clone $query;
+        $total = $total_query->count();
+        $list = $query->all();
+        $data = [
+            'total' => $total,
+            'page' => $page,
+            'page_size' => $page_size,
+            'list' => $list,
+        ];
+
+        return $data;
     }
 }

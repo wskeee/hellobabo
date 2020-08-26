@@ -267,7 +267,7 @@ return [
     'Total Capacity' => '总容量',
     'Use' => '使用',
     'The' => '所属',
-    'Account Number' => '账号',
+    'Account' => '账号',
     'True' => '真实',
     'Build' => '建设',
     'Data' => '数据',
@@ -413,6 +413,8 @@ return [
     'Day Income' => '当日收益',
     'Month Income' => '当月收益',
     'Last Income Time' => '最近收益时间',
+    'Shops' => '产品合作方列表',
+    'Income Value' => '收益值',
 
     //后台-商品配置
     'Dir' => '目录',
