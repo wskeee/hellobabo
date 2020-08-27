@@ -39,7 +39,7 @@ class Poster extends BaseAction
         $model_img = $type == 1 ? $model->cover_url : $model->user_cover_url;
         /* @var $goods_model Goods */
         $goods_model = $type == 1 ? $model : Goods::findOne(['id' => $model->goods_id]);
-        $goods_poster = $goods_model->poster_url;
+        $goods_poster = $type == 1 ? $goods_model->poster_url : $model->user_poster_url;
 
         $savePath = Yii::$app->params['webuploader']['savePath'];
         $link = Url::to(['http://shop.hellobabo.com/jump/wx-min/open','page' => 'show','id'=>$id,'type' =>$type,'rec_id' => $rec_id],'http');
@@ -100,7 +100,7 @@ class Poster extends BaseAction
             'background' => [
                 'url' => $goods_poster,
                 'width' => 600,
-                'height' => 988
+                'height' => 870
             ],
         ];
         // 新建文件路径

@@ -27,6 +27,7 @@ use yii\db\ActiveRecord;
  * @property string $goods_params 附加参数
  * @property string $user_cover_url 用户封面路径
  * @property string $share_thumb_url 用户缩略分享图
+ * @property string $user_poster_url 用户海报图片
  * @property int $spec_id 规格id
  * @property string $spec_key 商品规格key
  * @property string $spec_key_name 规格对应的中文名字
@@ -41,10 +42,10 @@ use yii\db\ActiveRecord;
  * @property int $created_by 创建人（购买人），关联user表id字段
  * @property int $created_at 创建时间（购买时间）
  * @property int $updated_at 更新时间
- * 
+ *
  * @property Order $order 订单
  * @property Goods $goods 商品
- * @property Groupon $groupon 
+ * @property Groupon $groupon
  * @property User $creater 创建人
  * @property OrderGoodsMaterial[] $orderGoodsMaterials 订单素材
  * @property OrderGoodsScene[] $orderGoodsScenes 订单场景
@@ -117,7 +118,7 @@ class OrderGoods extends ActiveRecord
             [['goods_price', 'goods_cost', 'amount'], 'number'],
             [['order_sn'], 'string', 'max' => 20],
             [['goods_name', 'spec_key', 'spec_key_name'], 'string', 'max' => 100],
-            [['goods_img', 'user_cover_url','share_thumb_url'], 'string', 'max' => 255],
+            [['goods_img', 'user_cover_url', 'share_thumb_url', 'user_poster_url'], 'string', 'max' => 255],
             [['goods_params'], 'string'],
         ];
     }
@@ -141,6 +142,7 @@ class OrderGoods extends ActiveRecord
             'goods_num' => Yii::t('app', 'Num'),
             'user_cover_url' => I18NUitl::t('app', '{User}{Cover}'),
             'share_thumb_url' => I18NUitl::t('app', '{Share}{Thumb}'),
+            'user_poster_url' => I18NUitl::t('app', '{User}{Poster}'),
             'spec_id' => Yii::t('app', 'Spec ID'),
             'spec_key' => Yii::t('app', 'Spec Key'),
             'spec_key_name' => Yii::t('app', 'Spec'),
@@ -196,7 +198,7 @@ class OrderGoods extends ActiveRecord
     }
 
     /**
-     * 订单场景 
+     * 订单场景
      * @return ActiveQuery
      */
     public function getOrderGoodsScenes()
@@ -205,7 +207,7 @@ class OrderGoods extends ActiveRecord
     }
 
     /**
-     * 订单场景页 
+     * 订单场景页
      * @return ActiveQuery
      */
     public function getOrderGoodsScenePages()

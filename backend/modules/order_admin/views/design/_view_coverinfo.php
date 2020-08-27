@@ -54,6 +54,22 @@ use yii\helpers\Html;
             echo ($model->status == WorkflowDesign::STATUS_RUNGING || $model->status == WorkflowDesign::STATUS_CHECK_FAIL) ? $picker : $image;
             ?>
         </div>
+        <div class="item">
+            <label>分享海报</label>
+            <?php
+            $picker = ImagePicker::widget([
+                'name' => 'user_poster_url',
+                'value' => $model->orderGoods->user_poster_url,
+                'pluginEvents' => [
+                    "fileDequeued" => "onPosterClear",
+                    'uploadComplete' => "onPosterUploadComplete",
+                ]
+            ]);
+            $image = Html::img($model->orderGoods->user_poster_url, ['style' => 'width:128px;']);
+            // 编辑状态 与 完成状态
+            echo ($model->status == WorkflowDesign::STATUS_RUNGING || $model->status == WorkflowDesign::STATUS_CHECK_FAIL) ? $picker : $image;
+            ?>
+        </div>
     </div>
 </div>
 <script>
@@ -70,5 +86,12 @@ use yii\helpers\Html;
     }
     function onShareThumbUploadComplete(evt, dbFile, file) {
         $.post('save-share-thumb', {ogid:<?= $model->orderGoods->id ?>, share_thumb_url: dbFile.url});
+    }
+    /* 分享海报 */
+    function onPosterClear(evt, file) {
+        $.post('save-poster', {ogid:<?= $model->orderGoods->id ?>, poster_url: ''});
+    }
+    function onPosterUploadComplete(evt, dbFile, file) {
+        $.post('save-poster', {ogid:<?= $model->orderGoods->id ?>, poster_url: dbFile.url});
     }
 </script>

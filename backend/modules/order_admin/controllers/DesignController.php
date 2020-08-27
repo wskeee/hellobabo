@@ -284,6 +284,34 @@ class DesignController extends Controller
     }
 
     /**
+     * 保存用户分享缩略图
+     */
+    public function actionSavePoster()
+    {
+        Yii::$app->response->format = 'json';
+        $ogid = Yii::$app->request->post('ogid');
+        $poster_url = Yii::$app->request->post('poster_url');
+        if ($ogid == '') {
+            return new ApiResponse(ApiResponse::CODE_COMMON_MISS_PARAM, null, null, ['param' => 'pid']);
+        }
+        $model = OrderGoods::findOne(['id' => $ogid]);
+        if (!$model) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_NOT_FOUND, null, null, ['param' => I18NUitl::t('app', '{Order}{Goods}')]);
+        }
+        // 必须为设计阶段才可以上传封面
+        if (($model->status != OrderGoods::STATUS_DESIGNING && $model->status != OrderGoods::STATUS_DESIGN_CHECK_FAIL)) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_FORBIDDEN);
+        }
+        // 保存封面
+        $model->user_poster_url = $poster_url;
+        if ($model->save()) {
+            return new ApiResponse(ApiResponse::CODE_COMMON_OK);
+        } else {
+            return new ApiResponse(ApiResponse::CODE_COMMON_SAVE_DB_FAIL, implode(',', $model->getErrorSummary(true)));
+        }
+    }
+
+    /**
      * 保存成品
      *
      * @param type $pid
