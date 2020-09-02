@@ -3,6 +3,7 @@
 namespace common\models\activity;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%activity_join_record}}".
@@ -23,6 +24,11 @@ class ActivityJoinRecord extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%activity_join_record}}';
+    }
+
+    public function behaviors()
+    {
+        return [TimestampBehavior::class];
     }
 
     /**

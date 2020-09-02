@@ -259,6 +259,42 @@ class CouponService
     }
 
     /**
+     * 获取指定类型的可用优惠卷
+     * @param int $used_type
+     */
+    public static function getUseableCouponByUsed($user_id, $used_type = Coupon::USED_NEWER)
+    {
+        $time = time();
+        $query = Coupon::find()
+            // 已经发布
+            ->where(['status' => Coupon::STATUS_PUBLISHED,])
+            // 类型
+            ->where(['used' => $used_type])
+            // 到了指定发布时间和结束时间内
+            ->andWhere(['<=', 'start_time', $time])
+            ->andWhere(['>', 'end_time', $time])
+            ->andWhere(['>', 'quota', 'take_count']);
+
+        // 结果
+        $list = $query->asArray()->all();
+        $coupon_ids = array_column($list, 'id');
+        if (!empty($coupon_ids)) {
+            $user_coupon_map = CouponService::getUserCouponCount($user_id, $coupon_ids);
+            foreach ($list as &$coupon) {
+                $coupon_count = isset($user_coupon_map[$coupon['id']]) ? $user_coupon_map[$coupon['id']] : 0;
+                // 是否已领取过
+                $coupon['has_take'] = $coupon_count > 0;
+                // 还能否继续领取
+                $coupon['can_take'] = $coupon_count ? $coupon_count < $coupon['user_max_count'] : true;
+                // 总过领了多少张
+                $coupon['user_take_count'] = $coupon_count;
+            }
+        }
+
+        return $list;
+    }
+
+    /**
      * 获取未用优惠卷
      * @param int $user_id
      */
@@ -300,6 +336,26 @@ class CouponService
             }
         }
         return $unuseable;
+    }
+
+    /**
+     * 获取用户已领优惠卷
+     * @param array $ids
+     */
+    public static function getUserCouponByIds($ids){
+        $time = time();
+        $query = self::getQuery()
+            // 查询属于我的并且未用
+            ->where([
+                'user_coupon.id' => $ids,
+            ]);
+
+        $user_coupons = $query->all();
+        // 值转换
+        foreach ($user_coupons as &$item) {
+            $item = self::appendCoupon($item);
+        }
+        return $user_coupons ? $user_coupons : [];
     }
 
     /**
