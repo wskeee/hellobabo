@@ -203,7 +203,7 @@ class BaseAction extends Action
      */
     public function getSecretParam($name, $defaultValue = null)
     {
-        return urldecode(isset($this->secretParams[$name]) ? $this->secretParams[$name] : $defaultValue);
+        return isset($this->secretParams[$name]) ? $this->secretParams[$name] : $defaultValue;
     }
 
     /**
