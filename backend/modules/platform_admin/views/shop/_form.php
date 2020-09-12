@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?php // $form->field($model, 'logo_url')->widget(ImagePicker::class) ?>
+    <?= $form->field($model, 'logo_url')->widget(ImagePicker::class) ?>
 
     <?= $form->field($model, 'income_value')->textInput(['maxlength' => true,'placeholder' => '0~1为百分比，1~N等值']) ?>
 
