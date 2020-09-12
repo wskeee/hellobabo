@@ -7,6 +7,9 @@ namespace common\services;
 use common\models\order\Order;
 use common\models\shop\Shop;
 use common\models\shop\ShopSaleRecord;
+use Exception;
+use Yii;
+use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
@@ -35,6 +38,7 @@ class ShopService
         $rows = [
             'shop_id' => $shop->id,
             'order_id' => $order->id,
+            'goods_id' => $order->orderGoods[0]->id,
             'income_value' => $shop->income_value,
             'real_income' => $real_income
         ];
@@ -57,7 +61,7 @@ class ShopService
 
         // 生成销售记录
         $shopSaleRecord = new ShopSaleRecord($rows);
-        $tran = \Yii::$app->db->beginTransaction();
+        $tran = Yii::$app->db->beginTransaction();
         try {
             // 更新商家
             // 保存商家销售记录
@@ -65,9 +69,9 @@ class ShopService
                 $tran->commit();
                 return self::success();
             } else {
-                throw new \Exception(implode(',', $shopSaleRecord->getErrorSummary(true)));
+                throw new Exception(implode(',', $shopSaleRecord->getErrorSummary(true)));
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $tran->rollBack();
             return self::fail([], $e->getMessage());
         }
@@ -116,13 +120,73 @@ class ShopService
         $query = ShopSaleRecord::find()
             ->where($params)
             ->andFilterWhere(['>=', 'created_at', $start_time])
+            ->andFilterWhere(['<=', 'created_at', $end_time]);
+
+        $total_query = clone $query;
+        $total_res = $total_query->select(['count(id) as count', 'sum(real_income) income'])->asArray()->one();
+        $query->with('order', 'goods');
+        $query->offset(($page - 1) * $page_size)->limit($page_size);
+        $list = $query->orderBy('created_at desc')->asArray()->all();
+        $data = [
+            'total' => (int)$total_res['count'],
+            'page' => $page,
+            'page_size' => $page_size,
+            'all_income' => $total_res['income'],
+            'list' => $list,
+        ];
+
+        return $data;
+    }
+
+    /**
+     * 获取年度或者月度收益统计
+     *
+     * @param array $params
+     * @param int $start_time
+     * @param int $end_time
+     * @param bool $is_year
+     * @return array|ActiveRecord[]
+     */
+    public static function getIncomeStat($params, $start_time, $end_time, $is_year = true)
+    {
+        $format = $is_year ? '%Y-%m' : '%Y-%m-%d';
+        $query = ShopSaleRecord::find()
+            ->select(["from_unixtime(created_at, '$format') date", 'sum(real_income) value'])
+            ->where($params)
+            ->andFilterWhere(['>=', 'created_at', $start_time])
             ->andFilterWhere(['<=', 'created_at', $end_time])
-            ->offset(($page - 1) * $page_size)
-            ->limit($page_size);
+            ->asArray()
+            ->groupBy(['date']);
+        return $query->all();
+    }
+
+    /**
+     * 获取收益排行
+     *
+     * @param array $params
+     * @param int $start_time
+     * @param int $end_time
+     * @param int $page
+     * @param int $page_size
+     * @return array
+     */
+    public static function getIncomeRank($params, $start_time, $end_time, $page = 1, $page_size = 20)
+    {
+        $query = ShopSaleRecord::find()->alias('ShopSaleRecord')
+            ->joinWith('goods goods')
+            ->andFilterWhere($params)
+            ->andFilterWhere(['>=', 'ShopSaleRecord.created_at', $start_time])
+            ->andFilterWhere(['<=', 'ShopSaleRecord.created_at', $end_time])
+            ->groupBy(['ShopSaleRecord.goods_id']);
 
         $total_query = clone $query;
         $total = $total_query->count();
-        $list = $query->all();
+        $query->select([
+            'ShopSaleRecord.goods_id',
+            'goods.goods_name', 'goods.category_id',
+            'IFNULL(sum(ShopSaleRecord.real_income),0) value']);
+        $query->offset(($page - 1) * $page_size)->limit($page_size);;
+        $list = $query->asArray()->all();
         $data = [
             'total' => $total,
             'page' => $page,
@@ -132,4 +196,43 @@ class ShopService
 
         return $data;
     }
+
+    /**
+     * 获取销售排行
+     *
+     * @param array $params
+     * @param int $start_time
+     * @param int $end_time
+     * @param int $page
+     * @param int $page_size
+     * @return array
+     */
+    public static function getCountRank($params, $start_time, $end_time, $page = 1, $page_size = 20)
+    {
+        $query = ShopSaleRecord::find()->alias('ShopSaleRecord')
+            ->joinWith('goods goods')
+            ->andFilterWhere($params)
+            ->andFilterWhere(['>=', 'ShopSaleRecord.created_at', $start_time])
+            ->andFilterWhere(['<=', 'ShopSaleRecord.created_at', $end_time])
+            ->groupBy(['ShopSaleRecord.goods_id']);
+
+        $total_query = clone $query;
+        $total = $total_query->count();
+        $query->select([
+            'ShopSaleRecord.goods_id',
+            'goods.goods_name', 'goods.category_id',
+            'count(ShopSaleRecord.goods_id) value']);
+        $query->offset(($page - 1) * $page_size)->limit($page_size);;
+        $list = $query->asArray()->all();
+        $data = [
+            'total' => $total,
+            'page' => $page,
+            'page_size' => $page_size,
+            'list' => $list,
+        ];
+
+        return $data;
+    }
+
+
 }

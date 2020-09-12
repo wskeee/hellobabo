@@ -1,0 +1,144 @@
+/**
+ * common
+ */
+.wrap-empty {
+    min-height: unset !important;
+    margin: unset !important;
+    height: 100% !important;
+    background-color: #fff !important;
+}
+
+.wrap{
+    display: flex;
+    flex-direction: column;
+}
+
+.wrap-content{
+    height: 500px;
+    flex: 1;
+    margin-bottom: 60px;
+}
+
+/**
+ * login
+ */
+.site-login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 15px;
+    height: 100%;
+}
+
+.site-login .logo-box {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+/**
+ * select
+ */
+.content-box select {
+    padding: 1px 5px;
+    border: solid 1px #ccc;
+    border-radius: 5px;
+}
+
+/**
+ * panel
+ */
+.panel .head {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #F2F2F2;
+    border: solid 1px #d7d7d7;
+}
+
+.panel .head span {
+    line-height: 23px;
+}
+
+.panel .head .num {
+    font-weight: bold;
+}
+
+.panel .body {
+    width: 100%;
+    min-height: 300px;
+}
+
+.panel .chart-box {
+    width: 100%;
+    height: 100%;
+}
+
+/**
+ * 首页
+ */
+.site-index .item label {
+    text-align: right;
+    width: 120px;
+}
+
+/**
+ * 收益页
+ */
+.site-income {
+    padding: 10px;
+}
+
+.site-income .tab-head {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.site-income .tab-head .item {
+    border: solid 1px #4cae4c;
+    border-radius: 0 5px 5px 0;
+    padding: 2px 20px;
+    color: #5cb85c;
+}
+
+.site-income .tab-head .item:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.site-income .tab-head .current {
+    color: #fff;
+    background-color: #5cb85c;
+}
+
+/**
+ * rank
+ */
+.site-rank{
+    padding: 10px;
+}
+
+
+/**
+ * 底部导航
+ */
+.bottom-nav {
+    display: flex;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    background: #fff;
+    border-top: solid 1px #eee;
+}
+
+.bottom-nav .item {
+    flex: 1;
+    text-align: center;
+    padding: 15px;
+    color: #999;
+}
+
+.bottom-nav .current {
+    background: #ddd;
+    color: #666;
+}
+
