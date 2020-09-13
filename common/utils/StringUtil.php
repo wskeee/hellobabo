@@ -215,4 +215,51 @@ class StringUtil
         //函数返回 1024 的几次方
         return intval($value * pow(1024, $exponent));
     }
+
+    /**
+     * 脱敏
+     * 如手机中间数据显示数字
+     *
+     * @param string $str
+     * @param string $replace
+     *
+     *
+     */
+    public static function str_hide($str, $replace = '*')
+    {
+        /*
+        var_dump(str_hide("王磊"));
+        var_dump(str_hide("何阳超"));
+        var_dump(str_hide("5558888"));
+        var_dump(str_hide("0205558888"));
+        var_dump(str_hide("15915762146"));
+        var_dump(str_hide("440883198508163"));
+        var_dump(str_hide("440883198508163912"));
+        */
+
+        $rules = [
+            // 规格 = [前面保留长度，中间隐藏长度，后面保留长茺]
+            2 => [0, 1, 1], // 2个字
+            3 => [1, 1, 1], // 3个字
+            4 => [1, 2, 1], // 4个字
+            7 => [2, 3, 2], // 7位坐机 5558888
+            10 => [3, 3, 4], // 10位坐机 0205558888
+            11 => [3, 4, 4], // 11手机 15915762146
+            //15 => [6, 5, 4], // 15位身份证 440883198508163
+            //18 => [6, 8, 4], // 18位身份证 440883198508163912
+            15 => [1, 13, 1], // 15位身份证 440883198508163
+            18 => [1, 16, 1], // 18位身份证 440883198508163912
+        ];
+        // 都不合适隐中间 3/1
+        $len = mb_strlen($str);
+        $rule = isset($rules[$len]) ? $rules[$len] : [floor($len / 3) - 1, floor($len / 3), floor($len / 3)];
+        $hide_num = $rule[1];//min(4, $rule[1]);
+        //$hide_str = str_pad($replace, $hide_num, $replace);
+        //$pattern = "/(\w{" . $rule[0] . "})\w{" . $rule[1] . "}(\w{" . $rule[2] . "})/";
+        //$replacement = "\$1{$hide_str}\$2";
+        //$str = preg_replace($pattern, $replacement, $str);
+        $str = mb_substr($str,0,$rule[0]).str_pad("",$hide_num,"*").mb_substr($str,-$rule[2],$rule[2]);
+
+        return $str;
+    }
 }

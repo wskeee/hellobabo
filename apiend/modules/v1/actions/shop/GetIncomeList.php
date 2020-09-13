@@ -5,12 +5,11 @@ namespace apiend\modules\v1\actions\shop;
 
 
 use apiend\models\Response;
-use apiend\modules\v1\actions\BaseAction;
 use common\models\shop\ShopSaleRecord;
 use common\services\ShopService;
+use common\utils\StringUtil;
 use Yii;
 use yii\base\Action;
-use yii\helpers\StringHelper;
 
 /**
  * 获取收益列表
@@ -41,7 +40,7 @@ class GetIncomeList extends Action
         foreach ($res['list'] as &$item) {
             $user_name = $item['order']['consignee'];
             $item['goods_name'] = $item['goods']['goods_name'];
-            $item['user_name'] = $this->substr_cut($user_name);
+            $item['user_name'] = StringUtil::str_hide($user_name);
             $item['buy_time'] = date('Y-m-d', $item['created_at']);
             unset($item['order']);
             unset($item['goods']);
@@ -50,10 +49,4 @@ class GetIncomeList extends Action
         return new Response(Response::CODE_COMMON_OK, null, $res);
     }
 
-    function substr_cut($user_name){
-        $strlen     = mb_strlen($user_name, 'utf-8');
-        $firstStr     = mb_substr($user_name, 0, 1, 'utf-8');
-        $lastStr     = mb_substr($user_name, -1, 1, 'utf-8');
-        return $strlen == 2 ? $firstStr . str_repeat('*', mb_strlen($user_name, 'utf-8') - 1) : $firstStr . str_repeat("*", $strlen - 2) . $lastStr;
-    }
 }
