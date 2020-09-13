@@ -186,7 +186,7 @@ class ShopService
             'goods.goods_name', 'goods.category_id',
             'IFNULL(sum(ShopSaleRecord.real_income),0) value']);
         $query->offset(($page - 1) * $page_size)->limit($page_size);;
-        $list = $query->asArray()->all();
+        $list = $query->orderBy('value desc')->asArray()->all();
         $data = [
             'total' => $total,
             'page' => $page,
@@ -223,7 +223,7 @@ class ShopService
             'goods.goods_name', 'goods.category_id',
             'count(ShopSaleRecord.goods_id) value']);
         $query->offset(($page - 1) * $page_size)->limit($page_size);;
-        $list = $query->asArray()->all();
+        $list = $query->orderBy('value desc')->asArray()->all();
         $data = [
             'total' => $total,
             'page' => $page,
