@@ -131,7 +131,7 @@ class ShopService
             'total' => (int)$total_res['count'],
             'page' => $page,
             'page_size' => $page_size,
-            'all_income' => $total_res['income'],
+            'all_income' => $total_res ? (double)$total_res['income'] : 0,
             'list' => $list,
         ];
 
