@@ -38,7 +38,7 @@ class ShopService
         $rows = [
             'shop_id' => $shop->id,
             'order_id' => $order->id,
-            'goods_id' => $order->orderGoods[0]->id,
+            'goods_id' => $order->orderGoods[0]->goods_id,
             'income_value' => $shop->income_value,
             'real_income' => $real_income
         ];
