@@ -22,24 +22,33 @@ $this->title = Yii::t('app', 'Login');
             <img src="/statics/imgs/site/logo.png">
         </div>
         <div class="row">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+            <?php $form = ActiveForm::begin([
+                    'id' => 'login-form',
+                    'fieldConfig' => [
+                        'template' => "{label}<div class=\"col-lg-12 col-md-12\">{input}</div>\n<div class=\"col-lg-7 col-md-7\">{error}</div>",
+                        'labelOptions' => ['class' => 'control-label', 'style' => ['color' => '#999999', 'font-weight' => 'normal', 'padding-left' => '0']],
+                    ],
+            ]); ?>
             <!--密码登录-->
             <div class="pass-login-covers">
-                <?= $form->field($model, 'username',[
-                    'options' => [
-                        'class' => 'col-xs-12 attr-name',
-                    ],
-                    'inputOptions' => ['placeholder' => '账号'],
-                    'template' => "<div class=\"col-xs-12\" style=\"padding:0px;\">{input}</div>\n<div class=\"col-xs-10\" style=\"padding: 0px 5px;\">{error}</div>"
-                ]); ?>
-
-                <?= $form->field($model, 'password', [
-                    'options' => [
-                        'class' => 'col-xs-12 attr-pass',
-                    ],
-                    'inputOptions' => ['placeholder' => '密码'],
-                    'template' => "<div class=\"col-xs-12\" style=\"padding:0px;\">{input}</div>\n<div class=\"col-xs-10\" style=\"padding: 0px 5px;\">{error}</div>"
-                ])->passwordInput() ?>
+                <div class="field-loginform-username required">
+                    <div class="field-row">
+                        <label class="control-label" for="loginform-username">账号</label>
+                        <div>
+                            <input type="text" id="loginform-username" class="form-control" name="LoginForm[username]" placeholder="账号" aria-required="true">
+                        </div>
+                    </div>
+                    <div class="col-lg-7 col-md-7"><p class="help-block help-block-error"></p></div>
+                </div>
+                <div class="field-loginform-password required">
+                    <div class="field-row">
+                        <label class="control-label" for="loginform-password">密码</label>
+                        <div>
+                            <input type="password" id="loginform-password" class="form-control" name="LoginForm[password]" value="" placeholder="密码" aria-required="true">
+                        </div>
+                    </div>
+                    <div class="col-lg-7 col-md-7"><p class="help-block help-block-error"></p></div>
+                </div>
             </div>
             <!--登录按钮-->
             <div class="col-xs-12 button">

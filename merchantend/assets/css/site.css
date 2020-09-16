@@ -28,11 +28,30 @@
     justify-content: center;
     padding: 0 15px;
     height: 100%;
+    background-size: cover;
+    background-image: url('/statics/imgs/site/bg.jpg');
 }
 
 .site-login .logo-box {
     text-align: center;
     margin-bottom: 50px;
+}
+
+.site-login .logo-box img{
+    width: 160px;
+}
+
+.site-login .panel{
+    background: unset;
+}
+.pass-login-covers .field-row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pass-login-covers .control-label{
+    margin-right: 28px;
 }
 
 /**
