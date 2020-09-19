@@ -8,7 +8,7 @@ $shop = Shop::findOne(['user_id' => Yii::$app->user->id]);
 
 <div class="nav">
     <div class="content">
-        <div style="display: flex;">
+        <div style="display: flex;flex:1;">
             <img class="navbar-brand" src="<?= $shop->logo_url ?>">
             <div class="navbar-info">
                 <div style="font-size:16px;"><?= $shop->name ?></div>
