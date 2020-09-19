@@ -53,6 +53,7 @@ class GetIncomeStat extends Action
             $month_num = 12;
             $daily_sale_logs = ArrayHelper::map($res, 'date', 'value');
             $all_incomes = array_sum(array_column($res, 'value'));
+            $all_incomes = round($all_incomes * 100) / 100;
             $incomes = [];
             for ($i = 1; $i <= $month_num; $i++) {
                 $d = $i > 9 ? $i : "0$i";

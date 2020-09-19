@@ -343,7 +343,7 @@
                 {
                     show: false,
                     start: 0,
-                    end: 25
+                    end: 100
                 },
                 {
                     type: 'inside',
