@@ -70,7 +70,6 @@ $shop = Shop::findOne(['user_id' => Yii::$app->user->id]);
             if (r.code == '0') {
                 var data = r.data.incomes;
                 $('.content-box .year .num').html(r.data.all_incomes+'元');
-                yearIncomeChart.chartOptions.dataZoom[0]['end'] = 60;
                 yearIncomeChart.reflashChart(data);
             }
         },'json');

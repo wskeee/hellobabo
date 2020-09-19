@@ -11,8 +11,8 @@ $shop = Shop::findOne(['user_id' => Yii::$app->user->id]);
         <div style="display: flex;">
             <img class="navbar-brand" src="<?= $shop->logo_url ?>">
             <div class="navbar-info">
-                <div style="font-size:16px;"><?= $shop->name ?>，战略合作伙伴</div>
-                <div style="font-size:9px;">欢迎使用芭宝收益平台</div>
+                <div style="font-size:16px;"><?= $shop->name ?></div>
+                <div style="font-size:9px;">战略合作伙伴</div>
             </div>
         </div>
         <div class="logout-box">
