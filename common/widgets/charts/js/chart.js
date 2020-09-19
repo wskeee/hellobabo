@@ -298,7 +298,7 @@
                 }
             },
             toolbox: {
-                show: true,
+                show: false,
                 feature: {
                     mark: {show: true},
                     dataView: {show: true, readOnly: false},
@@ -309,6 +309,7 @@
             },
             calculable: true,
             legend: {
+                show: false,
                 data: ['收益'],
                 itemGap: 5
             },
