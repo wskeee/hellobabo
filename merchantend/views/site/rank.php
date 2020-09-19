@@ -21,59 +21,57 @@ SiteAssets::register($this);
 <style>
 
 </style>
-<div>
-    <div class="site-rank">
-        <div class="content-box">
-            <div class="panel form-group month">
-                <div class="head">
-                    <div>
-                        <select id="rank-year" onchange="onSearchChange()">
-                            <option value="" selected>全部</option>
-                            <?php for ($i = 2020; $i <= 2025; $i++): ?>
-                                <option value="<?= $i ?>"><?= $i ?>年</option>
-                            <?php endfor; ?>
-                        </select>
-                        <select id="rank-month" onchange="onSearchChange()">
-                            <option value="" selected>全部</option>
-                            <?php for ($i = 1; $i <= 12; $i++): ?>
-                                <option value="<?= $i > 9 ? $i : '0' . $i ?>"><?= $i ?>月</option>
-                            <?php endfor; ?>
-                        </select>
-                    </div>
-                    <div>
-                        <select id="rank-category" onchange="onSearchChange()">
-                            <option value="" selected>总排行榜</option>
-                            <?php foreach ($categorys as $category): ?>
-                                <option value="<?= $category->id ?>"><?= $category->name ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <select id="rank-type" onchange="onSearchChange()">
-                            <option value="income" selected>按收益</option>
-                            <option value="count">按销量</option>
-                        </select>
-                    </div>
+<div class="site-rank">
+    <div class="content-box">
+        <div class="panel form-group month">
+            <div class="head">
+                <div>
+                    <select id="rank-year" onchange="onSearchChange()">
+                        <option value="" selected>全部</option>
+                        <?php for ($i = 2020; $i <= 2025; $i++): ?>
+                            <option value="<?= $i ?>"><?= $i ?>年</option>
+                        <?php endfor; ?>
+                    </select>
+                    <select id="rank-month" onchange="onSearchChange()">
+                        <option value="" selected>全部</option>
+                        <?php for ($i = 1; $i <= 12; $i++): ?>
+                            <option value="<?= $i > 9 ? $i : '0' . $i ?>"><?= $i ?>月</option>
+                        <?php endfor; ?>
+                    </select>
                 </div>
-                <div class="body">
-                    <div class="tabel-box">
-                        <table id="my-table" class="table table-hover" style="font-size: 12px;">
-                            <thead>
-                            <tr>
-                                <th>排名</th>
-                                <th>绘本名</th>
-                                <th>类型</th>
-                                <th class="th-type">收益</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+                <div>
+                    <select id="rank-category" onchange="onSearchChange()">
+                        <option value="" selected>总排行榜</option>
+                        <?php foreach ($categorys as $category): ?>
+                            <option value="<?= $category->id ?>"><?= $category->name ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <select id="rank-type" onchange="onSearchChange()">
+                        <option value="income" selected>按收益</option>
+                        <option value="count">按销量</option>
+                    </select>
+                </div>
+            </div>
+            <div class="body">
+                <div class="tabel-box">
+                    <table id="e-table" class="e-table" style="font-size: 12px;">
+                        <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>绘本名</th>
+                            <th>类型</th>
+                            <th class="th-type">收益</th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="loading-box">
-                <div class="loading"></div>
-            </div>
+        </div>
+        <div class="loading-box">
+            <div class="loading"></div>
         </div>
     </div>
 </div>
@@ -107,7 +105,7 @@ SiteAssets::register($this);
             type: $('#rank-type').val(),
             category: $('#rank-category').val(),
         };
-        $('#my-table tbody').empty();
+        $('#e-table tbody').empty();
         getList(params, 1, page_size);
     }
 
@@ -140,7 +138,7 @@ SiteAssets::register($this);
                 page = Number(r.data.page);
                 total = r.data.total;
                 var row_tpl = $('#row-tpl').html();
-                var table_body = $('#my-table tbody');
+                var table_body = $('#e-table tbody');
                 var list = r.data.list;
 
                 var row, item;

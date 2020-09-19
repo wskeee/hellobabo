@@ -19,8 +19,8 @@ ChartAsset::register($this);
 <style>
 
 </style>
-<div>
-    <div class="site-index">
+<div class="site-index">
+    <div class="content-box" style="padding: 15px;">
         <div class="item">
             <label>总绘本数：</label>
             <span class="txt goods_count">0 本</span>
@@ -40,6 +40,9 @@ ChartAsset::register($this);
         <div class="item">
             <label >今天收益：</label>
             <span class="txt day_income">0 元</span>
+        </div>
+        <div class="logo-box">
+            <img class="logo" src="/statics/imgs/site/logo-watermark.png">
         </div>
     </div>
 </div>

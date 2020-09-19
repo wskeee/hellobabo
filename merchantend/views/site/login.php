@@ -17,7 +17,7 @@ $this->title = Yii::t('app', 'Login');
 ?>
 
 <div class="site-login">
-    <div class="panel">
+    <div>
         <div class="logo-box">
             <img src="/statics/imgs/site/logo.png">
         </div>
@@ -34,38 +34,48 @@ $this->title = Yii::t('app', 'Login');
                 <div class="field-loginform-username required">
                     <div class="field-row">
                         <label class="control-label" for="loginform-username">账号</label>
-                        <div>
-                            <input type="text" id="loginform-username" class="form-control" name="LoginForm[username]" placeholder="账号" aria-required="true">
+                        <div class="control-input">
+                            <input type="text" id="loginform-username" class="form-control" name="LoginForm[username]" placeholder="请输入用户名" aria-required="true" value="<?=$model->username?>">
+                            <?php if(isset($model->errors['username'])): ?>
+                                <div><p class="help-block help-block-error"><?= $model->errors['username'][0] ?></p></div>
+                            <?php endif; ?>
                         </div>
                     </div>
-                    <div class="col-lg-7 col-md-7"><p class="help-block help-block-error"></p></div>
                 </div>
                 <div class="field-loginform-password required">
                     <div class="field-row">
                         <label class="control-label" for="loginform-password">密码</label>
-                        <div>
-                            <input type="password" id="loginform-password" class="form-control" name="LoginForm[password]" value="" placeholder="密码" aria-required="true">
+                        <div class="control-input">
+                            <input type="password" id="loginform-password" class="form-control" name="LoginForm[password]" value="<?=$model->username?>" placeholder="请输入密码" aria-required="true">
+                            <?php if(isset($model->errors['password'])): ?>
+                                <div><p class="help-block help-block-error"><?= $model->errors['password'][0] ?></p></div>
+                            <?php endif; ?>
                         </div>
                     </div>
-                    <div class="col-lg-7 col-md-7"><p class="help-block help-block-error"></p></div>
+                </div>
+            </div>
+
+            <!--记住登陆/忘记密码/注册-->
+            <div class="remeber-forget" style="display: none;">
+                <div class="field-row">
+                    <label class="control-label" for="loginform-username"></label>
+                    <div class="control-input" style="width: 180px;text-align: right;">
+                        <div class="checkbox">
+                            <input type="hidden" name="LoginForm[rememberMe]" value="0">
+                            <input type="checkbox" id="loginform-rememberme" name="LoginForm[rememberMe]" value="1" checked="">
+                            <label for="loginform-rememberme">
+                                记住账号
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!--登录按钮-->
-            <div class="col-xs-12 button">
+            <div class="field-row">
                 <?= Html::submitButton('登录', [
+                    'id' => 'submit-btn',
                     'name' => 'login-button',
                     'class' => 'btn btn-primary col-xs-12',
-                ]) ?>
-            </div>
-            <!--记住登陆/忘记密码/注册-->
-            <div class="remeber-forget">
-                <?= $form->field($model, 'rememberMe', [
-                    'options' => [
-                        'class' => 'col-xs-6',
-                    ],
-                    //'template' => "{label}\n<div class=\"col-lg-12\">{input}</div>",
-                ])->checkbox([
-                    'template' => "<div class=\"checkbox\"><label for=\"loginform-rememberme\">{input}自动登录</label></div>"
                 ]) ?>
             </div>
             <?php ActiveForm::end(); ?>

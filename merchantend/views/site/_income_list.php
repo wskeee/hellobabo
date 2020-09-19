@@ -12,7 +12,7 @@ $shop = Shop::findOne(['user_id' => Yii::$app->user->id]);
 
 <div class="content-box">
     <div class="panel form-group month">
-        <div class="head">
+        <div class="head" style="padding: 10px;border-bottom: solid 1px #d4dced;margin-top:0;">
             <div>
                 <span class="title">总收益：</span>
                 <span class="num all-income">（0 元）</span>
@@ -32,7 +32,7 @@ $shop = Shop::findOne(['user_id' => Yii::$app->user->id]);
         </div>
         <div class="body">
             <div class="tabel-box">
-                <table id="my-table" class="table table-hover" style="font-size: 12px;">
+                <table id="e-table" class="e-table" style="font-size: 12px;">
                     <thead>
                         <tr>
                             <th>序号</th>
@@ -82,7 +82,7 @@ $shop = Shop::findOne(['user_id' => Yii::$app->user->id]);
             year:$('#income-year').val(),
             month:$('#income-month').val(),
         };
-        $('#my-table tbody').empty();
+        $('#e-table tbody').empty();
         getList(params,1,page_size);
     }
 
@@ -115,7 +115,7 @@ $shop = Shop::findOne(['user_id' => Yii::$app->user->id]);
                 page = Number(r.data.page);
                 total = r.data.total;
                 var row_tpl = $('#row-tpl').html();
-                var table_body = $('#my-table tbody');
+                var table_body = $('#e-table tbody');
                 var list = r.data.list;
 
                 var row, item;

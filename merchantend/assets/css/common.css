@@ -113,24 +113,45 @@ a.desc:after {
 * 导航头部样式
 *
 *****************************************************/
-.nav {
+.nav{
+
+}
+.nav .content{
+    position: relative;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    height: 60px;
-    border-bottom: solid 1px #f2f2f2;
+    height: 64px;
+    background-size: cover;
+    background-image: url('/statics/imgs/site/head_bg.png');
+    padding: 10px;
+    color: #fff;
 }
 
 /* LOGO样式 */
-.navbar-brand {
+.nav .navbar-brand {
     float: unset;
     padding: 0;
     margin-right: 10px;
 }
 
-.navbar-brand img{
+.nav .navbar-brand img{
     height: 100%;
 }
+
+.nav .navbar-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.nav .logout-box{
+    color: #fff;
+    text-align: center;
+    font-size: 12px;
+}
+
 
 /*****************************************************
 *

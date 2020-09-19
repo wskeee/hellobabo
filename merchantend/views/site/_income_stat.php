@@ -11,8 +11,8 @@ $shop = Shop::findOne(['user_id' => Yii::$app->user->id]);
 ?>
 
 <div class="content-box">
-    <div class="panel form-group month">
-        <div class="head">
+    <div class="panel form-group month" style="padding: 10px;">
+        <div class="head" style="border-bottom: dashed 1px #d4dced;">
             <div>
                 <span class="title">月收益：</span>
                 <span class="num">（0 元）</span>
@@ -27,9 +27,11 @@ $shop = Shop::findOne(['user_id' => Yii::$app->user->id]);
             <div class="chart-box month-income"></div>
         </div>
     </div>
+</div>
 
-    <div class="panel form-group year">
-        <div class="head">
+<div class="content-box" style="margin-top: 10px;">
+    <div class="panel form-group year" style="padding: 10px;">
+        <div class="head" style="border-bottom: dashed 1px #d4dced;">
             <div>
                 <span class="title">年收益：</span>
                 <span class="num">（0 元）</span>

@@ -6,9 +6,9 @@ $route = Yii::$app->controller->getRoute();
 ?>
 
 <div class="bottom-nav">
-    <a class="item" data-url="site/index">首页</a>
-    <a class="item" data-url="site/income">收益</a>
-    <a class="item" data-url="site/rank">排行</a>
+    <a class="item" data-url="site/index"><div>首页</div></a>
+    <a class="item" data-url="site/income"><div>收益</div></a>
+    <a class="item" data-url="site/rank"><div>排行</div></a>
 </div>
 
 <?php
