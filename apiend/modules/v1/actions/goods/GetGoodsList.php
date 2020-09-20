@@ -47,7 +47,7 @@ class GetGoodsList extends BaseAction
         // 查询价格
         $priceMap = ArrayHelper::map(GoodsSpecPrice::find()
             ->select(['goods_id', new Expression('Min(goods_price) AS price')])
-            ->where(['goods_id' => array_column($list, 'id')])
+            ->where(['goods_id' => array_column($list, 'id'),'is_del' => 0])
             ->groupBy(['goods_id'])
             ->asArray()
             ->all(), 'goods_id', 'price');
