@@ -26,9 +26,23 @@ use yii\widgets\ActiveForm;
 
     <?php /*= $form->field($model, 'content')->textarea(['rows' => 6]) */?>
 
-    <?= $form->field($model, 'start_time')->widget(DatePicker::class)?>
+    <?= $form->field($model, 'start_time')->widget(DatePicker::class,[
+        'pluginOptions' => [
+            'convertFormat' => true,
+            'autoclose' => true,
+            'todayHighlight' => true,
+            'format' => 'yyyy-mm-dd',
+        ],
+    ])?>
 
-    <?= $form->field($model, 'end_time')->widget(DatePicker::class) ?>
+    <?= $form->field($model, 'end_time')->widget(DatePicker::class,[
+        'pluginOptions' => [
+            'convertFormat' => true,
+            'autoclose' => true,
+            'todayHighlight' => true,
+            'format' => 'yyyy-mm-dd',
+        ],
+    ]) ?>
 
     <?= $form->field($model, 'setting')->textarea(['rows' => 6]) ?>
 

@@ -1,6 +1,8 @@
 <?php
 
+use common\models\activity\Activity;
 use common\utils\I18NUitl;
+use common\widgets\grid\GridViewChangeSelfColumn;
 use yii\helpers\Html;
 use yii\grid\GridView;
 
@@ -32,22 +34,30 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'cover_url',
                 'format' => 'raw',
-                'value' => function($model){
-                    return Html::img($model->cover_url,['style' => 'width:80px;']);
+                'value' => function ($model) {
+                    return Html::img($model->cover_url, ['style' => 'width:80px;']);
                 }
             ],
             [
                 'attribute' => 'share_poster_url',
                 'format' => 'raw',
-                'value' => function($model){
-                    return Html::img($model->share_poster_url,['style' => 'width:80px;']);
+                'value' => function ($model) {
+                    return Html::img($model->share_poster_url, ['style' => 'width:80px;']);
                 }
             ],
             //'share_poster_url:url',
             //'content:ntext',
             'start_time:datetime',
             'end_time:datetime',
-            'status',
+            [
+                'attribute' => 'status',
+                'class' => GridViewChangeSelfColumn::class,
+                'headerOptions' => ['style' => 'width:100px'],
+                'plugOptions' => [
+                    'values' => [Activity::STATUS_DISABLED, Activity::STATUS_ENABLED],
+                    'labels' => ['停用', '启用']
+                ]
+            ],
             //'setting:ntext',
             //'view_count',
             //'join_count',

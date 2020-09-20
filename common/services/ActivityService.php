@@ -12,6 +12,28 @@ class ActivityService
     use BaseServiceTrait;
 
     /**
+     * 检查活动是否有效
+     * @param int $id
+     * @return bool
+     */
+    public static function checkActivityIsVaild($id)
+    {
+        $activity = Activity::findOne(['id' => $id]);
+        if (!$activity || $activity->status != Activity::STATUS_ENABLED) {
+            return false;
+        }
+        $time = time();
+        if ($activity->getOldAttribute('start_time') > $time) {
+            // 未上架
+            return false;
+        } else if ($activity->getOldAttribute('end_time') < $time) {
+            // 已下架
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 通过 Code 查询对应活动
      * @param $code
      * @return Activity|null

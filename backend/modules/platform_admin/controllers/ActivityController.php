@@ -2,17 +2,17 @@
 
 namespace backend\modules\platform_admin\controllers;
 
-use Yii;
 use common\models\activity\Activity;
 use common\models\activity\searchs\ActivitySearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use common\widgets\grid\GridViewChangeSelfController;
+use Yii;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 
 /**
  * ActivityController implements the CRUD actions for Activity model.
  */
-class ActivityController extends Controller
+class ActivityController extends GridViewChangeSelfController
 {
     /**
      * {@inheritdoc}
