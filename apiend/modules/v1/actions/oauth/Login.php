@@ -66,12 +66,16 @@ class Login extends BaseAction
             $tran->rollBack();
             return new Response(Response::CODE_COMMON_SAVE_DB_FAIL, '登录失败！', $ex);
         }
+        $userArr = $user->toArray([
+            'id', 'username', 'nickname', 'phone', 'sex', 'avatar'
+        ]);
+        $userArr['gameData'] = $user->gameData;
         return new Response(Response::CODE_COMMON_OK, null, [
             'is_new' => $isNew,
             'openid' => $userAuth->identifier,
             'token' => $user->access_token,
             'token_expire_time' => $user->access_token_expire_time,
-            'user' => $user,
+            'user' => $userArr,
         ]);
     }
 
