@@ -102,7 +102,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'style' => 'width: 90px'
                     ],
                     'value' => function ($data) {
-                        return Banner::$targetType[$data->target];
+                        return isset(Banner::$targetType[$data->target]) ? Banner::$targetType[$data->target] : '--';
                     },
                     'contentOptions' => [
                         'style' => [

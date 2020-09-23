@@ -16,7 +16,7 @@ class GetNew extends BaseAction
 
     public function run()
     {
-        $model = Banner::findOne(['is_publish' => 1]);
+        $model = Banner::findAll(['is_publish' => 1]);
 
         return new Response(Response::CODE_COMMON_OK, null, ['banner' => $model]);
     }

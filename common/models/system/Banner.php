@@ -40,10 +40,11 @@ class Banner extends ActiveRecord
     const YES_PUBLISH = 1;
     
     /** 打开方式-新开页面 */
-    const TARGET_BLANK = '_blank';
+    const TARGET_BLANK = 'navigate';
     /** 打开方式-替换打开 */
-    const TARGET_SELF = '_self';
-
+    const TARGET_SELF = 'redirect';
+    /** 跳转到 tabBar 页面，并关闭其他所有非 tabBar 页面 */
+    const TARGET_SWITCHTAB = 'switchTab';
     /**
      * 内容类型
      * @var array
@@ -67,8 +68,9 @@ class Banner extends ActiveRecord
      * @var array 
      */
     public static $targetType = [
-        self::TARGET_BLANK => '新开页面',
-        self::TARGET_SELF => '替换打开',
+        self::TARGET_BLANK => '弹出新窗口',
+        self::TARGET_SELF => '替换当前窗口',
+        self::TARGET_SWITCHTAB => '切换Tab',
     ];
 
     /**

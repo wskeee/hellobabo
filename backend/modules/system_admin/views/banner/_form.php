@@ -1,6 +1,7 @@
 <?php
 
 use common\models\system\Banner;
+use common\widgets\webuploader\FilePicker;
 use common\widgets\webuploader\ImagePicker;
 use kartik\widgets\SwitchInput;
 use yii\helpers\Html;
@@ -27,13 +28,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'path')->widget(ImagePicker::class)->label('路径（建议尺寸：1920*400）'); ?>
+    <?= $form->field($model, 'path')->widget(FilePicker::class)->label('路径（建议尺寸：1920*400）'); ?>
 
     <?= $form->field($model, 'link')->textInput(['maxlength' => true]) ?>
 
-    <?php $form->field($model, 'type')->radioList(Banner::$contentType) ?>
+    <?= $form->field($model, 'type')->radioList(Banner::$contentType) ?>
     
-    <?php $form->field($model, 'target')->radioList(Banner::$targetType) ?>
+    <?= $form->field($model, 'target')->radioList(Banner::$targetType) ?>
     
     <?= $form->field($model, 'is_publish')->widget(SwitchInput::class, [
         'pluginOptions' => [
