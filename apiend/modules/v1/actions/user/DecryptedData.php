@@ -17,9 +17,19 @@ class DecryptedData extends BaseAction
     {
         /* @var $user User */
         $user = Yii::$app->user->identity;
+
+        $code = $this->getSecretParam('code');
+        if($code){
+            $data = Yii::$app->wechat->miniProgram->auth->session($code);
+            $session_key = $data['session_key'];
+            $user->auths->credential = $session_key;
+            $user->auths->save();
+        }else{
+            $session_key = $user->auths->credential;
+        }
         
         $decryptedData = Yii::$app->wechat->miniProgram->encryptor->decryptData(
-                $user->auths->credential, 
+                $session_key,
                 $this->getSecretParam('iv'), 
                 $this->getSecretParam('encryptedData'));
         

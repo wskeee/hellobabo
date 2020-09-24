@@ -22,7 +22,7 @@ class GetGoodsList extends BaseAction
     public function run()
     {
         $category_id = $this->getSecretParam('category_id', '');
-        $keyword = $this->getSecretParam('keyword', '');
+        $keyword = urldecode($this->getSecretParam('keyword', ''));
         $page = $this->getSecretParam('page', 1);
         $page_size = $this->getSecretParam('page_size', 10);
 

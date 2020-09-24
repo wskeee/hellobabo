@@ -287,6 +287,7 @@ return [
     'File' => '文件',
     'List' => '列表',
     'Activity' => '活动',
+    'Activities' => '活动列表',
     'Expire' => '到期',
     'Upload By' => '上传者',
     'Is' => '是否',
@@ -398,7 +399,7 @@ return [
     'Valid Days' => '自领取之日起有效天数',
     'Swap' => '兑换',
     'Swaps' => '兑换列表',
-    'Code' => '码',
+    'Code' => 'Code',
     'Is Swap' => '是否兑换',
     'Swap At' => '兑换时间',
     'Swap By' => '兑换人',
@@ -416,6 +417,7 @@ return [
     'Last Income Time' => '最近收益时间',
     'Shops' => '产品合作方列表',
     'Income Value' => '收益值',
+    'Join' => '参加',
 
     //后台-商品配置
     'Dir' => '目录',

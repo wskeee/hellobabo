@@ -53,6 +53,7 @@ use yii\helpers\ArrayHelper;
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
  *
+ * @property GoodsCategory $category 分类
  * @property AdminUser $owner   作者
  * @property Shop $shop   商家
  * @property AdminUser $creater   创建人
@@ -320,6 +321,14 @@ class Goods extends ActiveRecord
     public function getUpdater()
     {
         return $this->hasOne(AdminUser::class, ['id' => 'updated_by']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getCategory()
+    {
+        return $this->hasOne(GoodsCategory::class, ['id' => 'category_id']);
     }
 
     /**

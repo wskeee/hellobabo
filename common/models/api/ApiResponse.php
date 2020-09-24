@@ -96,7 +96,7 @@ class ApiResponse {
      * @param array $params     自定义信息中动态传参
      * @return array [code,msg,data]
      */
-    public function __construct($code = self::CODE_OK, $msg = null, $data = null, $params = null) {
+    public function __construct($code = self::CODE_COMMON_OK, $msg = null, $data = null, $params = null) {
         $codeMap = $this->getCodeMap();
         //不自定将使用预定义格式 
         $msg = $msg == null ? (isset($codeMap[$code]) ? $codeMap[$code] : '') : $msg;

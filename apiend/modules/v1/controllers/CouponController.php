@@ -7,6 +7,8 @@ use apiend\modules\v1\actions\coupon\ExchangeCoupon;
 use apiend\modules\v1\actions\coupon\GetChooseList;
 use apiend\modules\v1\actions\coupon\GetCouponBest;
 use apiend\modules\v1\actions\coupon\GetCouponList;
+use apiend\modules\v1\actions\coupon\GetCouponListByType;
+use apiend\modules\v1\actions\coupon\GetCouponListByUsed;
 use apiend\modules\v1\actions\coupon\GetMyCouponList;
 use apiend\modules\v1\actions\coupon\ReceiveCoupon;
 use apiend\modules\v1\actions\coupon\SearchCouponByCode;
@@ -61,6 +63,7 @@ class CouponController extends ApiController
             'exchange-coupon' => ['post'],
             'receive-coupon' => ['post'],
             'search-coupon-by-code' => ['post'],
+            'get-coupon-list-by-used' => ['get'],
         ];
         return $behaviors;
     }
@@ -78,6 +81,7 @@ class CouponController extends ApiController
             'exchange-coupon' => ['class' => ExchangeCoupon::class],
             'receive-coupon' => ['class' => ReceiveCoupon::class],
             'search-coupon-by-code' => ['class' => SearchCouponByCode::class],
+            'get-coupon-list-by-used' => ['class' => GetCouponListByUsed::class],
         ];
     }
 

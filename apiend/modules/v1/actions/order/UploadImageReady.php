@@ -28,23 +28,17 @@ class UploadImageReady extends BaseAction
     {
         $order_goods_id = $this->getSecretParam('order_goods_id');
 
-        $orderGoods = OrderGoods::findOne(['id' => $order_goods_id]);
+        $orderGoods = OrderGoods::find()->where(['id' => $order_goods_id])->with('goods')->with('goods.category')->one();
         if (!$orderGoods) {
             return new Response(Response::CODE_COMMON_NOT_FOUND, null, null, ['param' => I18NUitl::t('app', '{Order}{Goods}')]);
         }
         $pages = (new Query())
                 ->select([
                     'OrderGoodsScenePage.*',
-                    'Face.name face_name',
-                    'Face.url face_url',
-                    'Angle.name angle_name',
-                    'Angle.url angle_url',
                     'Pose.filepath pose_url',
                 ])
                 ->from(['OrderGoodsScenePage' => OrderGoodsScenePage::tableName()])
                 ->leftJoin(['SourcePage' => GoodsScenePage::tableName()], 'OrderGoodsScenePage.page_id = SourcePage.id')
-                ->leftJoin(['Face' => ShootingFace::tableName()], 'SourcePage.face_id = Face.id')
-                ->leftJoin(['Angle' => ShootingAngle::tableName()], 'SourcePage.angle_id = Angle.id')
                 ->leftJoin(['Pose' => GoodsPagePose::tableName()], 'SourcePage.id = Pose.page_id')
                 ->where([
                     'OrderGoodsScenePage.order_goods_id' => $order_goods_id,
@@ -64,6 +58,8 @@ class UploadImageReady extends BaseAction
 
         return new Response(Response::CODE_COMMON_OK, null, [
             'orderGoods' => $orderGoods,
+            'goods' => $orderGoods->goods,
+            'category' => $orderGoods->goods->category,
             'pages' => $pages,
             'actions' => $actions,
         ]);

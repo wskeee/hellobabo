@@ -86,7 +86,7 @@ use common\widgets\Menu;
                             ['label' => '提现列表', 'icon' => 'circle-o', 'url' => ['/platform_admin/withdrawals/index']],
                             ['label' => '反馈列表', 'icon' => 'circle-o', 'url' => ['/platform_admin/issue/index']],
                             ['label' => '文章管理', 'icon' => 'circle-o', 'url' => ['/platform_admin/post/index']],
-                            ['label' => '活动管理', 'icon' => 'circle-o', 'url' => ['/platform_admin/vote-activity/index']],
+                            // ['label' => '投票活动管理', 'icon' => 'circle-o', 'url' => ['/platform_admin/vote-activity/index']],
                             ['label' => '留言', 'icon' => 'circle-o', 'url' => ['/platform_admin/comment/index']],
                         ],
                     ],
@@ -102,6 +102,7 @@ use common\widgets\Menu;
                             ['label' => '拍摄表情', 'icon' => 'circle-o', 'url' => ['/platform_config/shooting-face/index']],
                             ['label' => '快递公司', 'icon' => 'circle-o', 'url' => ['/platform_config/express/index']],
                             ['label' => '文章类型', 'icon' => 'circle-o', 'url' => ['/platform_config/post-type/index']],
+                            ['label' => '活动管理', 'icon' => 'circle-o', 'url' => ['/platform_admin/activity/index']],
                         ],
                     ],
                     [

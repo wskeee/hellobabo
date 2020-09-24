@@ -29,6 +29,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'income_value',
             //'des',
             'status',
+            [
+                'attribute' => 'logo_url',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return Html::img($model->logo_url, ['style' => 'height:80px']);
+                }
+            ],
             //'cover_url:url',
             //'goods_count',
             //'order_count',

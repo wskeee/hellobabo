@@ -73,6 +73,15 @@ class SaveSceneUserImage extends BaseAction
         $user = \Yii::$app->user->identity;
         $source_page = $page->sourcePage;
 
+        if($page->orderGoods->goods->category->code != 'mofang'){
+            // 不是模仿
+            return [
+                'ogp_id' => $page->id,
+                'play_score' => -1,
+                'gameData' => $user->gameData
+            ];
+        }
+
         if ($source_page && $source_page->pose && $source_page->pose->pose_data) {
             // 计算得分
             $check_result = PoseUtil::check($filepath, json_decode($source_page->pose->required_data, true));

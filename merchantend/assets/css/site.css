@@ -1,0 +1,277 @@
+/**
+ * common
+ */
+.wrap-empty {
+    min-height: unset !important;
+    margin: unset !important;
+    height: 100% !important;
+    background-color: #fff !important;
+}
+
+.wrap{
+    display: flex;
+    flex-direction: column;
+    height: 100% !important;
+    background: #f2f4f7 !important;
+}
+
+.wrap-content{
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+/**
+ * 自定义 tabel
+ */
+.e-table th{
+    height: 32px;
+    background: #f0f5ff;
+    text-align: center;
+}
+.e-table {
+    width: 100%;
+    border-bottom: 1px solid #d4dced
+}
+
+.e-table td {
+    border-left: 1px solid #d4dced;
+    border-top: 1px solid #d4dced;
+    text-align: center;
+    height: 64px;
+}
+
+.e-table tr td:first-child{
+    border-left: unset;
+    background: #f0f5ff;
+}
+.e-table tr td:last-child{
+    border-right: unset;
+}
+
+/**
+ * content-box
+ */
+.content-box{
+    position: relative;
+    color: #192b3b;
+    border: solid 1px #d4dced;
+    background: #fff;
+    min-height: 100%;
+    border-radius: 5px;
+    font-size: 14px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+/**
+ * login
+ */
+.site-login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 15px;
+    height: 100%;
+    background-size: cover;
+    background-image: url('/statics/imgs/site/bg.jpg');
+}
+
+.site-login .logo-box {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.site-login .logo-box img{
+    width: 160px;
+}
+
+.site-login .panel{
+    background: unset;
+    border: unset;
+}
+.site-login .pass-login-covers{
+    margin-bottom: 50px;
+}
+.site-login .field-row{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.site-login .control-label{
+    font-size: 16px;
+    color: #192b3b;
+    margin-right: 14px;
+    width: 32px;
+    margin-top: 8px;
+}
+
+.site-login .control-input input{
+    width: 180px;
+}
+
+.site-login .help-block-error{
+    font-size: 14px;
+    color: #ad3f14;
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
+.site-login #submit-btn{
+    width: 170px;
+    height: 48px;
+    border-radius: 24px;
+    background: #247fff;
+    font-size: 18px;
+}
+
+
+/**
+ * select
+ */
+.content-box select {
+    padding: 1px 5px;
+    border: solid 1px #ccc;
+    border-radius: 5px;
+    height: 30px;
+}
+
+/**
+ * panel
+ */
+.panel{
+    margin-bottom: 0 !important;
+    border: unset !important;
+}
+.panel .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: -10px;
+    padding: 10px 0;
+    height: 53px;
+}
+
+.panel .head span {
+    line-height: 23px;
+}
+
+.panel .head .num {
+    font-weight: bold;
+}
+
+.panel .body {
+    width: 100%;
+}
+
+.panel .chart-box {
+    width: 100%;
+    height: 100%;
+}
+
+/**
+ * 首页
+ */
+.site-index{
+    flex: 1;
+    margin-top: 12px;
+}
+.site-index .content-box{
+    padding: 15px;
+}
+.site-index .item{
+    border-bottom: dashed 1px #d4dced;
+    height: 32px;
+    line-height: 32px;
+}
+.site-index .item label {
+    text-align: right;
+    width: 85px;
+}
+.site-index .logo-box{
+    position: absolute;
+    right: 25px;
+    bottom: 25px;
+}
+.site-index .logo{
+    width: 160px;
+}
+
+/**
+ * 收益页
+ */
+.site-income {
+    margin-top: 9px;
+}
+
+.site-income .tab-head {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 9px;
+}
+
+.site-income .tab-head .item {
+    border: solid 1px #4391f4;
+    border-radius: 0 5px 5px 0;
+    color: #4391f4;
+    width: 70px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+}
+
+.site-income .tab-head .item:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.site-income .tab-head .current {
+    color: #fff;
+    background-color: #4391f4;
+}
+
+/**
+ * rank
+ */
+.site-rank{
+    margin-top: 9px;
+}
+
+.site-rank .panel .head{
+    padding: 10px;
+    border-bottom: solid 1px #d4dced;
+    margin-top: 0;
+}
+
+
+/**
+ * 底部导航
+ */
+.bottom-nav {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    bottom: 0;
+    background: #fff;
+    border-top: solid 1px #00000011;
+    -moz-box-shadow:0px -5px 10px #00000011;
+    -webkit-box-shadow:0px -5px 10px #00000011;
+    box-shadow:0px -5px 10px #00000011;
+}
+
+.bottom-nav .item {
+    flex: 1;
+    text-align: center;
+    padding: 15px 0;
+    color: #3d5579;
+}
+
+
+.bottom-nav .current {
+    background: #247fff;
+    color: #fff;
+}
+

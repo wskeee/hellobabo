@@ -32,6 +32,7 @@ use yii\db\Query;
  *
  * @property GoodsScenePage sourcePage;
  * @property OrderGoodsSceme $scene 场景
+ * @property OrderGoods $orderGoods 订单商品
  */
 class OrderGoodsScenePage extends ActiveRecord
 {
@@ -105,6 +106,17 @@ class OrderGoodsScenePage extends ActiveRecord
         return $this->hasOne(OrderGoodsScene::class, ['id' => 'order_goods_scene_id']);
     }
 
+
+    /**
+     * 场景
+     *
+     * @return ActiveQuery
+     */
+    public function getOrderGoods()
+    {
+        return $this->hasOne(OrderGoods::class, ['id' => 'order_goods_id']);
+    }
+
     /**
      * 初始分页数据
      *
@@ -117,7 +129,7 @@ class OrderGoodsScenePage extends ActiveRecord
             ->select([
                 'OrderGoodsScene.id order_goods_scene_id', 'OrderGoodsScene.sort_order scene_sort_order',
                 'ScenePage.*',
-                'OrderGoodsScene.effect_url' // 使用场景预览图替换
+                //'OrderGoodsScene.effect_url' // 使用场景预览图替换
             ])
             ->from(['OrderGoodsScene' => OrderGoodsScene::tableName()])
             ->leftJoin(['ScenePage' => GoodsScenePage::tableName()], 'ScenePage.scene_id = OrderGoodsScene.scene_id')

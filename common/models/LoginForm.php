@@ -104,7 +104,7 @@ class LoginForm extends Model
     
     /**
      * 短信登录验证
-     * @param type $phone   输入的唯一号码
+     * @param string $phone   输入的唯一号码
      * @return boolean  whether the user is logged in successfully
      */
     public function smsLogin($phone)
@@ -131,9 +131,8 @@ class LoginForm extends Model
     {
         $User = $this->userClass;
         if ($this->_user === null) {
-                $this->_user = $User::findByUsername($this->username);
-            }
-
+            $this->_user = $User::findByUsername($this->username);
+        }
         return $this->_user;
     }
 }
