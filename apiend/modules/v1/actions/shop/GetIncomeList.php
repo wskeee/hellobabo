@@ -36,7 +36,7 @@ class GetIncomeList extends Action
         }
 
         $res = ShopService::getIncomeList(['shop_id' => $shop_id], $start_time, $end_time, $page, $page_size);
-        $res['data']['all_income'] = round($res['data']['all_income'] * 100)/100;
+        $res['all_income'] = round($res['all_income'] * 100)/100;
         /** @var ShopSaleRecord $item */
         foreach ($res['list'] as &$item) {
             $user_name = $item['order']['consignee'];
