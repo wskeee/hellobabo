@@ -35,6 +35,7 @@ class ShopService
 
         // 计算商家实际收益 = 订单总额 * 分成比例(income_value < 1) 或者 直接分成(income_value > 1)
         $real_income = $shop->income_value > 1 ? $shop->income_value : $order->order_amount * $shop->income_value;
+        $real_income = floor($real_income * 100)/100;
         $rows = [
             'shop_id' => $shop->id,
             'order_id' => $order->id,
