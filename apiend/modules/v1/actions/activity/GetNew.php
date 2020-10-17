@@ -16,7 +16,7 @@ class GetNew extends BaseAction
 
     public function run()
     {
-        $model = Banner::findAll(['is_publish' => 1]);
+        $model = Banner::find()->where(['is_publish' => 1])->orderBy(['sort_order' => SORT_ASC])->all();
 
         return new Response(Response::CODE_COMMON_OK, null, ['banner' => $model]);
     }
