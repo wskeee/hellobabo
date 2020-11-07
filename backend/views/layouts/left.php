@@ -51,7 +51,6 @@ use common\widgets\Menu;
                             ['label' => '日常任务', 'icon' => 'circle-o', 'url' => ['/system_admin/crontab/index'],],
                             ['label' => '数据库备份', 'icon' => 'database', 'url' => ['/system_admin/db-backup/index']],
 //                            ['label' => 'redis缓存管理', 'icon' => 'circle-o', 'url' => ['/rediscache_admin/acl/index']],
-                            ['label' => 'Banner管理', 'icon' => 'circle-o', 'url' => ['/system_admin/banner/index']],
                             ['label' => '上传文件管理', 'icon' => 'circle-o', 'url' => ['/system_admin/uploadfile/index']]
                         ],
                     ],
@@ -88,6 +87,8 @@ use common\widgets\Menu;
                             ['label' => '文章管理', 'icon' => 'circle-o', 'url' => ['/platform_admin/post/index']],
                             // ['label' => '投票活动管理', 'icon' => 'circle-o', 'url' => ['/platform_admin/vote-activity/index']],
                             ['label' => '留言', 'icon' => 'circle-o', 'url' => ['/platform_admin/comment/index']],
+                            ['label' => '首页Banner', 'icon' => 'circle-o', 'url' => ['/system_admin/banner/index']],
+                            ['label' => '活动管理', 'icon' => 'circle-o', 'url' => ['/platform_admin/activity/index']],
                         ],
                     ],
                     [
@@ -102,7 +103,6 @@ use common\widgets\Menu;
                             ['label' => '拍摄表情', 'icon' => 'circle-o', 'url' => ['/platform_config/shooting-face/index']],
                             ['label' => '快递公司', 'icon' => 'circle-o', 'url' => ['/platform_config/express/index']],
                             ['label' => '文章类型', 'icon' => 'circle-o', 'url' => ['/platform_config/post-type/index']],
-                            ['label' => '活动管理', 'icon' => 'circle-o', 'url' => ['/platform_admin/activity/index']],
                         ],
                     ],
                     [

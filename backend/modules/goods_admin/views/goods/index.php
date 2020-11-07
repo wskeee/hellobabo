@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //商品编号
             [
                 'attribute' => 'id',
-                'headerOptions' => ['style' => 'width:100px'],
+                'headerOptions' => ['style' => 'width:90px'],
             ],
             //封面
             [
@@ -85,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return empty($model->created_at) ? null : date('Y-m-d h:i:s', $model->created_at);
                 }
             ],
-            'goods_des',
+            //'goods_des',
             'tags',
             //'category_id',
             //'model_id',
