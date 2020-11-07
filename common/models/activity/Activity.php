@@ -9,11 +9,13 @@ use Yii;
  * This is the model class for table "{{%activity}}".
  *
  * @property int $id
+ * @property string $type 类型
  * @property string $name 名称
  * @property string $title 标题
  * @property string $code 活动编码
  * @property string $cover_url 封面路径
  * @property string $share_poster_url 分享海报路径
+ * @property string $show_urls 移动内容
  * @property string $content 内容
  * @property int $start_time 开始时间
  * @property int $end_time 结束时间
@@ -24,6 +26,15 @@ use Yii;
  */
 class Activity extends \yii\db\ActiveRecord
 {
+    /**
+     * 活动类型
+     * @var array
+     */
+    public static $typeNames = [
+        'common' => '公共',
+        'welcome' => '新人',
+    ];
+
     const STATUS_ENABLED = 1;
     const STATUS_DISABLED = 2;
     public static $statusNames = [
@@ -46,10 +57,11 @@ class Activity extends \yii\db\ActiveRecord
     {
         return [
             [[], 'required'],
-            [['content', 'setting'], 'string'],
+            [['type','content', 'setting'], 'string'],
             [['status', 'view_count', 'join_count'], 'integer'],
             [['name', 'code', 'start_time', 'end_time'], 'string', 'max' => 50],
             [['title', 'cover_url', 'share_poster_url'], 'string', 'max' => 255],
+            [['show_urls'], 'arrTostr'],
             ['start_time', 'filter', 'filter' => function () {
                 $hasTime = strpos($this->start_time, ' ') !== false;
                 return empty($this->start_time) ? 0 : strtotime($this->start_time . ($hasTime ? '' : ' 00:00:00'));
@@ -62,12 +74,29 @@ class Activity extends \yii\db\ActiveRecord
     }
 
     /**
+     * 数组转字符
+     *
+     * @param string|array $att
+     * @return boolean
+     */
+    public function arrTostr($att)
+    {
+        $value = $this[$att];
+        if (is_array($value)) {
+            $value = implode(',', array_filter($value));
+        }
+        $this[$att] = $value;
+        return true;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'type' => Yii::t('app', 'Type'),
             'name' => Yii::t('app', 'Name'),
             'title' => Yii::t('app', 'Title'),
             'code' => Yii::t('app', 'Code'),

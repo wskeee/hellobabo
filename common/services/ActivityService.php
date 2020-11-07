@@ -40,7 +40,10 @@ class ActivityService
      */
     public static function getActivityByCode($code)
     {
-        return Activity::findOne(['code' => $code]);
+        $activity = Activity::findOne(['code' => $code]);
+        $activity && $activity->setting != '' && $activity->setting = json_decode($activity->setting, true);
+        $activity && $activity->show_urls != '' && $activity->show_urls = explode(',', $activity->show_urls);
+        return $activity;
     }
 
     /**

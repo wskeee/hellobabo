@@ -1,7 +1,9 @@
 <?php
 
+use common\models\activity\Activity;
 use common\widgets\webuploader\ImagePicker;
 use kartik\date\DatePicker;
+use kartik\widgets\Select2;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -14,6 +16,8 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'type')->widget(Select2::class,['data' => Activity::$typeNames]) ?>
+
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
@@ -23,6 +27,19 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'cover_url')->widget(ImagePicker::class) ?>
 
     <?= $form->field($model, 'share_poster_url')->widget(ImagePicker::class) ?>
+
+    <!-- 商品展示图片 -->
+    <div class="from-group tile-group">
+        <div class="group-item">
+            <label class="control-label form-label">
+                <?= $model->getAttributeLabel('show_urls') ?>
+            </label>
+            <div>
+                <?= Html::hiddenInput('Activity[show_urls][]') ?>
+                <?= ImagePicker::widget(['name' => 'Activity[show_urls][]', 'value' => $model->show_urls, 'pluginOptions' => ['fileNumLimit' => 10]]) ?>
+            </div>
+        </div>
+    </div>
 
     <?php /*= $form->field($model, 'content')->textarea(['rows' => 6]) */?>
 

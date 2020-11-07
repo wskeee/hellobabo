@@ -18,9 +18,11 @@ class GetHomeConfig extends BaseAction
     public function run()
     {
         $bg_data = Config::getValue('wx_min_home_bg');
+        $app_share_title = Config::getValue('wx_min_app_share_title');
         $data = [
             'config' => [
-                'bgs' => array_filter(explode(',', $bg_data))
+                'bgs' => array_filter(explode(',', $bg_data)),
+                'app_share_title' => $app_share_title,
             ]
         ];
         return new Response(Response::CODE_COMMON_OK, null, $data);
