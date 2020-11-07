@@ -77,6 +77,7 @@ class SiteController extends Controller
         }
 
         $model = new LoginAdminForm(['userClass' => AdminUser::class]);
+        $model->scenario = LoginAdminForm::SCENARIO_PASS;
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
 //            return $this->goBack();
             return $this->redirect($this->getHomeUrl());
