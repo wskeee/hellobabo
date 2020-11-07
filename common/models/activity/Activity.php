@@ -102,6 +102,7 @@ class Activity extends \yii\db\ActiveRecord
             'code' => Yii::t('app', 'Code'),
             'cover_url' => Yii::t('app', 'Cover'),
             'share_poster_url' => I18NUitl::t('app', '{Share}{Poster}'),
+            'show_urls' => I18NUitl::t('app', '内容展示'),
             'content' => Yii::t('app', 'Content'),
             'start_time' => Yii::t('app', 'Start Time'),
             'end_time' => Yii::t('app', 'End Time'),
