@@ -37,7 +37,7 @@ class PosterUtils
         );
         $backgroundConfig = $config['background']; //海报最底层得背景
         //背景方法
-        $backgroundInfo = getimagesize($backgroundConfig['url']);
+        $backgroundInfo = @getimagesize($backgroundConfig['url']);
         $backgroundFun = 'imagecreatefrom' . image_type_to_extension($backgroundInfo[2], false);
         $background = $backgroundFun($backgroundConfig['url']);
         $backgroundWidth = $backgroundConfig['width'];//imagesx($background);  //背景宽度
@@ -51,7 +51,7 @@ class PosterUtils
         if (!empty($config['image'])) {
             foreach ($config['image'] as $key => $val) {
                 $val = array_merge($imageDefault, $val);
-                $info = getimagesize($val['url']);
+                $info = @getimagesize($val['url']);
                 $function = 'imagecreatefrom' . image_type_to_extension($info[2], false);
                 if (isset($val['stream']) && $val['stream']) {   //如果传的是字符串图像流
                     $info = getimagesizefromstring($val['url']);

@@ -45,6 +45,9 @@ phpunit.phar
 /apiend/runtime/
 /apiend/web/assets/
 /apiend/web/upload/
+/merchantend/runtime/
+/merchantend/web/assets/
+/merchantend/web/upload/
 /environments/
 /apiend/config/wechat.log
 /common/config/wechat.log
