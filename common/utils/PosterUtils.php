@@ -141,9 +141,12 @@ class PosterUtils
 
     private static function download($url)
     {
+        $url = str_replace('https:','http:',$url);
+        $ext = pathinfo($url, PATHINFO_EXTENSION);
+        empty($ext) && $ext='jpg';
         $dir = 'upload/poster';
         $name = md5($url);
-        $path = "$dir/$name";
+        $path = "$dir/$name.$ext";
         if (file_exists($path)) {
             return $path;
         }
