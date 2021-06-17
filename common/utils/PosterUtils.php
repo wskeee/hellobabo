@@ -2,6 +2,8 @@
 
 namespace common\utils;
 
+use function common\components\OAuths\qqAPI\comm\get_url_contents;
+
 /**
  * Description of PosterUtils
  *
@@ -127,13 +129,26 @@ class PosterUtils
     private static function replaceHttps($config)
     {
         if (is_string($config) && strpos($config, 'https:') !== false) {
-            return str_replace('https:', 'http:', $config);
+            return self::download($config);
         }
         if (isset($config['url'])) {
             if (strpos($config['url'], 'https') !== false) {
-                $config['url'] = str_replace('https:', 'http:', $config['url']);
+                $config['url'] = self::download($config['url']);
             }
         }
         return $config;
+    }
+
+    private static function download($url)
+    {
+        $dir = 'upload/poster';
+        $name = md5($url);
+        $path = "$dir/$name";
+        if (file_exists($path)) {
+            return $path;
+        }
+
+        file_put_contents($path, file_get_contents($url));
+        return $path;
     }
 }
