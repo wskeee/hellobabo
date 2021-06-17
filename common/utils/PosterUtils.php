@@ -35,7 +35,7 @@ class PosterUtils
             'fontColor' => '255,255,255', //字体颜色
             'angle' => 0,
         );
-        $backgroundConfig = $config['background']; //海报最底层得背景
+        $backgroundConfig = self::replaceHttps($config['background']); //海报最底层得背景
         //背景方法
         $backgroundInfo = @getimagesize($backgroundConfig['url']);
         $backgroundFun = 'imagecreatefrom' . image_type_to_extension($backgroundInfo[2], false);
@@ -50,7 +50,7 @@ class PosterUtils
         //处理了图片
         if (!empty($config['image'])) {
             foreach ($config['image'] as $key => $val) {
-                $val = array_merge($imageDefault, $val);
+                $val = self::replaceHttps(array_merge($imageDefault, $val));
                 $info = @getimagesize($val['url']);
                 $function = 'imagecreatefrom' . image_type_to_extension($info[2], false);
                 if (isset($val['stream']) && $val['stream']) {   //如果传的是字符串图像流
@@ -117,5 +117,23 @@ class PosterUtils
         !isset($val['top']) && $val['top'] = isset($val['bottom']) ? $targetHeight - $val['bottom'] - $val['height'] : 0;
         !isset($val['bottom']) && $val['bottom'] = isset($val['top']) ? $targetHeight - $val['top'] - $val['height'] : 0;
         return $val;
+    }
+
+    /**
+     * 替换 https 为 http
+     * @param $config
+     * @return string|string[]
+     */
+    private static function replaceHttps($config)
+    {
+        if (is_string($config) && strpos($config, 'https:') !== false) {
+            return str_replace('https:', 'http:', $config);
+        }
+        if (isset($config['url'])) {
+            if (strpos($config['url'], 'https') !== false) {
+                $config['url'] = str_replace('https:', 'http:', $config['url']);
+            }
+        }
+        return $config;
     }
 }
